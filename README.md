@@ -11,6 +11,7 @@ Work in progress!
 1. Get Path object working
 1. Get transformations working
 1. Get `text()` working
+1. Get `FormattedString` working
 1. Get pixel image export working (png, jpeg, tiff, ...)
 1. Get PDF export working
 1. Get SVG export working
