@@ -18,6 +18,8 @@ def test_foo(apiTestPath):
     db = Drawbot()
     namespace = makeDrawbotNamespace(db)
     runScript(apiTestPath, namespace)
+    if not apiTestsOutputDir.exists():
+        apiTestsOutputDir.mkdir()
     outputPath = apiTestsOutputDir / (apiTestPath.stem + ".png")
     expectedOutputPath = apiTestsExpectedOutputDir / (apiTestPath.stem + ".png")
     db.saveImage(outputPath)
