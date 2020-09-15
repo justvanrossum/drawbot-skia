@@ -28,6 +28,7 @@ def readbytes(path):
     with open(path, "rb") as f:
         return f.read()
 
+
 def compareImages(path1, path2):
     data1 = readbytes(path1)
     data2 = readbytes(path2)
