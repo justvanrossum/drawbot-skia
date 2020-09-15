@@ -8,14 +8,18 @@ class Drawbot:
     def __init__(self):
         self._stack = []
         self._gstate = GraphicsState()
-        self._canvas = None
+        self._skia_canvas = None
 
     @property
-    def canvas(self):
-        if self._canvas is None:
+    def _canvas(self):
+        if self._skia_canvas is None:
             self.size(1000, 1000)
-        return self._canvas
-    
+        return self._skia_canvas
+
+    @_canvas.setter
+    def _canvas(self, canvas):
+        self._skia_canvas = canvas
+
     def size(self, width, height):
         self._surface = skia.Surface(width, height)
         self._canvas = self._surface.getCanvas()
@@ -23,13 +27,13 @@ class Drawbot:
         self._canvas.scale(1, -1)
 
     def rect(self, x, y, w, h):
-        self._drawItem(self.canvas.drawRect, (x, y, w, h))
+        self._drawItem(self._canvas.drawRect, (x, y, w, h))
 
     def oval(self, x, y, w, h):
-        self._drawItem(self.canvas.drawOval, (x, y, w, h))
+        self._drawItem(self._canvas.drawOval, (x, y, w, h))
 
     def drawPath(self, path):
-        self._drawItem(self.canvas.drawPath, path.path)
+        self._drawItem(self._canvas.drawPath, path.path)
 
     def _drawItem(self, canvasMethod, item):
         if self._gstate.doFill:
@@ -47,43 +51,43 @@ class Drawbot:
         self._gstate.strokeColor.setStrokeWidth(value)
 
     def translate(self, x, y):
-        self.canvas.translate(x, y)
+        self._canvas.translate(x, y)
 
     def rotate(self, angle, center=(0, 0)):
         cx, cy = center
-        self.canvas.rotate(angle, cx, cy)
+        self._canvas.rotate(angle, cx, cy)
 
     def scale(self, sx, sy=None, center=(0, 0)):
         if sy is None:
             sy = sx
         cx, cy = center
         if cx != 0 or cy != 0:
-            self.canvas.translate(cx, cy)
-            self.canvas.scale(sx, sy)
-            self.canvas.translate(-cx, -cy)
+            self._canvas.translate(cx, cy)
+            self._canvas.scale(sx, sy)
+            self._canvas.translate(-cx, -cy)
         else:
-            self.canvas.scale(sx, sy)
+            self._canvas.scale(sx, sy)
 
     def skew(self, sx, sy=0, center=(0, 0)):
         cx, cy = center
         if cx != 0 or cy != 0:
-            self.canvas.translate(cx, cy)
-            self.canvas.skew(math.radians(sx), math.radians(sy))
-            self.canvas.translate(-cx, -cy)
+            self._canvas.translate(cx, cy)
+            self._canvas.skew(math.radians(sx), math.radians(sy))
+            self._canvas.translate(-cx, -cy)
         else:
-            self.canvas.skew(math.radians(sx), math.radians(sy))
+            self._canvas.skew(math.radians(sx), math.radians(sy))
 
     def transform(self, matrix):
         m = skia.Matrix()
         m.setAffine(matrix)
-        self.canvas.concat(m)
+        self._canvas.concat(m)
 
     @contextlib.contextmanager
     def savedState(self):
         self._stack.append(self._gstate.copy())
-        self.canvas.save()
+        self._canvas.save()
         yield
-        self.canvas.restore()
+        self._canvas.restore()
         self._gstate = self._stack.pop()
 
     def saveImage(self, fileName):
