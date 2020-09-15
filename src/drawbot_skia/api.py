@@ -1,11 +1,9 @@
-import math
 from .drawbot import Drawbot
-from .path import Path
-from .runner import makeNamespace
+from .runner import makeDrawbotNamespace
 
 
 __all__ = []
 _db = Drawbot()
-_dbNamespace = makeNamespace(math, _db, Path=Path)
+_dbNamespace = makeDrawbotNamespace(_db)
 globals().update(_dbNamespace)
 __all__.extend(_dbNamespace.keys())

@@ -10,7 +10,19 @@ def makeNamespace(*objects, **kwargs):
     return namespace
 
 
-def runScript(source, sourcePath, namespace=None):
+def makeDrawbotNamespace(drawbot):
+    from .path import Path
+    import math
+    return makeNamespace(math, drawbot, Path=Path)
+
+
+def runScript(sourcePath, namespace=None):
+    with open(sourcePath) as f:
+        source = f.read()
+    runScriptSource(source, sourcePath, namespace)
+
+
+def runScriptSource(source, sourcePath, namespace=None):
     if namespace is None:
         namespace = {}
     namespace.update({"__name__": "__main__", "__file__": sourcePath})
@@ -22,7 +34,7 @@ def runScript(source, sourcePath, namespace=None):
         parentDir = None
         saveDir = None
 
-    code = compile(source)
+    code = compile(source, sourcePath, "exec")
 
     if parentDir is not None:
         os.chdir(parentDir)

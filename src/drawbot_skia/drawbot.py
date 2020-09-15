@@ -1,5 +1,6 @@
 import contextlib
 import math
+import os
 import skia
 
 
@@ -91,6 +92,7 @@ class Drawbot:
         self._gstate = self._stack.pop()
 
     def saveImage(self, fileName):
+        fileName = os.fspath(fileName)
         assert fileName.endswith(".png")
         image = self._surface.makeImageSnapshot()
         image.save(fileName)
