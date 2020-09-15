@@ -44,12 +44,6 @@ class Drawbot:
     def drawPath(self, path):
         self._drawItem(self._canvas.drawPath, path.path)
 
-    def _drawItem(self, canvasMethod, *items):
-        if self._gstate.doFill:
-            canvasMethod(*items, self._gstate.fillColor)
-        if self._gstate.doStroke:
-            canvasMethod(*items, self._gstate.strokeColor)
-
     def fill(self, *args):
         self._gstate.setFillColor(_colorArgs(args))
 
@@ -134,6 +128,14 @@ class Drawbot:
         assert fileName.endswith(".png")
         image = self._surface.makeImageSnapshot()
         image.save(fileName)
+
+    # Helpers
+
+    def _drawItem(self, canvasMethod, *items):
+        if self._gstate.doFill:
+            canvasMethod(*items, self._gstate.fillColor)
+        if self._gstate.doStroke:
+            canvasMethod(*items, self._gstate.strokeColor)
 
 
 _strokeCapMapping = dict(
