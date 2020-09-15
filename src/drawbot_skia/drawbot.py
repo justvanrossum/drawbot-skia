@@ -51,6 +51,22 @@ class Drawbot:
     def strokeWidth(self, value):
         self._gstate.strokeColor.setStrokeWidth(value)
 
+    def lineCap(self, value):
+        mapping = dict(
+            butt=skia.Paint.Cap.kButt_Cap,
+            round=skia.Paint.Cap.kRound_Cap,
+            square=skia.Paint.Cap.kSquare_Cap,
+        )
+        self._gstate.strokeColor.setStrokeCap(mapping[value])
+
+    def lineJoin(self, value):
+        mapping = dict(
+            miter=skia.Paint.Join.kMiter_Join,
+            round=skia.Paint.Join.kRound_Join,
+            bevel=skia.Paint.Join.kBevel_Join,
+        )
+        self._gstate.strokeColor.setStrokeJoin(mapping[value])
+
     def translate(self, x, y):
         self._canvas.translate(x, y)
 
