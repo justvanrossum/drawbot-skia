@@ -2,7 +2,7 @@ import skia
 from fontTools.pens.basePen import BasePen
 
 
-class Path(BasePen):
+class BezierPath(BasePen):
 
     def __init__(self, path=None, glyphSet=None):
         super().__init__(glyphSet)

@@ -11,9 +11,9 @@ def makeNamespace(*objects, **kwargs):
 
 
 def makeDrawbotNamespace(drawbot):
-    from .path import Path
+    from .path import BezierPath
     import math
-    return makeNamespace(math, drawbot, Path=Path)
+    return makeNamespace(math, drawbot, BezierPath=BezierPath)
 
 
 def runScript(sourcePath, namespace=None):
