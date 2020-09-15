@@ -62,10 +62,11 @@ class Drawbot:
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
             self.fontSize(fontSize)
-        self._gstate.fontNameOrPath = fontNameOrPath
+        tf = skia.Typeface(fontNameOrPath)
+        self._gstate.font.setTypeface(tf)
 
     def fontSize(self, size):
-        self._gstate.fontSize = size
+        self._gstate.font.setSize(size)
 
     def text(self, txt, position, align=None):
         if not txt:
@@ -73,7 +74,7 @@ class Drawbot:
             return
         # XXX replace with harfbuzz-based layout
         x, y = position
-        blob = skia.TextBlob(txt, skia.Font(skia.Typeface(self._gstate.fontNameOrPath), self._gstate.fontSize))
+        blob = skia.TextBlob(txt, self._gstate.font)
         self._canvas.save()
         try:
             self._canvas.translate(x, y)
@@ -166,14 +167,14 @@ class GraphicsState:
             AntiAlias=True,
             Style=skia.Paint.kStroke_Style,
         )
-        self.fontSize = 10
-        self.fontNameOrPath = None
+        self.font = skia.Font(skia.Typeface(None), 10)
 
     def copy(self):
         result = GraphicsState()
         result.__dict__.update(self.__dict__)
         result.fillColor = _copyPaint(self.fillColor)
         result.strokeColor = _copyPaint(self.strokeColor)
+        result.font = _copyFont(self.font)
         return result
 
     def setFillColor(self, color):
@@ -217,6 +218,28 @@ def _copyPaint(paint):
     # I was hoping for a paint.copy() method, though.
     kwargs = {k: getattr(paint, g)() for k, g in _paintProperties}
     return skia.Paint(**kwargs)
+
+
+_fontProperties = [
+    'setBaselineSnap',      'isBaselineSnap',
+    'setEdging',            'getEdging',
+    'setEmbeddedBitmaps',   'isEmbeddedBitmaps',
+    'setEmbolden',          'isEmbolden',
+    'setForceAutoHinting',  'isForceAutoHinting',
+    'setHinting',           'getHinting',
+    'setLinearMetrics',     'isLinearMetrics',
+    'setScaleX',            'getScaleX',
+    'setSize',              'getSize',
+    'setSkewX',             'getSkewX',
+    'setSubpixel',          'isSubpixel',
+    # 'setTypeface',          'getTypeface',
+]
+
+def _copyFont(font):
+    newFont = skia.Font(font.getTypeface())
+    for setter, getter in _fontProperties:
+        getattr(newFont, setter)(getattr(font, getter))
+    return newFont
 
 
 def _colorArgs(args):
