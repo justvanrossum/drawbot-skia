@@ -1,7 +1,7 @@
-from math import *
+from math import *  # noqa: F401, F403
 import math
 from .drawbot import Drawbot
-from .path import Path
+from .path import Path  # noqa: F401
 
 
 __all__ = []
