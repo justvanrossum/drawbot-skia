@@ -1,6 +1,4 @@
-import math
 import os
-import traceback
 
 
 def makeNamespace(*objects, **kwargs):

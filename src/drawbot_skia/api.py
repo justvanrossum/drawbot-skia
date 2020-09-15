@@ -1,6 +1,6 @@
 import math
 from .drawbot import Drawbot
-from .path import Path  # noqa: F401
+from .path import Path
 from .runner import makeNamespace
 
 
