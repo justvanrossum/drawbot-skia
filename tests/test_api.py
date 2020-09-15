@@ -14,7 +14,7 @@ apiScripts = apiTestsDir.glob("*.py")
 
 
 @pytest.mark.parametrize("apiTestPath", apiScripts)
-def test_foo(apiTestPath):
+def test_apitest(apiTestPath):
     db = Drawbot()
     namespace = makeDrawbotNamespace(db)
     runScript(apiTestPath, namespace)
