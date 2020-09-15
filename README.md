@@ -29,7 +29,7 @@ Some parts of the DrawBot API will be hard or impractical to duplicate.
 
 Skia has only low level support for text, so we'll have to do Unicode processing, line wrapping and shaping ourselves. In other words, `textBox()` will be a tough one to crack.
 
-Generally, 100% text compatibility with DrawBot should not be top priority, as matching CoreText behavior will be an addition challenge.
+Generally, 100% text compatibility with DrawBot should not be top priority, as matching CoreText behavior will be a huge challenge.
 
 The `ImageObject` relies heavily on builtin macOS functionality, and i huge. At best, we should support a small subset of it, but even that is low priority.
 
