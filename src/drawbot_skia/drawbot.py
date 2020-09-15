@@ -44,11 +44,11 @@ class Drawbot:
     def drawPath(self, path):
         self._drawItem(self._canvas.drawPath, path.path)
 
-    def _drawItem(self, canvasMethod, item):
+    def _drawItem(self, canvasMethod, *items):
         if self._gstate.doFill:
-            canvasMethod(item, self._gstate.fillColor)
+            canvasMethod(*items, self._gstate.fillColor)
         if self._gstate.doStroke:
-            canvasMethod(item, self._gstate.strokeColor)
+            canvasMethod(*items, self._gstate.strokeColor)
 
     def fill(self, *args):
         self._gstate.setFillColor(_colorArgs(args))
@@ -85,10 +85,7 @@ class Drawbot:
             self._canvas.translate(x, y)
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
-            if self._gstate.doFill:
-                self._canvas.drawTextBlob(blob, 0, 0, self._gstate.fillColor)
-            if self._gstate.doStroke:
-                self._canvas.drawTextBlob(blob, 0, 0, self._gstate.strokeColor)
+            self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
         finally:
             self._canvas.restore()
 
