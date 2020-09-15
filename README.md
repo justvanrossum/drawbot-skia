@@ -29,7 +29,7 @@ A DrawBot-like cross-platform application shell can be developed, but that shoul
 
 Some parts of the DrawBot API will be hard or impractical to duplicate.
 
-Skia has only low level support for text, so we'll have to do Unicode processing, line wrapping and shaping ourselves. In other words, `textBox()` will be a tough one to crack.
+Skia has only low level support for text, so we'll have to do Unicode processing, line wrapping, hyphenation, and shaping ourselves. In other words, `textBox()` will be a tough one to crack.
 
 Generally, 100% text compatibility with DrawBot should not be top priority, as matching CoreText behavior will be a huge challenge.
 
