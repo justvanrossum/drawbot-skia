@@ -229,14 +229,16 @@ _fontProperties = [
     'setHinting',           'getHinting',
     'setLinearMetrics',     'isLinearMetrics',
     'setScaleX',            'getScaleX',
-    'setSize',              'getSize',
+    # 'setSize',              'getSize',
     'setSkewX',             'getSkewX',
     'setSubpixel',          'isSubpixel',
     # 'setTypeface',          'getTypeface',
 ]
 
 def _copyFont(font):
-    newFont = skia.Font(font.getTypeface())
+    # Make a shallow copy of a Font object.
+    # Was hoping for a font.copy() method.
+    newFont = skia.Font(font.getTypeface(), font.getSize())
     for setter, getter in _fontProperties:
         getattr(newFont, setter)(getattr(font, getter))
     return newFont
