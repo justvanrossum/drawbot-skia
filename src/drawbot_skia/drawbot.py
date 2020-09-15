@@ -52,20 +52,10 @@ class Drawbot:
         self._gstate.strokeColor.setStrokeWidth(value)
 
     def lineCap(self, value):
-        mapping = dict(
-            butt=skia.Paint.Cap.kButt_Cap,
-            round=skia.Paint.Cap.kRound_Cap,
-            square=skia.Paint.Cap.kSquare_Cap,
-        )
-        self._gstate.strokeColor.setStrokeCap(mapping[value])
+        self._gstate.strokeColor.setStrokeCap(_strokeCapMapping[value])
 
     def lineJoin(self, value):
-        mapping = dict(
-            miter=skia.Paint.Join.kMiter_Join,
-            round=skia.Paint.Join.kRound_Join,
-            bevel=skia.Paint.Join.kBevel_Join,
-        )
-        self._gstate.strokeColor.setStrokeJoin(mapping[value])
+        self._gstate.strokeColor.setStrokeJoin(_strokeJoinMapping[value])
 
     def translate(self, x, y):
         self._canvas.translate(x, y)
@@ -112,6 +102,19 @@ class Drawbot:
         assert fileName.endswith(".png")
         image = self._surface.makeImageSnapshot()
         image.save(fileName)
+
+
+_strokeCapMapping = dict(
+    butt=skia.Paint.Cap.kButt_Cap,
+    round=skia.Paint.Cap.kRound_Cap,
+    square=skia.Paint.Cap.kSquare_Cap,
+)
+
+_strokeJoinMapping = dict(
+    miter=skia.Paint.Join.kMiter_Join,
+    round=skia.Paint.Join.kRound_Join,
+    bevel=skia.Paint.Join.kBevel_Join,
+)
 
 
 class GraphicsState:
