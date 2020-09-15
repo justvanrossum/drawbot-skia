@@ -235,6 +235,7 @@ _fontProperties = [
     # 'setTypeface',          'getTypeface',
 ]
 
+
 def _copyFont(font):
     # Make a shallow copy of a Font object.
     # Was hoping for a font.copy() method.
