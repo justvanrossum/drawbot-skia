@@ -1,0 +1,2 @@
+skia-python==86.0
+fonttools==4.14.0
