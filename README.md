@@ -1,3 +1,5 @@
+[![Run tests](https://github.com/justvanrossum/drawbot-skia/workflows/Run%20tests/badge.svg)](https://github.com/justvanrossum/drawbot-skia/actions)
+
 # drawbot-skia
 
 A Python package implementing a subset of the [DrawBot](https://www.drawbot.com) API using [Skia](https://skia.org/) as a backend.
