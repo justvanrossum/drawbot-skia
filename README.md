@@ -1,6 +1,6 @@
 # drawbot-skia
 
-A Python package implementing a subset of the [DrawBot](https://www.drawbot.com) API using [Skia](https://skia.org/) as the backend.
+A Python package implementing a subset of the [DrawBot](https://www.drawbot.com) API using [Skia](https://skia.org/) as a backend.
 
 Work in progress!
 
