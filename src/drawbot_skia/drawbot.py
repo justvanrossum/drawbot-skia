@@ -6,10 +6,11 @@ import skia
 
 class Drawbot:
 
-    def __init__(self):
+    def __init__(self, flipCanvas=True):
         self._stack = []
         self._gstate = GraphicsState()
         self._skia_canvas = None
+        self._flipCanvas = flipCanvas
 
     @property
     def _canvas(self):
@@ -24,8 +25,15 @@ class Drawbot:
     def size(self, width, height):
         self._surface = skia.Surface(width, height)
         self._canvas = self._surface.getCanvas()
-        self._canvas.translate(0, height)
-        self._canvas.scale(1, -1)
+        if self._flipCanvas:
+            self._canvas.translate(0, height)
+            self._canvas.scale(1, -1)
+
+    def width(self):
+        return self._surface.width()
+
+    def height(self):
+        return self._surface.height()
 
     def rect(self, x, y, w, h):
         self._drawItem(self._canvas.drawRect, (x, y, w, h))
@@ -56,6 +64,33 @@ class Drawbot:
 
     def lineJoin(self, value):
         self._gstate.strokeColor.setStrokeJoin(_strokeJoinMapping[value])
+
+    def font(self, fontNameOrPath, fontSize=None):
+        if fontSize is not None:
+            self.fontSize(fontSize)
+        self._gstate.fontNameOrPath = fontNameOrPath
+
+    def fontSize(self, size):
+        self._gstate.fontSize = size
+
+    def text(self, txt, position, align=None):
+        if not txt:
+            # Hard Skia crash otherwise
+            return
+        # XXX replace with harfbuzz-based layout
+        x, y = position
+        blob = skia.TextBlob(txt, skia.Font(skia.Typeface(self._gstate.fontNameOrPath), self._gstate.fontSize))
+        self._canvas.save()
+        try:
+            self._canvas.translate(x, y)
+            if self._flipCanvas:
+                self._canvas.scale(1, -1)
+            if self._gstate.doFill:
+                self._canvas.drawTextBlob(blob, 0, 0, self._gstate.fillColor)
+            if self._gstate.doStroke:
+                self._canvas.drawTextBlob(blob, 0, 0, self._gstate.strokeColor)
+        finally:
+            self._canvas.restore()
 
     def translate(self, x, y):
         self._canvas.translate(x, y)
@@ -132,6 +167,8 @@ class GraphicsState:
             AntiAlias=True,
             Style=skia.Paint.kStroke_Style,
         )
+        self.fontSize = 10
+        self.fontNameOrPath = None
 
     def copy(self):
         result = GraphicsState()
