@@ -131,3 +131,4 @@ dmypy.json
 # Project
 .DS_Store
 Vault/
+/tests/apitests_output/
