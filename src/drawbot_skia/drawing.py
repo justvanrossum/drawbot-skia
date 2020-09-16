@@ -63,6 +63,12 @@ class Drawing:
         x2, y2 = pt2
         self._drawItem(self._canvas.drawLine, x1, y1, x2, y2)
 
+    def polygon(self, firstPoint, *points, close=True):
+        from .path import BezierPath
+        bez = BezierPath()
+        bez.polygon(firstPoint, *points, close=close)
+        self.drawPath(bez)
+
     def drawPath(self, path):
         self._drawItem(self._canvas.drawPath, path.path)
 
@@ -80,6 +86,9 @@ class Drawing:
 
     def lineJoin(self, value):
         self._gstate.strokeColor.setStrokeJoin(_strokeJoinMapping[value])
+
+    def miterLimit(self, value):
+        self._gstate.strokeColor.setStrokeMiter(value)
 
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
@@ -192,6 +201,7 @@ class GraphicsState:
             AntiAlias=True,
             Style=skia.Paint.kStroke_Style,
         )
+        self.strokeColor.setStrokeMiter(5)  # default better matching DrawBot
         self.font = skia.Font(skia.Typeface(None), 10)
         self.font.setForceAutoHinting(False)
         self.font.setHinting(skia.FontHinting.kNone)

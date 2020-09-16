@@ -32,3 +32,17 @@ class BezierPath(BasePen):
 
     def _endPath(self):
         pass
+
+    def rect(self, x, y, w, h):
+        self.moveTo((x, y))
+        self.lineTo((x, y + h))
+        self.lineTo((x + w, y + h))
+        self.lineTo((x + w, y))
+        self.closePath()
+
+    def polygon(self, firstPoint, *points, close=True):
+        self.moveTo(firstPoint)
+        for point in points:
+            self.lineTo(point)
+        if close:
+            self.closePath()
