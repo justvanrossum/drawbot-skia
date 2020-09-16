@@ -60,22 +60,24 @@ class RecordingDocument(Document):
         _savePictures(self._pictures, path, skia.kPNG)
 
     def _saveImage_jpeg(self, path, **kwargs):
-        _savePictures(self._pictures, path, skia.kJPEG)
+        _savePictures(self._pictures, path, skia.kJPEG, whiteBackground=True)
 
     _saveImage_jpg = _saveImage_jpeg
 
 
-def _savePictures(pictures, path, format):
+def _savePictures(pictures, path, format, whiteBackground=False):
     pictures = [pictures[-1]]
     for index, picture in enumerate(pictures):
-        _savePicture(picture, path, format)
+        _savePicture(picture, path, format, whiteBackground=whiteBackground)
 
 
-def _savePicture(picture, path, format):
+def _savePicture(picture, path, format, whiteBackground=False):
     x, y, width, height = picture.cullRect()
     assert x == 0 and y == 0
     surface = skia.Surface(int(width), int(height))
     with surface as canvas:
+        if whiteBackground:
+            canvas.clear(skia.ColorWHITE)
         canvas.drawPicture(picture)
     image = surface.makeImageSnapshot()
     image.save(os.fspath(path), format)
