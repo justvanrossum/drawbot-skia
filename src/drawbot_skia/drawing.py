@@ -1,5 +1,6 @@
 import contextlib
 import math
+import os
 import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
@@ -78,7 +79,11 @@ class Drawing:
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
             self.fontSize(fontSize)
-        tf = skia.Typeface(fontNameOrPath)
+        if os.path.exists(fontNameOrPath):
+            path = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
+            tf = skia.Typeface.MakeFromFile(path)
+        else:
+            tf = skia.Typeface(fontNameOrPath)
         self._gstate.font.setTypeface(tf)
 
     def fontSize(self, size):
