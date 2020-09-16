@@ -1,17 +1,26 @@
+from abc import ABC, abstractmethod
 import os
 import pathlib
 import skia
 
 
-class Document:
+class Document(ABC):
 
-    def beginPage(self, w, h):
-        ...
+    @property
+    @abstractmethod
+    def isDrawing(self):
+        return ...
 
+    @abstractmethod
+    def beginPage(self, w: int, h: int) -> "Canvas":
+        return ...
+
+    @abstractmethod
     def endPage(self):
         ...
 
-    def saveImage(self, path):
+    @abstractmethod
+    def saveImage(self, path, **kwargs):
         ...
 
 
