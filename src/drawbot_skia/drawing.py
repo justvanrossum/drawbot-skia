@@ -236,27 +236,28 @@ def _copyPaint(paint):
 
 
 _fontProperties = [
-    'setBaselineSnap',      'isBaselineSnap',
-    'setEdging',            'getEdging',
-    'setEmbeddedBitmaps',   'isEmbeddedBitmaps',
-    'setEmbolden',          'isEmbolden',
-    'setForceAutoHinting',  'isForceAutoHinting',
-    'setHinting',           'getHinting',
-    'setLinearMetrics',     'isLinearMetrics',
-    'setScaleX',            'getScaleX',
-    # 'setSize',              'getSize',
-    'setSkewX',             'getSkewX',
-    'setSubpixel',          'isSubpixel',
-    # 'setTypeface',          'getTypeface',
+    ('setBaselineSnap',      'isBaselineSnap'),
+    ('setEdging',            'getEdging'),
+    ('setEmbeddedBitmaps',   'isEmbeddedBitmaps'),
+    ('setEmbolden',          'isEmbolden'),
+    ('setForceAutoHinting',  'isForceAutoHinting'),
+    ('setHinting',           'getHinting'),
+    ('setLinearMetrics',     'isLinearMetrics'),
+    ('setScaleX',            'getScaleX'),
+    ('setSize',              'getSize'),
+    ('setSkewX',             'getSkewX'),
+    ('setSubpixel',          'isSubpixel'),
+    # ('setTypeface',          'getTypeface'),
 ]
 
 
 def _copyFont(font):
-    # Make a shallow copy of a Font object.
+    # Make a copy of a Font object.
     # Was hoping for a font.copy() method.
-    newFont = skia.Font(font.getTypeface(), font.getSize())
+    tf = skia.Typeface.MakeDeserialize(font.getTypeface().serialize())
+    newFont = skia.Font(tf, font.getSize())
     for setter, getter in _fontProperties:
-        getattr(newFont, setter)(getattr(font, getter))
+        getattr(newFont, setter)(getattr(font, getter)())
     return newFont
 
 
