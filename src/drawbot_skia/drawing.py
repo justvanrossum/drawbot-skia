@@ -98,7 +98,12 @@ class Drawing:
             tf = skia.Typeface.MakeFromFile(path)
         else:
             tf = skia.Typeface(fontNameOrPath)
-        self._gstate.font.setTypeface(tf)
+        font = self._gstate.font
+        font.setTypeface(tf)
+        font.setForceAutoHinting(False)
+        font.setHinting(skia.FontHinting.kNone)
+        font.setSubpixel(True)
+        font.setEdging(skia.Font.Edging.kAntiAlias)
 
     def fontSize(self, size):
         self._gstate.font.setSize(size)
