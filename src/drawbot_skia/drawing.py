@@ -1,14 +1,15 @@
 import contextlib
 import math
-import os
 import skia
+from .document import RecordingDocument
 
 
 class Drawing:
 
-    def __init__(self, flipCanvas=True):
+    def __init__(self, document=None, flipCanvas=True):
         self._stack = []
         self._gstate = GraphicsState()
+        self._document = document
         self._skia_canvas = None
         self._flipCanvas = flipCanvas
 
@@ -22,18 +23,29 @@ class Drawing:
     def _canvas(self, canvas):
         self._skia_canvas = canvas
 
+    def newDrawing(self):
+        ...
+
+    def endDrawing(self):
+        ...
+
     def size(self, width, height):
-        self._surface = skia.Surface(width, height)
-        self._canvas = self._surface.getCanvas()
+        if self._document is None:
+            self._document = RecordingDocument()
+        else:
+            assert not self._document.isDrawing
+        self._canvas = self._document.beginPage(width, height)
+        # self._surface = skia.Surface(width, height)
+        # self._canvas = self._surface.getCanvas()
         if self._flipCanvas:
             self._canvas.translate(0, height)
             self._canvas.scale(1, -1)
 
     def width(self):
-        return self._surface.width()
+        return self._document.pageWidth
 
     def height(self):
-        return self._surface.height()
+        return self._document.pageHeight
 
     def rect(self, x, y, w, h):
         self._drawItem(self._canvas.drawRect, (x, y, w, h))
@@ -125,10 +137,13 @@ class Drawing:
         self._gstate = self._stack.pop()
 
     def saveImage(self, fileName):
-        fileName = os.fspath(fileName)
-        assert fileName.endswith(".png")
-        image = self._surface.makeImageSnapshot()
-        image.save(fileName)
+        if self._document.isDrawing:
+            self._document.endPage()
+        self._document.saveImage(fileName)
+        # fileName = os.fspath(fileName)
+        # assert fileName.endswith(".png")
+        # image = self._surface.makeImageSnapshot()
+        # image.save(fileName)
 
     # Helpers
 
