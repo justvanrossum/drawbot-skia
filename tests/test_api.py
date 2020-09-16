@@ -64,10 +64,10 @@ def compareImages(path1, path2):
         return True, "images identical"
     if im1.size != im2.size:
         return False, "sizes differ"
-    a1 = np.array(im1)
-    a2 = np.array(im2)
+    a1 = np.array(im1).astype(int)
+    a2 = np.array(im2).astype(int)
     diff = a1 - a2
     maxDiff = max(abs(np.max(diff)), abs(np.min(diff)))
-    if maxDiff < 60:
+    if maxDiff < 128:
         return True, "images similar enough"
     return False, f"images differ too much, maxDiff: {maxDiff}"
