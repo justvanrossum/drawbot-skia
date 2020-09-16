@@ -51,8 +51,8 @@ class RecordingDocument(Document):
         stream = skia.FILEWStream(os.fspath(path))
         with skia.PDF.MakeDocument(stream) as document:
             for picture in self._pictures:
-                width = picture.width()
-                height = picture.height()
+                x, y, width, height = picture.cullRect()
+                assert x == 0 and y == 0
                 with document.page(width, height) as canvas:
                     canvas.drawPicture(picture)
 
