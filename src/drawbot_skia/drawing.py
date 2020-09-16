@@ -79,16 +79,16 @@ class Drawing:
         self._gstate.setStrokeColor(_colorArgs(args))
 
     def strokeWidth(self, value):
-        self._gstate.strokeColor.setStrokeWidth(value)
+        self._gstate.strokePaint.setStrokeWidth(value)
 
     def lineCap(self, value):
-        self._gstate.strokeColor.setStrokeCap(_strokeCapMapping[value])
+        self._gstate.strokePaint.setStrokeCap(_strokeCapMapping[value])
 
     def lineJoin(self, value):
-        self._gstate.strokeColor.setStrokeJoin(_strokeJoinMapping[value])
+        self._gstate.strokePaint.setStrokeJoin(_strokeJoinMapping[value])
 
     def miterLimit(self, value):
-        self._gstate.strokeColor.setStrokeMiter(value)
+        self._gstate.strokePaint.setStrokeMiter(value)
 
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
@@ -168,9 +168,9 @@ class Drawing:
 
     def _drawItem(self, canvasMethod, *items):
         if self._gstate.doFill:
-            canvasMethod(*items, self._gstate.fillColor)
+            canvasMethod(*items, self._gstate.fillPaint)
         if self._gstate.doStroke:
-            canvasMethod(*items, self._gstate.strokeColor)
+            canvasMethod(*items, self._gstate.strokePaint)
 
 
 _strokeCapMapping = dict(
@@ -191,17 +191,17 @@ class GraphicsState:
     def __init__(self):
         self.doFill = True
         self.doStroke = False
-        self.fillColor = skia.Paint(
+        self.fillPaint = skia.Paint(
             Color=0xFF000000,
             AntiAlias=True,
             Style=skia.Paint.kFill_Style,
         )
-        self.strokeColor = skia.Paint(
+        self.strokePaint = skia.Paint(
             Color=0xFF000000,
             AntiAlias=True,
             Style=skia.Paint.kStroke_Style,
         )
-        self.strokeColor.setStrokeMiter(5)  # default better matching DrawBot
+        self.strokePaint.setStrokeMiter(5)  # default better matching DrawBot
         self.font = skia.Font(skia.Typeface(None), 10)
         self.font.setForceAutoHinting(False)
         self.font.setHinting(skia.FontHinting.kNone)
@@ -211,8 +211,8 @@ class GraphicsState:
     def copy(self):
         result = GraphicsState()
         result.__dict__.update(self.__dict__)
-        result.fillColor = _copyPaint(self.fillColor)
-        result.strokeColor = _copyPaint(self.strokeColor)
+        result.fillPaint = _copyPaint(self.fillPaint)
+        result.strokePaint = _copyPaint(self.strokePaint)
         result.font = _copyFont(self.font)
         return result
 
@@ -221,14 +221,14 @@ class GraphicsState:
             self.doFill = False
         else:
             self.doFill = True
-            self.fillColor.setARGB(*color)
+            self.fillPaint.setARGB(*color)
 
     def setStrokeColor(self, color):
         if color is None:
             self.doStroke = False
         else:
             self.doStroke = True
-            self.strokeColor.setARGB(*color)
+            self.strokePaint.setARGB(*color)
 
 
 _paintProperties = [
