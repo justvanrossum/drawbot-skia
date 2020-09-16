@@ -188,6 +188,8 @@ class GraphicsState:
             Style=skia.Paint.kStroke_Style,
         )
         self.font = skia.Font(skia.Typeface(None), 10)
+        self.font.setForceAutoHinting(False)
+        self.font.setHinting(skia.FontHinting.kNormal)
 
     def copy(self):
         result = GraphicsState()
