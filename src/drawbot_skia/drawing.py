@@ -140,10 +140,10 @@ class Drawing:
         self._canvas.restore()
         self._gstate = self._stack.pop()
 
-    def saveImage(self, fileName):
+    def saveImage(self, fileName, multipage=False):
         if self._document.isDrawing:
             self._document.endPage()
-        self._document.saveImage(fileName)
+        self._document.saveImage(fileName, multipage=multipage)
         # fileName = os.fspath(fileName)
         # assert fileName.endswith(".png")
         # image = self._surface.makeImageSnapshot()
