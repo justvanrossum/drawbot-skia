@@ -1,4 +1,4 @@
-from drawbot_skia.runner import makeDrawbotNamespace, runScript
+from drawbot_skia.runner import makeDrawbotNamespace, runScript, runScriptSource
 from drawbot_skia.drawing import Drawing
 import pathlib
 import pytest
@@ -24,6 +24,25 @@ def test_apitest(apiTestPath):
     expectedOutputPath = apiTestsExpectedOutputDir / (apiTestPath.stem + ".png")
     db.saveImage(outputPath)
     compareImages(outputPath, expectedOutputPath)
+
+
+multipageSource = """
+for i in range(3):
+    newPage(200, 200)
+    rect(50, 50, 100, 100)
+"""
+
+
+def test_saveImage_multipage(tmpdir):
+    tmpdir = pathlib.Path(tmpdir)
+    db = Drawing()
+    namespace = makeDrawbotNamespace(db)
+    runScriptSource(multipageSource, "<string>", namespace)
+    assert [] == sorted(tmpdir.glob("*.png"))
+    outputPath = tmpdir / "test.png"
+    db.saveImage(outputPath, multipage=True)
+    expected_filenames = ['test_0.png', 'test_1.png', 'test_2.png']
+    assert expected_filenames == [p.name for p in sorted(tmpdir.glob("*.png"))]
 
 
 def readbytes(path):
