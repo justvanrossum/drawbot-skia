@@ -12,8 +12,17 @@ def main(args=None):
         prog="drawbot",
         description="Command line DrawBot tool.",
     )
-    parser.add_argument("drawbot_script", type=argparse.FileType("r"))
-    parser.add_argument("output_file", nargs="*", default=[])
+    parser.add_argument(
+        "drawbot_script",
+        type=argparse.FileType("r"),
+        help="The Drawbot script to run.",
+    )
+    parser.add_argument(
+        "output_file",
+        nargs="*",
+        default=[],
+        help="A filename for the output graphic.",
+    )
 
     args = parser.parse_args()
     db = Drawbot()
