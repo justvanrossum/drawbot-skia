@@ -1,4 +1,4 @@
-from .drawbot import Drawbot
+from .drawing import Drawbot
 from .runner import makeDrawbotNamespace
 
 

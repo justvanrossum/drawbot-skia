@@ -1,5 +1,5 @@
 from drawbot_skia.runner import makeDrawbotNamespace, runScript
-from drawbot_skia.drawbot import Drawbot
+from drawbot_skia.drawing import Drawbot
 import pathlib
 import pytest
 
