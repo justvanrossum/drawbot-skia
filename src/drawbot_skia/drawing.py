@@ -35,8 +35,6 @@ class Drawing:
         else:
             assert not self._document.isDrawing
         self._canvas = self._document.beginPage(width, height)
-        # self._surface = skia.Surface(width, height)
-        # self._canvas = self._surface.getCanvas()
         if self._flipCanvas:
             self._canvas.translate(0, height)
             self._canvas.scale(1, -1)
