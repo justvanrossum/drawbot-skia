@@ -190,6 +190,8 @@ class GraphicsState:
         self.font = skia.Font(skia.Typeface(None), 10)
         self.font.setForceAutoHinting(False)
         self.font.setHinting(skia.FontHinting.kNone)
+        self.font.setSubpixel(True)
+        self.font.setEdging(skia.Font.Edging.kAntiAlias)
 
     def copy(self):
         result = GraphicsState()
