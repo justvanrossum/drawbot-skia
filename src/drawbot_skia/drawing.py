@@ -58,6 +58,11 @@ class Drawing:
     def oval(self, x, y, w, h):
         self._drawItem(self._canvas.drawOval, (x, y, w, h))
 
+    def line(self, pt1, pt2):
+        x1, y1 = pt1
+        x2, y2 = pt2
+        self._drawItem(self._canvas.drawLine, x1, y1, x2, y2)
+
     def drawPath(self, path):
         self._drawItem(self._canvas.drawPath, path.path)
 
