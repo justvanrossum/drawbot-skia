@@ -244,7 +244,7 @@ _fontProperties = [
     ('setHinting',           'getHinting'),
     ('setLinearMetrics',     'isLinearMetrics'),
     ('setScaleX',            'getScaleX'),
-    ('setSize',              'getSize'),
+    # ('setSize',              'getSize'),
     ('setSkewX',             'getSkewX'),
     ('setSubpixel',          'isSubpixel'),
     # ('setTypeface',          'getTypeface'),
