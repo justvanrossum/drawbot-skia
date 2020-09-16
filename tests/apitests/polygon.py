@@ -1,4 +1,5 @@
 size(200, 200)
+
 stroke(0)
 strokeWidth(10)
 fill(1, 0.3, 0)
