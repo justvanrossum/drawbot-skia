@@ -111,6 +111,11 @@ class Drawing:
         x, y = position
         blob = skia.TextBlob(txt, self._gstate.font)
         self._canvas.save()
+        textWidth = self._gstate.font.measureText(txt)
+        if align == "right":
+            x -= textWidth
+        elif align == "center":
+            x -= textWidth / 2
         try:
             self._canvas.translate(x, y)
             if self._flipCanvas:
