@@ -6,7 +6,7 @@ from .runner import makeDrawbotNamespace, runScriptSource
 
 def main(args=None):
     if args is None:
-        args = sys.argv
+        args = sys.argv[1:]
 
     parser = argparse.ArgumentParser(
         prog="drawbot",
@@ -24,11 +24,11 @@ def main(args=None):
         help="A filename for the output graphic.",
     )
 
-    args = parser.parse_args()
+    arguments = parser.parse_args(args)
     db = Drawbot()
     namespace = makeDrawbotNamespace(db)
-    runScriptSource(args.drawbot_script.read(), args.drawbot_script.name, namespace)
-    for path in args.output_file:
+    runScriptSource(arguments.drawbot_script.read(), arguments.drawbot_script.name, namespace)
+    for path in arguments.output_file:
         db.saveImage(path)
 
 
