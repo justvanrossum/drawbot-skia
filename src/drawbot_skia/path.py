@@ -34,11 +34,10 @@ class BezierPath(BasePen):
         pass
 
     def rect(self, x, y, w, h):
-        self.moveTo((x, y))
-        self.lineTo((x, y + h))
-        self.lineTo((x + w, y + h))
-        self.lineTo((x + w, y))
-        self.closePath()
+        self.path.addRect((x, y, w, h))
+
+    def oval(self, x, y, w, h):
+        self.path.addOval((x, y, w, h))
 
     def polygon(self, firstPoint, *points, close=True):
         self.moveTo(firstPoint)
