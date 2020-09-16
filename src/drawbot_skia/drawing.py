@@ -144,10 +144,6 @@ class Drawing:
         if self._document.isDrawing:
             self._document.endPage()
         self._document.saveImage(fileName, multipage=multipage)
-        # fileName = os.fspath(fileName)
-        # assert fileName.endswith(".png")
-        # image = self._surface.makeImageSnapshot()
-        # image.save(fileName)
 
     # Helpers
 
