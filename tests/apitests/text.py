@@ -1,6 +1,6 @@
 size(200, 200)
 
-font("../fonts/IBMPlexSansArabic-Regular.otf", 16)
+font("../fonts/IBMPlexSansArabic-Regular.otf", 24)
 text("hello world", (10, 10))
 fill(1, 0, 0)
 text("foo bar", (10, 30))
