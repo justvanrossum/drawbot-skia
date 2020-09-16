@@ -45,3 +45,10 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+
+    - name: Storing Test Failure Artifacts
+      if: failure()
+      uses: actions/upload-artifact@master
+      with:
+        name: apitests_output
+        path: ./tests/apitests_output
