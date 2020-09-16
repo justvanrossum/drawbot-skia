@@ -1,5 +1,7 @@
 import argparse
 import sys
+from .drawbot import Drawbot
+from .runner import makeDrawbotNamespace, runScriptSource
 
 
 def main(args=None):
@@ -14,8 +16,11 @@ def main(args=None):
     parser.add_argument("output_file", nargs="*", default=[])
 
     args = parser.parse_args()
-    print(args.drawbot_script)
-    print(args.output_file)
+    db = Drawbot()
+    namespace = makeDrawbotNamespace(db)
+    runScriptSource(args.drawbot_script.read(), args.drawbot_script.name, namespace)
+    for path in args.output_file:
+        db.saveImage(path)
 
 
 if __name__ == "__main__":
