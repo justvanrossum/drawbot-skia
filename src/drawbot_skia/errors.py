@@ -1,2 +1,2 @@
 class DrawbotError(Exception):
-	pass
+    pass
