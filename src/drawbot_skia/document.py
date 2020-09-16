@@ -12,7 +12,7 @@ class Document(ABC):
         return ...
 
     @abstractmethod
-    def beginPage(self, w: int, h: int) -> "Canvas":
+    def beginPage(self, w: int, h: int) -> skia.Canvas:
         return ...
 
     @abstractmethod
