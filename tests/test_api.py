@@ -1,5 +1,5 @@
 from drawbot_skia.runner import makeDrawbotNamespace, runScript
-from drawbot_skia.drawing import Drawbot
+from drawbot_skia.drawing import Drawing
 import pathlib
 import pytest
 
@@ -15,7 +15,7 @@ apiScripts = apiTestsDir.glob("*.py")
 
 @pytest.mark.parametrize("apiTestPath", apiScripts)
 def test_apitest(apiTestPath):
-    db = Drawbot()
+    db = Drawing()
     namespace = makeDrawbotNamespace(db)
     runScript(apiTestPath, namespace)
     if not apiTestsOutputDir.exists():

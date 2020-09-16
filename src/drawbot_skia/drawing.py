@@ -4,7 +4,7 @@ import os
 import skia
 
 
-class Drawbot:
+class Drawing:
 
     def __init__(self, flipCanvas=True):
         self._stack = []

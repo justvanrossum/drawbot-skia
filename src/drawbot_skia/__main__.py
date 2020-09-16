@@ -1,6 +1,6 @@
 import argparse
 import sys
-from .drawing import Drawbot
+from .drawing import Drawing
 from .runner import makeDrawbotNamespace, runScriptSource
 
 
@@ -25,7 +25,7 @@ def main(args=None):
     )
 
     arguments = parser.parse_args(args)
-    db = Drawbot()
+    db = Drawing()
     namespace = makeDrawbotNamespace(db)
     runScriptSource(arguments.drawbot_script.read(), arguments.drawbot_script.name, namespace)
     for path in arguments.output_file:
