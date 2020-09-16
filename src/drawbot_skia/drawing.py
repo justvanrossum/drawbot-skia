@@ -2,6 +2,7 @@ import contextlib
 import math
 import skia
 from .document import RecordingDocument
+from .errors import DrawbotError
 
 
 class Drawing:
@@ -32,7 +33,8 @@ class Drawing:
         ...
 
     def size(self, width, height):
-        assert not self._document.isDrawing
+        if self._document.isDrawing:
+            raise DrawbotError("size() can't be called if there's already a canvas active")
         self._canvas = self._document.beginPage(width, height)
         if self._flipCanvas:
             self._canvas.translate(0, height)
