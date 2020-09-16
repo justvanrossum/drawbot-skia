@@ -68,6 +68,6 @@ def compareImages(path1, path2):
     a2 = np.array(im2)
     diff = a1 - a2
     standardDeviation = np.std(diff)
-    if standardDeviation < 38:
+    if standardDeviation < 40:
         return True, "images similar enough"
     return False, f"images differ too much, stddev: {standardDeviation}"
