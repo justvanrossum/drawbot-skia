@@ -2,6 +2,8 @@ from drawbot_skia.runner import makeDrawbotNamespace, runScript, runScriptSource
 from drawbot_skia.drawing import Drawing
 import pathlib
 import pytest
+from PIL import Image
+import numpy as np
 
 
 testDir = pathlib.Path(__file__).resolve().parent
@@ -23,7 +25,8 @@ def test_apitest(apiTestPath):
     outputPath = apiTestsOutputDir / (apiTestPath.stem + ".png")
     expectedOutputPath = apiTestsExpectedOutputDir / (apiTestPath.stem + ".png")
     db.saveImage(outputPath)
-    compareImages(outputPath, expectedOutputPath)
+    same, reason = compareImages(outputPath, expectedOutputPath)
+    assert same, reason
 
 
 multipageSource = """
@@ -53,4 +56,18 @@ def readbytes(path):
 def compareImages(path1, path2):
     data1 = readbytes(path1)
     data2 = readbytes(path2)
-    assert data1 == data2
+    if data1 == data2:
+        return True, "data identical"
+    im1 = Image.open(path1)
+    im2 = Image.open(path2)
+    if im1 == im2:
+        return True, "images identical"
+    if im1.size != im2.size:
+        return False, "sizes differ"
+    a1 = np.array(im1)
+    a2 = np.array(im2)
+    diff = a1 - a2
+    standardDeviation = np.std(diff)
+    if standardDeviation < 26:
+        return True, "images similar enough"
+    return False, f"images differ too much, stddev: {standardDeviation}"
