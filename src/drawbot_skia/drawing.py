@@ -9,6 +9,8 @@ class Drawing:
     def __init__(self, document=None, flipCanvas=True):
         self._stack = []
         self._gstate = GraphicsState()
+        if document is None:
+            document = RecordingDocument()
         self._document = document
         self._skia_canvas = None
         self._flipCanvas = flipCanvas
@@ -30,10 +32,7 @@ class Drawing:
         ...
 
     def size(self, width, height):
-        if self._document is None:
-            self._document = RecordingDocument()
-        else:
-            assert not self._document.isDrawing
+        assert not self._document.isDrawing
         self._canvas = self._document.beginPage(width, height)
         if self._flipCanvas:
             self._canvas.translate(0, height)
