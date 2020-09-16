@@ -140,10 +140,10 @@ class Drawing:
         self._canvas.restore()
         self._gstate = self._stack.pop()
 
-    def saveImage(self, fileName, multipage=False):
+    def saveImage(self, fileName):
         if self._document.isDrawing:
             self._document.endPage()
-        self._document.saveImage(fileName, multipage=multipage)
+        self._document.saveImage(fileName)
 
     # Helpers
 

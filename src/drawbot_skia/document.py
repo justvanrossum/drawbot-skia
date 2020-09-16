@@ -38,14 +38,14 @@ class RecordingDocument(Document):
         self._currentRecorder = None
         self.pageWidth = self.pageHeight = None
 
-    def saveImage(self, path, multipage=False, **kwargs):
+    def saveImage(self, path, **kwargs):
         path = pathlib.Path(path).resolve()
         suffix = path.suffix.lower().lstrip(".")
         methodName = f"_saveImage_{suffix}"
         method = getattr(self, methodName, None)
         if method is None:
             raise ValueError(f"unsupported file type: {suffix}")
-        method(path, multipage=multipage)
+        method(path)
 
     def _saveImage_pdf(self, path, **kwargs):
         stream = skia.FILEWStream(os.fspath(path))
@@ -56,26 +56,22 @@ class RecordingDocument(Document):
                 with document.page(width, height) as canvas:
                     canvas.drawPicture(picture)
 
-    def _saveImage_png(self, path, multipage=False, **kwargs):
-        _savePictures(self._pictures, path, skia.kPNG, multipage=multipage)
+    def _saveImage_png(self, path, **kwargs):
+        _savePictures(self._pictures, path, skia.kPNG)
 
-    def _saveImage_jpeg(self, path, multipage=False, **kwargs):
-        _savePictures(self._pictures, path, skia.kJPEG,
-                      multipage=multipage, whiteBackground=True)
+    def _saveImage_jpeg(self, path, **kwargs):
+        _savePictures(self._pictures, path, skia.kJPEG, whiteBackground=True)
 
     _saveImage_jpg = _saveImage_jpeg
 
 
-def _savePictures(pictures, path, format, multipage=False, whiteBackground=False):
-    if len(pictures) == 1:
-        multipage = False
-    elif not multipage:
-        pictures = [pictures[-1]]
+def _savePictures(pictures, path, format, whiteBackground=False):
+    singlePage = len(pictures) == 1
     for index, picture in enumerate(pictures):
-        if multipage:
-            framePath = path.parent / f"{path.stem}_{index}{path.suffix}"
-        else:
+        if singlePage:
             framePath = path
+        else:
+            framePath = path.parent / f"{path.stem}_{index}{path.suffix}"
         _savePicture(picture, framePath, format, whiteBackground=whiteBackground)
 
 

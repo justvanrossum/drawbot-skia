@@ -40,7 +40,7 @@ def test_saveImage_multipage(tmpdir):
     runScriptSource(multipageSource, "<string>", namespace)
     assert [] == sorted(tmpdir.glob("*.png"))
     outputPath = tmpdir / "test.png"
-    db.saveImage(outputPath, multipage=True)
+    db.saveImage(outputPath)
     expected_filenames = ['test_0.png', 'test_1.png', 'test_2.png']
     assert expected_filenames == [p.name for p in sorted(tmpdir.glob("*.png"))]
 
