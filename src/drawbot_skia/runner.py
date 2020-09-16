@@ -28,6 +28,7 @@ def runScriptSource(source, sourcePath, namespace=None):
     namespace.update({"__name__": "__main__", "__file__": sourcePath})
 
     if sourcePath:
+        sourcePath = os.path.normpath(os.path.abspath(sourcePath))
         parentDir = os.path.dirname(sourcePath)
         saveDir = os.getcwd()
     else:

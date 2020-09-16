@@ -35,6 +35,11 @@ class Drawing:
     def size(self, width, height):
         if self._document.isDrawing:
             raise DrawbotError("size() can't be called if there's already a canvas active")
+        self.newPage(width,  height)
+
+    def newPage(self, width, height):
+        if self._document.isDrawing:
+            self._document.endPage()
         self._canvas = self._document.beginPage(width, height)
         if self._flipCanvas:
             self._canvas.translate(0, height)
