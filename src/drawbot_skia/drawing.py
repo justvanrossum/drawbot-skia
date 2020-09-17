@@ -254,13 +254,17 @@ class GraphicsState:
             currentLocation = {a.axisTag: location.get(a.axisTag, a.defaultValue) for a in fvar.axes}
         else:
             pos = self.font.getTypeface().getVariationDesignPosition()
+            # XXX: With MutatorSans.ttf, this is "overcomplete" on macOS
+            # (hence the p.axis != 0 condition), and incomplete on Linux:
+            # the wght axis is not reported there.
+            # https://github.com/kyamagu/skia-python/issues/112
             currentLocation = {intToTag(p.axis): p.value for p in pos if p.axis != 0}
 
         tags = [a.axisTag for a in fvar.axes]
         location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
-        self._setFontDesignLocation(location)
+        self._setFontVariationDesignPosition(location)
 
-    def _setFontDesignLocation(self, location):
+    def _setFontVariationDesignPosition(self, location):
         from .font import tagToInt
         makeCoord = skia.FontArguments.VariationPosition.Coordinate
         rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location]
