@@ -93,16 +93,13 @@ class Drawing:
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
             self.fontSize(fontSize)
-        if os.path.exists(fontNameOrPath):
-            path = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
-            tf = skia.Typeface.MakeFromFile(path)
-        else:
-            tf = skia.Typeface(fontNameOrPath)
-        font = self._gstate.font
-        font.setTypeface(tf)
+        self._gstate.setFont(fontNameOrPath)
 
     def fontSize(self, size):
         self._gstate.font.setSize(size)
+
+    def fontVariations(self, resetVariations=False, **axes):
+        ...
 
     def text(self, txt, position, align=None):
         if not txt:
@@ -213,6 +210,7 @@ class GraphicsState:
         self.font.setHinting(skia.FontHinting.kNone)
         self.font.setSubpixel(True)
         self.font.setEdging(skia.Font.Edging.kAntiAlias)
+        self._ttFont = None
 
     def copy(self):
         result = GraphicsState()
@@ -235,6 +233,21 @@ class GraphicsState:
         else:
             self.doStroke = True
             self.strokePaint.setARGB(*color)
+
+    def setFont(self, fontNameOrPath):
+        if os.path.exists(fontNameOrPath):
+            path = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
+            tf = skia.Typeface.MakeFromFile(path)
+        else:
+            tf = skia.Typeface(fontNameOrPath)
+        self.font.setTypeface(tf)
+
+    @property
+    def ttFont(self):
+        if self._ttFont is None:
+            from .font import makeTTFontFromSkiaTypeface
+            self._ttFont = makeTTFontFromSkiaTypeface(self.font.getTypeface())
+        return self._ttFont
 
 
 _paintProperties = [

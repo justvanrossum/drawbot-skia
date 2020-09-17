@@ -2,6 +2,7 @@ import os
 import pathlib
 import skia
 from drawbot_skia.font import makeTTFontFromSkiaTypeface
+from drawbot_skia.drawing import GraphicsState
 
 
 testDir = pathlib.Path(__file__).resolve().parent
@@ -14,3 +15,9 @@ def test_font():
     assert ttf["name"].getName(6, 3, 1).toUnicode() == "MutatorMathTest-LightCondensed"
     fvar = ttf["fvar"]
     assert fvar.axes[0].axisTag == "wdth"
+
+
+def test_font_gs():
+    gs = GraphicsState()
+    gs.setFont(fontPath)
+    assert "fvar" in gs.ttFont
