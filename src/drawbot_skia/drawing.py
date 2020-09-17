@@ -99,7 +99,7 @@ class Drawing:
         self._gstate.font.setSize(size)
 
     def fontVariations(self, *, resetVariations=False, **location):
-        self._gstate.setFontVariations(location, resetVariations)
+        return self._gstate.setFontVariations(location, resetVariations)
 
     def text(self, txt, position, align=None):
         if not txt:
@@ -263,6 +263,7 @@ class GraphicsState:
         tags = [a.axisTag for a in fvar.axes]
         location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
         self._setFontVariationDesignPosition(location)
+        return dict(location)
 
     def _setFontVariationDesignPosition(self, location):
         from .font import tagToInt
