@@ -256,13 +256,14 @@ class GraphicsState:
             pos = self.font.getTypeface().getVariationDesignPosition()
             currentLocation = {intToTag(p.axis): p.value for p in pos if p.axis != 0}
 
-        location = {tag: location.get(tag, value) for tag, value in currentLocation.items()}
+        tags = [a.axisTag for a in fvar.axes]
+        location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
         self._setFontDesignLocation(location)
 
     def _setFontDesignLocation(self, location):
         from .font import tagToInt
         makeCoord = skia.FontArguments.VariationPosition.Coordinate
-        rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location.items()]
+        rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location]
         coords = skia.FontArguments.VariationPosition.Coordinates(rawCoords)
         pos = skia.FontArguments.VariationPosition(coords)
         fontArgs = skia.FontArguments()
