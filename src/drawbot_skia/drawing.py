@@ -191,7 +191,7 @@ _strokeJoinMapping = dict(
 
 class GraphicsState:
 
-    def __init__(self):
+    def __init__(self, cachedTypefaces=None):
         self.doFill = True
         self.doStroke = False
         self.fillPaint = skia.Paint(
@@ -211,9 +211,12 @@ class GraphicsState:
         self.font.setSubpixel(True)
         self.font.setEdging(skia.Font.Edging.kAntiAlias)
         self._ttFont = None
+        if cachedTypefaces is None:
+            cachedTypefaces = {}
+        self._cachedTypefaces = cachedTypefaces
 
     def copy(self):
-        result = GraphicsState()
+        result = GraphicsState(self._cachedTypefaces)
         result.__dict__.update(self.__dict__)
         result.fillPaint = _copyPaint(self.fillPaint)
         result.strokePaint = _copyPaint(self.strokePaint)
@@ -237,11 +240,17 @@ class GraphicsState:
     def setFont(self, fontNameOrPath):
         if os.path.exists(fontNameOrPath):
             path = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
-            tf = skia.Typeface.MakeFromFile(path)
+            tf = self._getFontFromFile(path)
         else:
             tf = skia.Typeface(fontNameOrPath)
         self.font.setTypeface(tf)
         self._ttFont = None  # purge cached TTFont
+
+    def _getFontFromFile(self, fontPath):
+        if fontPath not in self._cachedTypefaces:
+            tf = skia.Typeface.MakeFromFile(fontPath)
+            self._cachedTypefaces[fontPath] = tf
+        return self._cachedTypefaces[fontPath]
 
     def setFontVariations(self, location, resetVariations):
         from .font import intToTag
