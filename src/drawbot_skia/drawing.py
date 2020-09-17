@@ -98,8 +98,8 @@ class Drawing:
     def fontSize(self, size):
         self._gstate.font.setSize(size)
 
-    def fontVariations(self, resetVariations=False, **axes):
-        ...
+    def fontVariations(self, *, resetVariations=False, **location):
+        self._gstate.setFontVariations(location, resetVariations)
 
     def text(self, txt, position, align=None):
         if not txt:
@@ -242,6 +242,33 @@ class GraphicsState:
             tf = skia.Typeface(fontNameOrPath)
         self.font.setTypeface(tf)
         self._ttFont = None  # purge cached TTFont
+
+    def setFontVariations(self, location, resetVariations):
+        from .font import intToTag
+        fvar = self.ttFont.get("fvar")
+        if fvar is None:
+            # TODO: warn?
+            return
+
+        if resetVariations:
+            currentLocation = {a.axisTag: location.get(a.axisTag, a.defaultValue) for a in fvar.axes}
+        else:
+            pos = self.font.getTypeface().getVariationDesignPosition()
+            currentLocation = {intToTag(p.axis): p.value for p in pos if p.axis != 0}
+
+        location = {tag: location.get(tag, value) for tag, value in currentLocation.items()}
+        self._setFontDesignLocation(location)
+
+    def _setFontDesignLocation(self, location):
+        from .font import tagToInt
+        makeCoord = skia.FontArguments.VariationPosition.Coordinate
+        rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location.items()]
+        coords = skia.FontArguments.VariationPosition.Coordinates(rawCoords)
+        pos = skia.FontArguments.VariationPosition(coords)
+        fontArgs = skia.FontArguments()
+        fontArgs.setVariationDesignPosition(pos)
+        tf = self.font.getTypeface().makeClone(fontArgs)
+        self.font.setTypeface(tf)
 
     @property
     def ttFont(self):

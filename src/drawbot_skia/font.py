@@ -32,3 +32,9 @@ class SkiaSFNTReader:
 
 def intToTag(intTag):
     return struct.pack(">i", intTag).decode()
+
+
+def tagToInt(tag):
+    if isinstance(tag, str):
+        tag = bytes(tag, "ascii")
+    return struct.unpack(">i", tag)[0]
