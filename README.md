@@ -25,7 +25,7 @@ Work in progress!
 
 This project is purely a Python package that implements (part of) the DrawBot drawing API. Using Skia ([skia-python](https://github.com/kyamagu/skia-python)) ensures this can be done in a cross-platform way.
 
-A DrawBot-like cross-platform application shell can be developed, but that should be a separate project. Looking forward to the `drawbot-qt`, `drawbot-wx`, `drawbot-win` or any `drawbot-*` projects of the future!
+A DrawBot-like cross-platform application shell can be developed, but that would be a separate project. Looking forward to the `drawbot-qt`, `drawbot-wx`, `drawbot-win` or any `drawbot-*` projects of the future!
 
 ## Compatibility caveats
 
