@@ -62,6 +62,6 @@ To adapt a DrawBot script to `drawbot-skia` you can do a couple of things:
 
 Or you can use the `drawbot` runner app from the command line:
 
-- `drawbot mydrawbitscript.py output.png`
+- `drawbot mydrawbotscript.py output.png`
 
 With the runner app you won't need any Drawbot import in the script, nor do you need a `saveImage(...)` to export results. It pretty much behaves as if you hit "Run" in the classic Drawbot application.
