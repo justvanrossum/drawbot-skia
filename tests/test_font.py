@@ -15,6 +15,7 @@ def test_font():
     assert ttf["name"].getName(6, 3, 1).toUnicode() == "MutatorMathTest-LightCondensed"
     fvar = ttf["fvar"]
     assert fvar.axes[0].axisTag == "wdth"
+    assert ["name", "fvar"] == list(ttf.tables.keys())
 
 
 def test_font_gs():
