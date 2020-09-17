@@ -42,3 +42,26 @@ The `ImageObject` relies heavily on builtin macOS functionality, and it is huge.
 So far no existing DrawBot code has been reused. Perhaps that small snippets will be copied, perhaps a part of the test suite will be adapted. Other than that I want this to be an independent project, and would like to use Skia’s powers to maximum effect, keeping efficiency and performance in mind. DrawBot's ties to macOS are so strong that it makes platform-neutral code reuse virtually impossible.
 
 Potentially, some higher level code could be shared (for example, drawing code that uses lower level primitives), but that will have to been seen later.
+
+## Install
+
+For now, just install from the repo. The quickest way is:
+
+`pip install git+https://github.com/justvanrossum/drawbot-skia.git`
+
+If you want to see the source code and possibly contribute: clone the repo, and do `pip install -e .` in the root directory.
+
+Once things settle a bit I want to upload to PyPI.
+
+## Usage
+
+To adapt a DrawBot script to `drawbot-skia` you can do a couple of things:
+
+- Add `from drawbot_skia.drawbot imort *` at the top of your script
+- Or `import drawbot_skia.drawbot as db` if that's your preferred style
+
+Or you can use the `drawbot` runner app from the command line:
+
+- `drawbot mydrawbitscript.py output.png`
+
+With the runner app you won't need any Drawbot import in the script, nor do you need a `saveImage(...)` to export results. It pretty much behaves as if you hit "Run" in the classic Drawbot application.
