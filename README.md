@@ -60,8 +60,8 @@ To adapt a DrawBot script to `drawbot-skia` you can do a couple of things:
 - Add `from drawbot_skia.drawbot imort *` at the top of your script
 - Or `import drawbot_skia.drawbot as db` if that's your preferred style
 
-Or you can use the `drawbot` runner app from the command line:
+Or you can use the `drawbot` runner tool from the command line:
 
 - `drawbot mydrawbotscript.py output.png`
 
-With the runner app you won't need any Drawbot import in the script, nor do you need a `saveImage(...)` to export results. It pretty much behaves as if you hit "Run" in the classic Drawbot application.
+With the `drawbot` runner tool, you won't need any Drawbot import in the script, nor do you need a `saveImage(...)` to export results. It pretty much behaves as if you hit "Run" in the classic Drawbot application.
