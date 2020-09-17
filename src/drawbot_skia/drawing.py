@@ -241,6 +241,7 @@ class GraphicsState:
         else:
             tf = skia.Typeface(fontNameOrPath)
         self.font.setTypeface(tf)
+        self._ttFont = None  # purge cached TTFont
 
     @property
     def ttFont(self):
