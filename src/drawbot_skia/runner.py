@@ -25,6 +25,8 @@ def runScript(sourcePath, namespace=None):
 def runScriptSource(source, sourcePath, namespace=None):
     if namespace is None:
         namespace = {}
+    if os.path.exists(sourcePath):
+        sourcePath = os.path.normpath(os.path.abspath(sourcePath))
     namespace.update({"__name__": "__main__", "__file__": sourcePath})
 
     if sourcePath:
