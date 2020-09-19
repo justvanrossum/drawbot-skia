@@ -305,7 +305,7 @@ class TextStyle:
         if resetFeatures:
             self.currentFeatures = {}
         self.currentFeatures.update(features)
-        return self.currentFeatures
+        return dict(self.currentFeatures)
 
     def setFontVariations(self, location, resetVariations):
         from .font import intToTag
@@ -328,7 +328,7 @@ class TextStyle:
         location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
         self._setFontVariationDesignPosition(location)
         self.currentVariations = dict(location)
-        return self.currentVariations
+        return dict(self.currentVariations)
 
     def _setFontVariationDesignPosition(self, location):
         from .font import tagToInt
