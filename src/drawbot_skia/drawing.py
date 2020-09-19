@@ -105,10 +105,7 @@ class Drawing:
     def fontVariations(self, *, resetVariations=False, **location):
         return self._gstate.setFontVariations(location, resetVariations)
 
-    def textSize(self, txt):
-        # TODO: with some smartness we can shape only once, for a
-        # textSize()/text() call combination with the same text and
-        # the same text parameters.
+    def _textShapeHelper(self, txt):
         font = self._gstate.font
         glyphsInfo = self._gstate.shape(
             txt,
@@ -116,24 +113,25 @@ class Drawing:
             variations=self._gstate.currentVariations,
         )
         fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
+        return glyphsInfo, fontScale
+
+    def textSize(self, txt):
+        # TODO: with some smartness we can shape only once, for a
+        # textSize()/text() call combination with the same text and
+        # the same text parameters.
+        glyphsInfo, fontScale = self._textShapeHelper(txt)
         textWidth = fontScale * glyphsInfo.endPos[0]
-        return (textWidth, font.getSpacing())
+        return (textWidth, self._gstate.font.getSpacing())
 
     def text(self, txt, position, align=None):
         if not txt:
             # Hard Skia crash otherwise
             return
 
-        font = self._gstate.font
-        glyphsInfo = self._gstate.shape(
-            txt,
-            features=self._gstate.currentFeatures,
-            variations=self._gstate.currentVariations,
-        )
-        fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
+        glyphsInfo, fontScale = self._textShapeHelper(txt)
         positions = scalePositions(glyphsInfo.positions, fontScale)
         builder = skia.TextBlobBuilder()
-        builder.allocRunPos(font, glyphsInfo.gids, positions)
+        builder.allocRunPos(self._gstate.font, glyphsInfo.gids, positions)
         blob = builder.make()
 
         x, y = position
