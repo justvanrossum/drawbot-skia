@@ -94,35 +94,35 @@ class Drawing:
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
             self.fontSize(fontSize)
-        self._gstate.setFont(fontNameOrPath)
+        self._gstate.textStyle.setFont(fontNameOrPath)
 
     def fontSize(self, size):
-        self._gstate.font.setSize(size)
+        self._gstate.textStyle.font.setSize(size)
 
     def openTypeFeatures(self, *, resetFeatures=False, **features):
-        return self._gstate.setOpenTypeFeatures(features, resetFeatures)
+        return self._gstate.textStyle.setOpenTypeFeatures(features, resetFeatures)
 
     def fontVariations(self, *, resetVariations=False, **location):
-        return self._gstate.setFontVariations(location, resetVariations)
+        return self._gstate.textStyle.setFontVariations(location, resetVariations)
 
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a
         # textSize()/text() call combination with the same text and
         # the same text parameters.
-        glyphsInfo = self._gstate.shape(txt)
-        textWidth = self._gstate.fontScale * glyphsInfo.endPos[0]
-        return (textWidth, self._gstate.font.getSpacing())
+        glyphsInfo = self._gstate.textStyle.shape(txt)
+        textWidth = self._gstate.textStyle.fontScale * glyphsInfo.endPos[0]
+        return (textWidth, self._gstate.textStyle.font.getSpacing())
 
     def text(self, txt, position, align=None):
         if not txt:
             # Hard Skia crash otherwise
             return
 
-        glyphsInfo = self._gstate.shape(txt)
-        fontScale = self._gstate.fontScale
+        glyphsInfo = self._gstate.textStyle.shape(txt)
+        fontScale = self._gstate.textStyle.fontScale
         positions = scalePositions(glyphsInfo.positions, fontScale)
         builder = skia.TextBlobBuilder()
-        builder.allocRunPos(self._gstate.font, glyphsInfo.gids, positions)
+        builder.allocRunPos(self._gstate.textStyle.font, glyphsInfo.gids, positions)
         blob = builder.make()
 
         x, y = position
@@ -210,9 +210,17 @@ _strokeJoinMapping = dict(
 
 class GraphicsState:
 
-    def __init__(self, cachedTypefaces=None):
+    def __init__(self, cachedTypefaces=None, _doInitialize=True):
+        if cachedTypefaces is None:
+            cachedTypefaces = {}
         self.doFill = True
         self.doStroke = False
+        self._cachedTypefaces = cachedTypefaces
+
+        if not _doInitialize:
+            # self.copy() will initialize further
+            return
+
         self.fillPaint = skia.Paint(
             Color=0xFF000000,
             AntiAlias=True,
@@ -224,28 +232,15 @@ class GraphicsState:
             Style=skia.Paint.kStroke_Style,
         )
         self.strokePaint.setStrokeMiter(5)  # default better matching DrawBot
-        self.font = skia.Font(skia.Typeface(None), 10)
-        self.font.setForceAutoHinting(False)
-        self.font.setHinting(skia.FontHinting.kNone)
-        self.font.setSubpixel(True)
-        self.font.setEdging(skia.Font.Edging.kAntiAlias)
-        self._ttFont = None
-        self._shape = None
-        if cachedTypefaces is None:
-            cachedTypefaces = {}
-        self._cachedTypefaces = cachedTypefaces
-        self.currentFeatures = {}
-        self.currentVariations = {}
+        self.textStyle = TextStyle(cachedTypefaces)
 
     def copy(self):
-        result = GraphicsState(self._cachedTypefaces)
+        result = GraphicsState(self._cachedTypefaces, _doInitialize=False)
         for name in ["doFill", "doStroke"]:
             setattr(result, name, getattr(self, name))
         result.fillPaint = _copyPaint(self.fillPaint)
         result.strokePaint = _copyPaint(self.strokePaint)
-        result.font = _copyFont(self.font)
-        result.currentFeatures = dict(self.currentFeatures)
-        result.currentVariations = dict(self.currentVariations)
+        result.textStyle = self.textStyle.copy()
         return result
 
     def setFillColor(self, color):
@@ -261,6 +256,32 @@ class GraphicsState:
         else:
             self.doStroke = True
             self.strokePaint.setARGB(*color)
+
+
+class TextStyle:
+
+    def __init__(self, cachedTypefaces, _doInitialize=True):
+        self._cachedTypefaces = cachedTypefaces
+        self._ttFont = None
+        self._shape = None
+
+        if not _doInitialize:
+            # self.copy() will initialize further
+            return
+
+        self.font = skia.Font(skia.Typeface(None), 10)
+        self.font.setForceAutoHinting(False)
+        self.font.setHinting(skia.FontHinting.kNone)
+        self.font.setSubpixel(True)
+        self.font.setEdging(skia.Font.Edging.kAntiAlias)
+        self.currentFeatures = {}
+        self.currentVariations = {}
+
+    def copy(self):
+        result = TextStyle(self._cachedTypefaces, _doInitialize=False)
+        result.font = _copyFont(self.font)
+        result.currentFeatures = dict(self.currentFeatures)
+        result.currentVariations = dict(self.currentVariations)
 
     def setFont(self, fontNameOrPath):
         if os.path.exists(fontNameOrPath):
