@@ -101,6 +101,9 @@ class Drawing:
     def fontVariations(self, *, resetVariations=False, **location):
         return self._gstate.setFontVariations(location, resetVariations)
 
+    def textSize(self, txt):
+        ...
+
     def text(self, txt, position, align=None):
         if not txt:
             # Hard Skia crash otherwise
