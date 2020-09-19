@@ -4,6 +4,8 @@ import os
 import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
+from .text import getShapeFuncForSkiaTypeface
+from .segmenting import textSegments, reorderedSegments
 
 
 class Drawing:
@@ -93,27 +95,45 @@ class Drawing:
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
             self.fontSize(fontSize)
-        self._gstate.setFont(fontNameOrPath)
+        self._gstate.textStyle.setFont(fontNameOrPath)
 
     def fontSize(self, size):
-        self._gstate.font.setSize(size)
+        self._gstate.textStyle.font.setSize(size)
+
+    def openTypeFeatures(self, *, resetFeatures=False, **features):
+        return self._gstate.textStyle.setOpenTypeFeatures(features, resetFeatures)
 
     def fontVariations(self, *, resetVariations=False, **location):
-        return self._gstate.setFontVariations(location, resetVariations)
+        return self._gstate.textStyle.setFontVariations(location, resetVariations)
+
+    def textSize(self, txt):
+        # TODO: with some smartness we can shape only once, for a
+        # textSize()/text() call combination with the same text and
+        # the same text parameters.
+        glyphsInfo = self._gstate.textStyle.shape(txt)
+        textWidth = glyphsInfo.endPos[0]
+        return (textWidth, self._gstate.textStyle.font.getSpacing())
 
     def text(self, txt, position, align=None):
         if not txt:
             # Hard Skia crash otherwise
             return
-        # XXX replace with harfbuzz-based layout
+
+        glyphsInfo = self._gstate.textStyle.shape(txt)
+        builder = skia.TextBlobBuilder()
+        builder.allocRunPos(self._gstate.textStyle.font, glyphsInfo.gids, glyphsInfo.positions)
+        blob = builder.make()
+
         x, y = position
-        blob = skia.TextBlob(txt, self._gstate.font)
-        self._canvas.save()
-        textWidth = self._gstate.font.measureText(txt)
+        textWidth = glyphsInfo.endPos[0]
+        if align is None:
+            align = "left" if not glyphsInfo.baseLevel else "right"
         if align == "right":
             x -= textWidth
         elif align == "center":
             x -= textWidth / 2
+
+        self._canvas.save()
         try:
             self._canvas.translate(x, y)
             if self._flipCanvas:
@@ -191,9 +211,17 @@ _strokeJoinMapping = dict(
 
 class GraphicsState:
 
-    def __init__(self, cachedTypefaces=None):
+    def __init__(self, cachedTypefaces=None, _doInitialize=True):
+        if cachedTypefaces is None:
+            cachedTypefaces = {}
         self.doFill = True
         self.doStroke = False
+        self._cachedTypefaces = cachedTypefaces
+
+        if not _doInitialize:
+            # self.copy() will initialize further
+            return
+
         self.fillPaint = skia.Paint(
             Color=0xFF000000,
             AntiAlias=True,
@@ -205,22 +233,15 @@ class GraphicsState:
             Style=skia.Paint.kStroke_Style,
         )
         self.strokePaint.setStrokeMiter(5)  # default better matching DrawBot
-        self.font = skia.Font(skia.Typeface(None), 10)
-        self.font.setForceAutoHinting(False)
-        self.font.setHinting(skia.FontHinting.kNone)
-        self.font.setSubpixel(True)
-        self.font.setEdging(skia.Font.Edging.kAntiAlias)
-        self._ttFont = None
-        if cachedTypefaces is None:
-            cachedTypefaces = {}
-        self._cachedTypefaces = cachedTypefaces
+        self.textStyle = TextStyle(cachedTypefaces)
 
     def copy(self):
-        result = GraphicsState(self._cachedTypefaces)
-        result.__dict__.update(self.__dict__)
+        result = GraphicsState(self._cachedTypefaces, _doInitialize=False)
+        for name in ["doFill", "doStroke"]:
+            setattr(result, name, getattr(self, name))
         result.fillPaint = _copyPaint(self.fillPaint)
         result.strokePaint = _copyPaint(self.strokePaint)
-        result.font = _copyFont(self.font)
+        result.textStyle = self.textStyle.copy()
         return result
 
     def setFillColor(self, color):
@@ -237,6 +258,32 @@ class GraphicsState:
             self.doStroke = True
             self.strokePaint.setARGB(*color)
 
+
+class TextStyle:
+
+    def __init__(self, cachedTypefaces, _doInitialize=True):
+        self._cachedTypefaces = cachedTypefaces
+        self._ttFont = None
+        self._shape = None
+
+        if not _doInitialize:
+            # self.copy() will initialize further
+            return
+
+        self.font = skia.Font(skia.Typeface(None), 10)
+        self.font.setForceAutoHinting(False)
+        self.font.setHinting(skia.FontHinting.kNone)
+        self.font.setSubpixel(True)
+        self.font.setEdging(skia.Font.Edging.kAntiAlias)
+        self.currentFeatures = {}
+        self.currentVariations = {}
+
+    def copy(self):
+        result = TextStyle(self._cachedTypefaces, _doInitialize=False)
+        result.font = _copyFont(self.font)
+        result.currentFeatures = dict(self.currentFeatures)
+        result.currentVariations = dict(self.currentVariations)
+
     def setFont(self, fontNameOrPath):
         if os.path.exists(fontNameOrPath):
             path = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
@@ -244,13 +291,21 @@ class GraphicsState:
         else:
             tf = skia.Typeface(fontNameOrPath)
         self.font.setTypeface(tf)
-        self._ttFont = None  # purge cached TTFont
+        # purge cached items:
+        self._ttFont = None
+        self._shape = None
 
     def _getFontFromFile(self, fontPath):
         if fontPath not in self._cachedTypefaces:
             tf = skia.Typeface.MakeFromFile(fontPath)
             self._cachedTypefaces[fontPath] = tf
         return self._cachedTypefaces[fontPath]
+
+    def setOpenTypeFeatures(self, features, resetFeatures):
+        if resetFeatures:
+            self.currentFeatures = {}
+        self.currentFeatures.update(features)
+        return dict(self.currentFeatures)
 
     def setFontVariations(self, location, resetVariations):
         from .font import intToTag
@@ -266,13 +321,14 @@ class GraphicsState:
             # XXX: With MutatorSans.ttf, this is "overcomplete" on macOS
             # (hence the p.axis != 0 condition), and incomplete on Linux:
             # the wght axis is not reported there.
-            # https://github.com/kyamagu/skia-python/issues/112
+            # https://github.com/kyamagu/skia-python/issues/113
             currentLocation = {intToTag(p.axis): p.value for p in pos if p.axis != 0}
 
         tags = [a.axisTag for a in fvar.axes]
         location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
         self._setFontVariationDesignPosition(location)
-        return dict(location)
+        self.currentVariations = dict(location)
+        return dict(self.currentVariations)
 
     def _setFontVariationDesignPosition(self, location):
         from .font import tagToInt
@@ -291,6 +347,35 @@ class GraphicsState:
             from .font import makeTTFontFromSkiaTypeface
             self._ttFont = makeTTFontFromSkiaTypeface(self.font.getTypeface())
         return self._ttFont
+
+    def shape(self, txt):
+        if self._shape is None:
+            self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
+
+        segments, baseLevel = textSegments(txt)
+        segments = reorderedSegments(segments, baseLevel)
+        startPos = (0, 0)
+        glyphsInfo = None
+        for runChars, script, bidiLevel, index in segments:
+            runInfo = self._shape(
+                runChars,
+                fontSize=self.font.getSize(),
+                startPos=startPos,
+                startCluster=index,
+                flippedCanvas=True,
+                features=self.currentFeatures,
+                variations=self.currentVariations,
+            )
+            if glyphsInfo is None:
+                glyphsInfo = runInfo
+            else:
+                glyphsInfo.gids += runInfo.gids
+                glyphsInfo.clusters += runInfo.clusters
+                glyphsInfo.positions += runInfo.positions
+                glyphsInfo.endPos = runInfo.endPos
+            startPos = runInfo.endPos
+        glyphsInfo.baseLevel = baseLevel
+        return glyphsInfo
 
 
 _paintProperties = [

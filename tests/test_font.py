@@ -20,5 +20,5 @@ def test_font():
 
 def test_font_gs():
     gs = GraphicsState()
-    gs.setFont(fontPath)
-    assert "fvar" in gs.ttFont
+    gs.textStyle.setFont(fontPath)
+    assert "fvar" in gs.textStyle.ttFont
