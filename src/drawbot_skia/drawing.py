@@ -105,19 +105,11 @@ class Drawing:
     def fontVariations(self, *, resetVariations=False, **location):
         return self._gstate.setFontVariations(location, resetVariations)
 
-    def _textShapeHelper(self, txt):
-        glyphsInfo = self._gstate.shape(
-            txt,
-            features=self._gstate.currentFeatures,
-            variations=self._gstate.currentVariations,
-        )
-        return glyphsInfo
-
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a
         # textSize()/text() call combination with the same text and
         # the same text parameters.
-        glyphsInfo = self._textShapeHelper(txt)
+        glyphsInfo = self._gstate.shape(txt)
         textWidth = self._gstate.fontScale * glyphsInfo.endPos[0]
         return (textWidth, self._gstate.font.getSpacing())
 
@@ -126,7 +118,7 @@ class Drawing:
             # Hard Skia crash otherwise
             return
 
-        glyphsInfo = self._textShapeHelper(txt)
+        glyphsInfo = self._gstate.shape(txt)
         fontScale = self._gstate.fontScale
         positions = scalePositions(glyphsInfo.positions, fontScale)
         builder = skia.TextBlobBuilder()
@@ -335,14 +327,18 @@ class GraphicsState:
         return self._ttFont
 
     @property
-    def shape(self):
-        if self._shape is None:
-            self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
-        return self._shape
-
-    @property
     def fontScale(self):
         return self.font.getSize() / self.font.getTypeface().getUnitsPerEm()
+
+    def shape(self, txt):
+        if self._shape is None:
+            self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
+        glyphsInfo = self._shape(
+            txt,
+            features=self.currentFeatures,
+            variations=self.currentVariations,
+        )
+        return glyphsInfo
 
 
 _paintProperties = [
