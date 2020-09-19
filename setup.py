@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="drawbot-skia",
-    python_requires=">=3.6",
+    use_scm_version={"write_to": "src/drawbot_skia/_version.py"},
     entry_points={
         'console_scripts': ['drawbot=drawbot_skia.__main__:main'],
     },
@@ -16,5 +16,9 @@ setup(
         "uharfbuzz",
         "python-bidi",
         "unicodedata2",
+    ],
+    setup_requires=["setuptools_scm"],
+    python_requires=">=3.6",
+    classifiers=[
     ],
 )

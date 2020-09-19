@@ -132,3 +132,4 @@ dmypy.json
 .DS_Store
 Vault/
 /tests/apitests_output/
+src/drawbot_skia/_version.py
