@@ -8,18 +8,27 @@ Work in progress!
 
 ## Roadmap
 
-1. Get basic shapes working
-1. Get basic colors working
-1. Get Path object working
-1. Get transformations working
-1. Get `text()` working
-1. Get `FormattedString` working
-1. Get pixel image export working (png, jpeg, tiff, ...)
-1. Get PDF export working
+1. Get basic shapes working ✅
+1. Get basic colors working ✅
+1. Get minimal `BezierPath` object working ✅
+1. Get transformations working ✅
+1. Get single-line, single style `text()` working ✅
+1. Get variable fonts working ✅ (Caveat: #1)
+1. Get HarfBuzz shaping working ✅
+1. Get OpenType features working ✅
+1. Get PNG, JPEG image export working ✅
+1. Get PDF export working ✅
 1. Get SVG export working
-1. Get mp4 export working
+1. Get MP4 export working
+1. Get Animated GIF export working
+1. Get multi-line, single style `text()` working
+1. Get `FormattedString` working
+1. Get multi-style `text()` working
+1. Get remaining `BezierPath` methods working
+1. Get many-things-I-forgot-to-mention working
 1. ...
-1. Fill gaps in DrawBot API
+1. `textBox()` 🔴 _(Major Obstacle)_
+1. Fill further gaps in DrawBot API
 
 ## Vision
 
