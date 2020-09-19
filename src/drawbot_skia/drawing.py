@@ -99,6 +99,10 @@ class Drawing:
     def fontSize(self, size):
         self._gstate.font.setSize(size)
 
+
+    def openTypeFeatures(self, *, resetFeatures=False, **features):
+        return self._gstate.setOpenTypeFeatures(features, resetFeatures)
+
     def fontVariations(self, *, resetVariations=False, **location):
         return self._gstate.setFontVariations(location, resetVariations)
 
@@ -122,7 +126,11 @@ class Drawing:
             return
 
         font = self._gstate.font
-        gids, clusters, positions, endPos = self._gstate.shape(txt, variations=self._gstate.currentVariations)
+        gids, clusters, positions, endPos = self._gstate.shape(
+            txt,
+            features=self._gstate.currentFeatures,
+            variations=self._gstate.currentVariations,
+        )
         fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
         positions = scalePositions(positions, fontScale)
         builder = skia.TextBlobBuilder()
@@ -282,6 +290,12 @@ class GraphicsState:
             tf = skia.Typeface.MakeFromFile(fontPath)
             self._cachedTypefaces[fontPath] = tf
         return self._cachedTypefaces[fontPath]
+
+    def setOpenTypeFeatures(self, features, resetFeatures):
+        if resetFeatures:
+            self.currentFeatures = {}
+        self.currentFeatures.update(features)
+        return self.currentFeatures
 
     def setFontVariations(self, location, resetVariations):
         from .font import intToTag
