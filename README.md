@@ -13,7 +13,7 @@ Work in progress!
 1. Get minimal `BezierPath` object working ✅
 1. Get transformations working ✅
 1. Get single-line, single style `text()` working ✅
-1. Get variable fonts working ✅ (Caveat: #1)
+1. Get variable fonts working ✅ (Caveat: [#1](https://github.com/justvanrossum/drawbot-skia/issues/1))
 1. Get HarfBuzz shaping working ✅
 1. Get OpenType features working ✅
 1. Get PNG, JPEG image export working ✅
