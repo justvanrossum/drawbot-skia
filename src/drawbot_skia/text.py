@@ -14,7 +14,9 @@ class GlyphInfo(NamedTuple):
 
 
 def getShapeFuncForSkiaTypeface(skTypeface):
-    return getShapeFuncForHBFace(makeHBFaceFromSkiaTypeface(skTypeface))
+    face = makeHBFaceFromSkiaTypeface(skTypeface)
+    font = hb.Font(face)
+    return functools.partial(_shape, face, font)
 
 
 def makeHBFaceFromSkiaTypeface(skTypeface):
@@ -35,11 +37,6 @@ def makeHBFaceFromSkiaTypeface(skTypeface):
         return data
 
     return hb.Face.create_for_tables(getTable, None)
-
-
-def getShapeFuncForHBFace(face):
-    font = hb.Font(face)
-    return functools.partial(_shape, face, font)
 
 
 def _shape(face, font,
