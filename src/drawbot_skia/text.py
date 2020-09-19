@@ -73,6 +73,12 @@ def _shape(face, font,
     return gids, clusters, positions, endPos
 
 
+def scalePositions(positions, sx, sy=None):
+    if sy is None:
+        sy = sx
+    return [(x * sx, y * sy) for x, y in positions]
+
+
 def getFeatures(face, otTableTag):
     features = set()
     for scriptIndex, script in enumerate(hb.ot_layout_table_get_script_tags(face, otTableTag)):

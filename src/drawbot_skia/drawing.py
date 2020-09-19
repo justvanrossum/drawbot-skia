@@ -4,6 +4,7 @@ import os
 import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
+from .text import getShapeFuncForSkiaTypeface, scalePositions
 
 
 class Drawing:
@@ -108,15 +109,25 @@ class Drawing:
         if not txt:
             # Hard Skia crash otherwise
             return
-        # XXX replace with harfbuzz-based layout
+
+        font = self._gstate.font
+        tf = font.getTypeface()  # gstate should cache
+        shape = getShapeFuncForSkiaTypeface(tf)
+        gids, clusters, positions, endPos = shape(txt, variations=self._gstate.currentVariations)
+        fontScale = font.getSize() / tf.getUnitsPerEm()
+        positions = scalePositions(positions, fontScale)
+        builder = skia.TextBlobBuilder()
+        builder.allocRunPos(font, gids, positions)
+        blob = builder.make()
+
         x, y = position
-        blob = skia.TextBlob(txt, self._gstate.font)
-        self._canvas.save()
-        textWidth = self._gstate.font.measureText(txt)
+        textWidth = fontScale * endPos[0]
         if align == "right":
             x -= textWidth
         elif align == "center":
             x -= textWidth / 2
+
+        self._canvas.save()
         try:
             self._canvas.translate(x, y)
             if self._flipCanvas:
@@ -217,6 +228,7 @@ class GraphicsState:
         if cachedTypefaces is None:
             cachedTypefaces = {}
         self._cachedTypefaces = cachedTypefaces
+        self.currentVariations = {}
 
     def copy(self):
         result = GraphicsState(self._cachedTypefaces)
@@ -275,7 +287,8 @@ class GraphicsState:
         tags = [a.axisTag for a in fvar.axes]
         location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
         self._setFontVariationDesignPosition(location)
-        return dict(location)
+        self.currentVariations = dict(location)
+        return self.currentVariations
 
     def _setFontVariationDesignPosition(self, location):
         from .font import tagToInt
