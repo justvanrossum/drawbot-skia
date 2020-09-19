@@ -362,18 +362,18 @@ class TextStyle:
                 fontSize=self.font.getSize(),
                 startPos=startPos,
                 startCluster=index,
+                flippedCanvas=True,
                 features=self.currentFeatures,
                 variations=self.currentVariations,
             )
-            endPos = startPos[0] + runInfo.endPos[0], startPos[1] + runInfo.endPos[1]
             if glyphsInfo is None:
                 glyphsInfo = runInfo
             else:
                 glyphsInfo.gids += runInfo.gids
                 glyphsInfo.clusters += runInfo.clusters
                 glyphsInfo.positions += runInfo.positions
-                glyphsInfo.endPos = endPos
-            startPos = endPos
+                glyphsInfo.endPos = runInfo.endPos
+            startPos = runInfo.endPos
         glyphsInfo.baseLevel = baseLevel
         return glyphsInfo
 

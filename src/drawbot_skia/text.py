@@ -31,7 +31,9 @@ def makeHBFaceFromSkiaTypeface(skTypeface):
 
 
 def _shape(face, font,
-           text, fontSize=None, startPos=(0, 0), startCluster=0,
+           text, fontSize=None,
+           startPos=(0, 0), startCluster=0,
+           flippedCanvas=False,
            *,
            features=None,
            variations=None,
@@ -44,9 +46,11 @@ def _shape(face, font,
         variations = {}
 
     if fontSize is None:
-        fontScale = 1
+        fontScaleX = fontScaleY = 1
     else:
-        fontScale = fontSize / face.upem
+        fontScaleX = fontScaleY = fontSize / face.upem
+    if flippedCanvas:
+        fontScaleY = -fontScaleY
 
     font.scale = (face.upem, face.upem)
     font.set_variations(variations)
@@ -75,12 +79,12 @@ def _shape(face, font,
     for pos in buf.glyph_positions:
         dx, dy, ax, ay = pos.position
         positions.append((
-            startPosX + (x + dx) * fontScale,
-            startPosY + (y + dy) * fontScale,
+            startPosX + (x + dx) * fontScaleX,
+            startPosY + (y + dy) * fontScaleY,
         ))
         x += ax
         y += ay
-    endPos = x * fontScale, y * fontScale
+    endPos = startPosX + x * fontScaleX, startPosY + y * fontScaleY
     return SimpleNamespace(
         gids=gids,
         clusters=clusters,
