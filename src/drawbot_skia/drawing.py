@@ -4,7 +4,7 @@ import os
 import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
-from .text import getShapeFuncForSkiaTypeface, scalePositions
+from .text import getShapeFuncForSkiaTypeface
 
 
 class Drawing:
@@ -110,7 +110,7 @@ class Drawing:
         # textSize()/text() call combination with the same text and
         # the same text parameters.
         glyphsInfo = self._gstate.textStyle.shape(txt)
-        textWidth = self._gstate.textStyle.fontScale * glyphsInfo.endPos[0]
+        textWidth = glyphsInfo.endPos[0]
         return (textWidth, self._gstate.textStyle.font.getSpacing())
 
     def text(self, txt, position, align=None):
@@ -119,14 +119,12 @@ class Drawing:
             return
 
         glyphsInfo = self._gstate.textStyle.shape(txt)
-        fontScale = self._gstate.textStyle.fontScale
-        positions = scalePositions(glyphsInfo.positions, fontScale)
         builder = skia.TextBlobBuilder()
-        builder.allocRunPos(self._gstate.textStyle.font, glyphsInfo.gids, positions)
+        builder.allocRunPos(self._gstate.textStyle.font, glyphsInfo.gids, glyphsInfo.positions)
         blob = builder.make()
 
         x, y = position
-        textWidth = fontScale * glyphsInfo.endPos[0]
+        textWidth = glyphsInfo.endPos[0]
         if align == "right":
             x -= textWidth
         elif align == "center":
@@ -347,15 +345,12 @@ class TextStyle:
             self._ttFont = makeTTFontFromSkiaTypeface(self.font.getTypeface())
         return self._ttFont
 
-    @property
-    def fontScale(self):
-        return self.font.getSize() / self.font.getTypeface().getUnitsPerEm()
-
     def shape(self, txt):
         if self._shape is None:
             self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
         glyphsInfo = self._shape(
             txt,
+            self.font.getSize(),
             features=self.currentFeatures,
             variations=self.currentVariations,
         )
