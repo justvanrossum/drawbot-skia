@@ -5,6 +5,7 @@ import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
 from .text import getShapeFuncForSkiaTypeface
+from .segmenting import textSegments, reorderedSegments
 
 
 class Drawing:
@@ -348,12 +349,30 @@ class TextStyle:
     def shape(self, txt):
         if self._shape is None:
             self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
-        glyphsInfo = self._shape(
-            txt,
-            self.font.getSize(),
-            features=self.currentFeatures,
-            variations=self.currentVariations,
-        )
+
+        segments, baseLevel = textSegments(txt)
+        segments = reorderedSegments(segments, baseLevel)
+        startPos = (0, 0)
+        glyphsInfo = None
+        for runChars, script, bidiLevel, index in segments:
+            runInfo = self._shape(
+                runChars,
+                fontSize=self.font.getSize(),
+                startPos=startPos,
+                startCluster=index,
+                features=self.currentFeatures,
+                variations=self.currentVariations,
+            )
+            endPos = startPos[0] + runInfo.endPos[0], startPos[1] + runInfo.endPos[1]
+            if glyphsInfo is None:
+                glyphsInfo = runInfo
+            else:
+                glyphsInfo.gids += runInfo.gids
+                glyphsInfo.clusters += runInfo.clusters
+                glyphsInfo.positions += runInfo.positions
+                glyphsInfo.endPos = endPos
+            startPos = endPos
+        glyphsInfo.baseLevel = baseLevel
         return glyphsInfo
 
 
