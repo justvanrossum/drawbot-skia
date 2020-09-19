@@ -33,7 +33,7 @@ shapeTestCases = [
 def test_shape(fontPath, text, features, variations, direction, language, script, expected):
     tf = skia.Typeface.MakeFromFile(os.fspath(fontPath))
     shapeFunc = getShapeFuncForSkiaTypeface(tf)
-    gids, clusters, positions, endPos = shapeFunc(
+    glyphInfo = shapeFunc(
         text,
         features=features,
         variations=variations,
@@ -42,7 +42,7 @@ def test_shape(fontPath, text, features, variations, direction, language, script
         script=script,
     )
     expectedGids, expectedClusters, expectedPositions, expectedEndPos = expected
-    assert expectedGids == gids
-    assert expectedClusters == clusters
-    assert expectedPositions == positions
-    assert expectedEndPos == endPos
+    assert expectedGids == glyphInfo.gids
+    assert expectedClusters == glyphInfo.clusters
+    assert expectedPositions == glyphInfo.positions
+    assert expectedEndPos == glyphInfo.endPos

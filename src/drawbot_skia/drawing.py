@@ -110,13 +110,13 @@ class Drawing:
         # textSize()/text() call combination with the same text and
         # the same text parameters.
         font = self._gstate.font
-        gids, clusters, positions, endPos = self._gstate.shape(
+        glyphsInfo = self._gstate.shape(
             txt,
             features=self._gstate.currentFeatures,
             variations=self._gstate.currentVariations,
         )
         fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
-        textWidth = fontScale * endPos[0]
+        textWidth = fontScale * glyphsInfo.endPos[0]
         return (textWidth, font.getSpacing())
 
     def text(self, txt, position, align=None):
@@ -125,19 +125,19 @@ class Drawing:
             return
 
         font = self._gstate.font
-        gids, clusters, positions, endPos = self._gstate.shape(
+        glyphsInfo = self._gstate.shape(
             txt,
             features=self._gstate.currentFeatures,
             variations=self._gstate.currentVariations,
         )
         fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
-        positions = scalePositions(positions, fontScale)
+        positions = scalePositions(glyphsInfo.positions, fontScale)
         builder = skia.TextBlobBuilder()
-        builder.allocRunPos(font, gids, positions)
+        builder.allocRunPos(font, glyphsInfo.gids, positions)
         blob = builder.make()
 
         x, y = position
-        textWidth = fontScale * endPos[0]
+        textWidth = fontScale * glyphsInfo.endPos[0]
         if align == "right":
             x -= textWidth
         elif align == "center":

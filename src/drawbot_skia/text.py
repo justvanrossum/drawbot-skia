@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 import functools
 import uharfbuzz as hb
 from .font import tagToInt
@@ -70,7 +71,12 @@ def _shape(face, font,
         x += ax
         y += ay
     endPos = x, y
-    return gids, clusters, positions, endPos
+    return SimpleNamespace(
+        gids=gids,
+        clusters=clusters,
+        positions=positions,
+        endPos=endPos,
+    )
 
 
 def scalePositions(positions, sx, sy=None):
