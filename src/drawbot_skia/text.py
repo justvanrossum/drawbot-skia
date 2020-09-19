@@ -4,15 +4,6 @@ import uharfbuzz as hb
 from .font import tagToInt
 
 
-class GlyphInfo(NamedTuple):
-    gid: int
-    cluster: int
-    dx: int
-    dy: int
-    ax: int
-    ay: int
-
-
 def getShapeFuncForSkiaTypeface(skTypeface):
     face = makeHBFaceFromSkiaTypeface(skTypeface)
     font = hb.Font(face)
@@ -70,11 +61,17 @@ def _shape(face, font,
 
     hb.shape(font, buf, features)
 
-    infos = []
-    for info, pos in zip(buf.glyph_infos, buf.glyph_positions):
-        infos.append(GlyphInfo(info.codepoint, info.cluster, *pos.position))
-
-    return infos
+    gids = [info.codepoint for info in buf.glyph_infos]
+    clusters = [info.cluster for info in buf.glyph_infos]
+    positions = []
+    x = y = 0
+    for pos in buf.glyph_positions:
+        dx, dy, ax, ay = pos.position
+        positions.append((x + dx, y + dy))
+        x += ax
+        y += ay
+    endPos = x, y
+    return gids, clusters, positions, endPos
 
 
 def getFeatures(face, otTableTag):
