@@ -321,7 +321,7 @@ class TextStyle:
             # XXX: With MutatorSans.ttf, this is "overcomplete" on macOS
             # (hence the p.axis != 0 condition), and incomplete on Linux:
             # the wght axis is not reported there.
-            # https://github.com/kyamagu/skia-python/issues/112
+            # https://github.com/kyamagu/skia-python/issues/113
             currentLocation = {intToTag(p.axis): p.value for p in pos if p.axis != 0}
 
         tags = [a.axisTag for a in fvar.axes]
