@@ -1,4 +1,3 @@
-from typing import NamedTuple
 import functools
 import uharfbuzz as hb
 from .font import tagToInt
