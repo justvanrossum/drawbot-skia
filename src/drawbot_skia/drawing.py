@@ -99,7 +99,6 @@ class Drawing:
     def fontSize(self, size):
         self._gstate.font.setSize(size)
 
-
     def openTypeFeatures(self, *, resetFeatures=False, **features):
         return self._gstate.setOpenTypeFeatures(features, resetFeatures)
 
