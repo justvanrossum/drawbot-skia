@@ -17,7 +17,7 @@ def makeDrawbotNamespace(drawbot):
 
 
 def runScript(sourcePath, namespace=None):
-    with open(sourcePath) as f:
+    with open(sourcePath, encoding="utf-8") as f:
         source = f.read()
     runScriptSource(source, sourcePath, namespace)
 
