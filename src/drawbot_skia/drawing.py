@@ -103,7 +103,14 @@ class Drawing:
         return self._gstate.setFontVariations(location, resetVariations)
 
     def textSize(self, txt):
-        ...
+        # TODO: with some smartness we can shape only once, for a
+        # textSize()/text() call combination with the same text and
+        # the same text parameters.
+        font = self._gstate.font
+        gids, clusters, positions, endPos = self._gstate.shape(txt, variations=self._gstate.currentVariations)
+        fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
+        textWidth = fontScale * endPos[0]
+        return (textWidth, font.getSpacing())
 
     def text(self, txt, position, align=None):
         if not txt:
@@ -112,7 +119,7 @@ class Drawing:
 
         font = self._gstate.font
         gids, clusters, positions, endPos = self._gstate.shape(txt, variations=self._gstate.currentVariations)
-        fontScale = font.getSize() / self._gstate.font.getTypeface().getUnitsPerEm()
+        fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
         positions = scalePositions(positions, fontScale)
         builder = skia.TextBlobBuilder()
         builder.allocRunPos(font, gids, positions)
