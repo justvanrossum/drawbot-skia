@@ -107,7 +107,11 @@ class Drawing:
         # textSize()/text() call combination with the same text and
         # the same text parameters.
         font = self._gstate.font
-        gids, clusters, positions, endPos = self._gstate.shape(txt, variations=self._gstate.currentVariations)
+        gids, clusters, positions, endPos = self._gstate.shape(
+            txt,
+            features=self._gstate.currentFeatures,
+            variations=self._gstate.currentVariations,
+        )
         fontScale = font.getSize() / font.getTypeface().getUnitsPerEm()
         textWidth = fontScale * endPos[0]
         return (textWidth, font.getSpacing())
@@ -234,14 +238,18 @@ class GraphicsState:
         if cachedTypefaces is None:
             cachedTypefaces = {}
         self._cachedTypefaces = cachedTypefaces
+        self.currentFeatures = {}
         self.currentVariations = {}
 
     def copy(self):
         result = GraphicsState(self._cachedTypefaces)
-        result.__dict__.update(self.__dict__)
+        for name in ["doFill", "doStroke"]:
+            setattr(result, name, getattr(self, name))
         result.fillPaint = _copyPaint(self.fillPaint)
         result.strokePaint = _copyPaint(self.strokePaint)
         result.font = _copyFont(self.font)
+        result.currentFeatures = dict(self.currentFeatures)
+        result.currentVariations = dict(self.currentVariations)
         return result
 
     def setFillColor(self, color):
