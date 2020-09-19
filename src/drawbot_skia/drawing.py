@@ -111,10 +111,8 @@ class Drawing:
             return
 
         font = self._gstate.font
-        tf = font.getTypeface()  # gstate should cache
-        shape = getShapeFuncForSkiaTypeface(tf)
-        gids, clusters, positions, endPos = shape(txt, variations=self._gstate.currentVariations)
-        fontScale = font.getSize() / tf.getUnitsPerEm()
+        gids, clusters, positions, endPos = self._gstate.shape(txt, variations=self._gstate.currentVariations)
+        fontScale = font.getSize() / self._gstate.font.getTypeface().getUnitsPerEm()
         positions = scalePositions(positions, fontScale)
         builder = skia.TextBlobBuilder()
         builder.allocRunPos(font, gids, positions)
@@ -225,6 +223,7 @@ class GraphicsState:
         self.font.setSubpixel(True)
         self.font.setEdging(skia.Font.Edging.kAntiAlias)
         self._ttFont = None
+        self._shape = None
         if cachedTypefaces is None:
             cachedTypefaces = {}
         self._cachedTypefaces = cachedTypefaces
@@ -259,7 +258,9 @@ class GraphicsState:
         else:
             tf = skia.Typeface(fontNameOrPath)
         self.font.setTypeface(tf)
-        self._ttFont = None  # purge cached TTFont
+        # purge cached items:
+        self._ttFont = None
+        self._shape = None
 
     def _getFontFromFile(self, fontPath):
         if fontPath not in self._cachedTypefaces:
@@ -307,6 +308,12 @@ class GraphicsState:
             from .font import makeTTFontFromSkiaTypeface
             self._ttFont = makeTTFontFromSkiaTypeface(self.font.getTypeface())
         return self._ttFont
+
+    @property
+    def shape(self):
+        if self._shape is None:
+            self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
+        return self._shape
 
 
 _paintProperties = [
