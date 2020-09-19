@@ -88,19 +88,3 @@ def getFeatures(face, otTableTag):
         for langIndex in langIdices:
             features.update(hb.ot_layout_language_get_feature_tags(face, otTableTag, scriptIndex, langIndex))
     return sorted(features)
-
-
-if __name__ == "__main__":
-    import sys
-    import skia
-    tf = skia.Typeface.MakeFromFile(sys.argv[1])
-    text = sys.argv[2]
-    # print(tf)
-    # face = makeHBFaceFromSkiaTypeface(tf)
-    # print(face)
-    # print(getFeatures(face, "GSUB"))
-    # print(getFeatures(face, "GPOS"))
-    shape = getShapeFuncForSkiaTypeface(tf)
-    print(shape(text, features=dict()))
-    print(shape(text, features=dict(ss01=True, ss02=True, ss03=True)))
-    print(shape(text, features=dict(), variations=dict(wght=800)))
