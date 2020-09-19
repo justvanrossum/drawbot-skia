@@ -11,7 +11,10 @@ setup(
     packages=find_packages("src"),
     install_requires=[
         "skia-python",
-        "fonttools",
-        "numpy",  # unlisted skia-python dependency
+        "fonttools[unicode]",
+        "numpy",  # unlisted skia-python dependency, TODO: is this true?
+        "uharfbuzz",
+        "python-bidi",
+        "unicodedata2",
     ],
 )
