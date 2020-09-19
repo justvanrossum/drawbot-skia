@@ -126,6 +126,8 @@ class Drawing:
 
         x, y = position
         textWidth = glyphsInfo.endPos[0]
+        if align is None:
+            align = "left" if not glyphsInfo.baseLevel else "right"
         if align == "right":
             x -= textWidth
         elif align == "center":
