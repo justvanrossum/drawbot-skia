@@ -71,14 +71,14 @@ class TextStyle:
         self.font.setHinting(skia.FontHinting.kNone)
         self.font.setSubpixel(True)
         self.font.setEdging(skia.Font.Edging.kAntiAlias)
-        self.currentFeatures = {}
-        self.currentVariations = {}
+        self.features = {}
+        self.variations = {}
 
     def copy(self):
         result = TextStyle(self._cachedTypefaces, _doInitialize=False)
         result.font = _copyFont(self.font)
-        result.currentFeatures = dict(self.currentFeatures)
-        result.currentVariations = dict(self.currentVariations)
+        result.features = dict(self.features)
+        result.variations = dict(self.variations)
 
     def setFont(self, fontNameOrPath):
         if os.path.exists(fontNameOrPath):
@@ -101,9 +101,9 @@ class TextStyle:
 
     def setOpenTypeFeatures(self, features, resetFeatures):
         if resetFeatures:
-            self.currentFeatures = {}
-        self.currentFeatures.update(features)
-        return dict(self.currentFeatures)
+            self.features = {}
+        self.features.update(features)
+        return dict(self.features)
 
     def setFontVariations(self, location, resetVariations):
         from .font import intToTag
@@ -125,8 +125,8 @@ class TextStyle:
         tags = [a.axisTag for a in fvar.axes]
         location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
         self._setFontVariationDesignPosition(location)
-        self.currentVariations = dict(location)
-        return dict(self.currentVariations)
+        self.variations = dict(location)
+        return dict(self.variations)
 
     def _setFontVariationDesignPosition(self, location):
         from .font import tagToInt
@@ -161,8 +161,8 @@ class TextStyle:
                 startPos=startPos,
                 startCluster=index,
                 flippedCanvas=True,
-                features=self.currentFeatures,
-                variations=self.currentVariations,
+                features=self.features,
+                variations=self.variations,
             )
             if glyphsInfo is None:
                 glyphsInfo = runInfo
