@@ -298,6 +298,8 @@ class TextStyle:
     def _getFontFromFile(self, fontPath):
         if fontPath not in self._cachedTypefaces:
             tf = skia.Typeface.MakeFromFile(fontPath)
+            if tf is None:
+                raise DrawbotError(f"can't load font: {fontPath}")
             self._cachedTypefaces[fontPath] = tf
         return self._cachedTypefaces[fontPath]
 
