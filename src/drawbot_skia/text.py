@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 import functools
 import uharfbuzz as hb
-from .font import tagToInt
+from .font import intToTag, tagToInt
 
 
 def getShapeFuncForSkiaTypeface(skTypeface):
@@ -12,16 +12,14 @@ def getShapeFuncForSkiaTypeface(skTypeface):
 
 def makeHBFaceFromSkiaTypeface(skTypeface):
     tableData = {}
+    tableTags = {intToTag(tag) for tag in skTypeface.getTableTags()}
 
     def getTable(face, tag, userData):
         if tag in tableData:
             return tableData[tag]
-        data = skTypeface.getTableData(tagToInt(tag))
-        if not data:
-            # Skia returns empty data when a table isn't present,
-            # so we can't distinguish beteen an empty table and
-            # a non-existant table. I don't think we need the former.
+        if tag not in tableTags:
             return None
+        data = skTypeface.getTableData(tagToInt(tag))
         # HB doesn't hold on the data, and neither does Skia, so we
         # need to do that ourselves.
         tableData[tag] = data
