@@ -199,6 +199,11 @@ class TextStyle(_ImmutableContainer):
         font = self._makeFontFromTypeface(typeface, self.fontSize)
         return font
 
+    @property
+    def ttFont(self):
+        _, ttFont = self._getTypefaceAndTTFont(self.font)
+        return ttFont
+
     def _getTypefaceAndTTFont(self, font):
         if font not in self._cachedTypefaces:
             if not os.path.exists(font):
