@@ -43,6 +43,8 @@ class GraphicsState:
         result.textStyle = self.textStyle
         return result
 
+    # Paint style
+
     def setFillColor(self, color):
         if color is None:
             self.fillPaint = self.fillPaint.copy(somethingToDraw=False)
