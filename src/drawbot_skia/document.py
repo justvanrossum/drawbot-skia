@@ -6,6 +6,9 @@ import skia
 
 class Document(ABC):
 
+    # pageWidth
+    # pageHeight
+
     @property
     @abstractmethod
     def isDrawing(self):
