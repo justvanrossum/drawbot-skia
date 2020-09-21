@@ -77,7 +77,7 @@ class GraphicsState:
         if os.path.exists(fontNameOrPath):
             font = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
         else:
-            font = font
+            font = fontNameOrPath
         self.textStyle = self.textStyle.copy(font=font)
 
     def setFontSize(self, size):

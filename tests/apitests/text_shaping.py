@@ -18,3 +18,5 @@ text(s, (width() - 50, 150))
 
 text("Alfabet", (width() / 2, 220))
 text("البشريةً", (width() / 2, 290))
+
+font("Helvetica")  # simply test loading an installed font
