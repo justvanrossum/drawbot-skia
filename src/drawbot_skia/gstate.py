@@ -196,7 +196,7 @@ class TextStyle(_ImmutableContainer):
         typeface, ttFont = self._getTypefaceAndTTFont(self.font)
         if self.variations and "fvar" in ttFont:
             typeface = self._cloneTypeface(typeface, ttFont, self.variations)
-        font = self._makeFont(typeface, self.fontSize)
+        font = self._makeFontFromTypeface(typeface, self.fontSize)
         return font
 
     def _getTypefaceAndTTFont(self, font):
@@ -212,7 +212,7 @@ class TextStyle(_ImmutableContainer):
         return self._cachedTypefaces[font]
 
     @staticmethod
-    def _makeFont(typeface, size):
+    def _makeFontFromTypeface(typeface, size):
         font = skia.Font(typeface, size)
         font.setForceAutoHinting(False)
         font.setHinting(skia.FontHinting.kNone)
