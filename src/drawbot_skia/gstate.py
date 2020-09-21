@@ -71,11 +71,7 @@ class GraphicsState:
     # Text style
 
     def setFont(self, fontNameOrPath):
-        if os.path.exists(fontNameOrPath):
-            font = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
-        else:
-            font = fontNameOrPath
-        self.textStyle = self.textStyle.copy(font=font)
+        self.textStyle = self.textStyle.copy(font=fontNameOrPath)
 
     def setFontSize(self, size):
         self.textStyle = self.textStyle.copy(fontSize=size)
@@ -191,17 +187,19 @@ class TextStyle(_ImmutableContainer):
         _, ttFont = self._getTypefaceAndTTFont(self.font)
         return ttFont
 
-    def _getTypefaceAndTTFont(self, font):
-        if font not in _fontCache:
-            if not os.path.exists(font):
-                typeface = skia.Typeface(font)
+    def _getTypefaceAndTTFont(self, fontNameOrPath):
+        cacheKey = fontNameOrPath
+        if cacheKey not in _fontCache:
+            fontNameOrPath = os.fspath(fontNameOrPath)
+            if not os.path.exists(fontNameOrPath):
+                typeface = skia.Typeface(fontNameOrPath)
             else:
-                typeface = skia.Typeface.MakeFromFile(font)
+                typeface = skia.Typeface.MakeFromFile(fontNameOrPath)
                 if typeface is None:
-                    raise DrawbotError(f"can't load font: {font}")
+                    raise DrawbotError(f"can't load font: {fontNameOrPath}")
             ttFont = makeTTFontFromSkiaTypeface(typeface)
-            _fontCache[font] = typeface, ttFont
-        return _fontCache[font]
+            _fontCache[cacheKey] = typeface, ttFont
+        return _fontCache[cacheKey]
 
     @staticmethod
     def _makeFontFromTypeface(typeface, size):
@@ -258,7 +256,7 @@ class TextStyle(_ImmutableContainer):
 
 
 # Font cache dict
-# - keys: font name or pathlib.Path object
+# - keys: font name or path string
 # - values: (skTypeface, ttFont) tuples
 _fontCache = {}
 
