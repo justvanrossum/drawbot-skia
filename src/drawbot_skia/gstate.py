@@ -98,19 +98,32 @@ class GraphicsState:
         return currentVariations
 
 
-class FillPaint:
-
-    somethingToDraw = True
-    color = (255, 0, 0, 0)  # ARGB
+class _ImmutableContainerMixin:
 
     def __init__(self, **properties):
         self.__dict__.update(properties)
         self._names = set(properties)
 
+    def _copyDict(self, properties):
+        dct = {n: self.__dict__[n] for n in self._names}
+        dct.update(properties)
+        return dct
+
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+        if self._names != other._names:
+            return False
+        return all(getattr(self, n) == getattr(other, n) for n in self._names)
+
+
+class FillPaint(_ImmutableContainerMixin):
+
+    somethingToDraw = True
+    color = (255, 0, 0, 0)  # ARGB
+
     def copy(self, **properties):
-        d = {n: self.__dict__[n] for n in self._names}
-        d.update(properties)
-        return self.__class__(**d)
+        return self.__class__(**self._copyDict(properties))
 
     @cached_property
     def paint(self):
@@ -158,21 +171,19 @@ _strokeJoinMapping = dict(
 )
 
 
-class TextStyle:
+class TextStyle(_ImmutableContainerMixin):
 
     fontSize = 10
     features = {}  # won't get mutated
     variations = {}  # won't get mutated
 
     def __init__(self, cachedTypefaces, **styleProperties):
+        super().__init__(**styleProperties)
         self._cachedTypefaces = cachedTypefaces
-        self.__dict__.update(styleProperties)
-        self._names = set(styleProperties)
 
     def copy(self, **styleProperties):
-        d = {n: self.__dict__[n] for n in self._names}
-        d.update(styleProperties)
-        return self.__class__(self._cachedTypefaces, **d)
+        dct = self._copyDict(styleProperties)
+        return self.__class__(self._cachedTypefaces, **dct)
 
     @cached_property
     def skFont(self):
