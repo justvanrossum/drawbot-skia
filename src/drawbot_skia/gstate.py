@@ -113,6 +113,10 @@ class _ImmutableContainer:
             return False
         return all(getattr(self, n) == getattr(other, n) for n in self._names)
 
+    def __repr__(self):
+        args = ", ".join(f"{n}={self.__dict__[n]}" for n in self._names)
+        return f"{self.__class__.__name__}({args})"
+
 
 class FillPaint(_ImmutableContainer):
 
