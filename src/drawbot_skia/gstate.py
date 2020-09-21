@@ -100,7 +100,7 @@ class GraphicsState:
         return currentVariations
 
 
-class _ImmutableContainerMixin:
+class _ImmutableContainer:
 
     def __init__(self, **properties):
         self.__dict__.update(properties)
@@ -119,7 +119,7 @@ class _ImmutableContainerMixin:
         return all(getattr(self, n) == getattr(other, n) for n in self._names)
 
 
-class FillPaint(_ImmutableContainerMixin):
+class FillPaint(_ImmutableContainer):
 
     somethingToDraw = True
     color = (255, 0, 0, 0)  # ARGB
@@ -173,7 +173,7 @@ _strokeJoinMapping = dict(
 )
 
 
-class TextStyle(_ImmutableContainerMixin):
+class TextStyle(_ImmutableContainer):
 
     fontSize = 10
     features = {}  # won't get mutated
