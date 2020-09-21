@@ -79,16 +79,16 @@ class Drawing:
         self._gstate.setStrokeColor(_colorArgs(args))
 
     def strokeWidth(self, value):
-        self._gstate.strokePaint.setStrokeWidth(value)
+        self._gstate.setStrokeWidth(value)
 
-    def lineCap(self, value):
-        self._gstate.strokePaint.setStrokeCap(_strokeCapMapping[value])
+    def lineCap(self, lineCap):
+        self._gstate.setLineCap(lineCap)
 
-    def lineJoin(self, value):
-        self._gstate.strokePaint.setStrokeJoin(_strokeJoinMapping[value])
+    def lineJoin(self, lineJoin):
+        self._gstate.setLineJoin(lineJoin)
 
-    def miterLimit(self, value):
-        self._gstate.strokePaint.setStrokeMiter(value)
+    def miterLimit(self, miterLimit):
+        self._gstate.setMiterLimit(miterLimit)
 
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
@@ -188,23 +188,10 @@ class Drawing:
     # Helpers
 
     def _drawItem(self, canvasMethod, *items):
-        if self._gstate.doFill:
-            canvasMethod(*items, self._gstate.fillPaint)
-        if self._gstate.doStroke:
-            canvasMethod(*items, self._gstate.strokePaint)
-
-
-_strokeCapMapping = dict(
-    butt=skia.Paint.Cap.kButt_Cap,
-    round=skia.Paint.Cap.kRound_Cap,
-    square=skia.Paint.Cap.kSquare_Cap,
-)
-
-_strokeJoinMapping = dict(
-    miter=skia.Paint.Join.kMiter_Join,
-    round=skia.Paint.Join.kRound_Join,
-    bevel=skia.Paint.Join.kBevel_Join,
-)
+        if self._gstate.fillPaint.somethingToDraw:
+            canvasMethod(*items, self._gstate.fillPaint.paint)
+        if self._gstate.strokePaint.somethingToDraw:
+            canvasMethod(*items, self._gstate.strokePaint.paint)
 
 
 def _colorArgs(args):

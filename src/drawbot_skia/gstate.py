@@ -27,48 +27,45 @@ class GraphicsState:
     def __init__(self, cachedTypefaces=None, _doInitialize=True):
         if cachedTypefaces is None:
             cachedTypefaces = {}
-        self.doFill = True
-        self.doStroke = False
         self._cachedTypefaces = cachedTypefaces
 
         if not _doInitialize:
             # self.copy() will initialize further
             return
 
-        self.fillPaint = skia.Paint(
-            Color=0xFF000000,
-            AntiAlias=True,
-            Style=skia.Paint.kFill_Style,
-        )
-        self.strokePaint = skia.Paint(
-            Color=0xFF000000,
-            AntiAlias=True,
-            Style=skia.Paint.kStroke_Style,
-        )
-        self.strokePaint.setStrokeMiter(5)  # default better matching DrawBot
+        self.fillPaint = FillPaint()
+        self.strokePaint = StrokePaint(somethingToDraw=False)
         self.textStyle = TextStyle(cachedTypefaces)
 
     def copy(self):
         result = GraphicsState(self._cachedTypefaces, _doInitialize=False)
-        for name in ["doFill", "doStroke", "textStyle"]:
+        for name in ["fillPaint", "strokePaint", "textStyle"]:
             setattr(result, name, getattr(self, name))
-        result.fillPaint = _copyPaint(self.fillPaint)
-        result.strokePaint = _copyPaint(self.strokePaint)
         return result
 
     def setFillColor(self, color):
         if color is None:
-            self.doFill = False
+            self.fillPaint = self.fillPaint.copy(somethingToDraw=False)
         else:
-            self.doFill = True
-            self.fillPaint.setARGB(*color)
+            self.fillPaint = self.fillPaint.copy(color=color, somethingToDraw=True)
 
     def setStrokeColor(self, color):
         if color is None:
-            self.doStroke = False
+            self.strokePaint = self.strokePaint.copy(somethingToDraw=False)
         else:
-            self.doStroke = True
-            self.strokePaint.setARGB(*color)
+            self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True)
+
+    def setStrokeWidth(self, strokeWidth):
+        self.strokePaint = self.strokePaint.copy(strokeWidth=strokeWidth)
+
+    def setLineCap(self, lineCap):
+        self.strokePaint = self.strokePaint.copy(lineCap=lineCap)
+
+    def setLineJoin(self, lineJoin):
+        self.strokePaint = self.strokePaint.copy(lineJoin=lineJoin)
+
+    def setMiterLimit(self, miterLimit):
+        self.strokePaint = self.strokePaint.copy(miterLimit=miterLimit)
 
     # Text style
 
@@ -99,6 +96,66 @@ class GraphicsState:
         currentVariations.update(location)
         self.textStyle = self.textStyle.copy(variations=currentVariations)
         return currentVariations
+
+
+class FillPaint:
+
+    somethingToDraw = True
+    color = (255, 0, 0, 0)
+
+    def __init__(self, **properties):
+        self.__dict__.update(properties)
+        self._names = set(properties)
+
+    def copy(self, **properties):
+        d = {n: self.__dict__[n] for n in self._names}
+        d.update(properties)
+        return self.__class__(**d)
+
+    @cached_property
+    def paint(self):
+        paint = skia.Paint(
+            Color=0,
+            AntiAlias=True,
+            Style=skia.Paint.kFill_Style,
+        )
+        paint.setARGB(*self.color)
+        return paint
+
+
+class StrokePaint(FillPaint):
+
+    miterLimit = 5
+    strokeWidth = 1
+    lineCap = "butt"
+    lineJoin = "miter"
+
+    @cached_property
+    def paint(self):
+        paint = skia.Paint(
+            Color=0,
+            AntiAlias=True,
+            Style=skia.Paint.kStroke_Style,
+        )
+        paint.setARGB(*self.color)
+        paint.setStrokeMiter(self.miterLimit)
+        paint.setStrokeWidth(self.strokeWidth)
+        paint.setStrokeCap(_strokeCapMapping[self.lineCap])
+        paint.setStrokeJoin(_strokeJoinMapping[self.lineJoin])
+        return paint
+
+
+_strokeCapMapping = dict(
+    butt=skia.Paint.Cap.kButt_Cap,
+    round=skia.Paint.Cap.kRound_Cap,
+    square=skia.Paint.Cap.kSquare_Cap,
+)
+
+_strokeJoinMapping = dict(
+    miter=skia.Paint.Join.kMiter_Join,
+    round=skia.Paint.Join.kRound_Join,
+    bevel=skia.Paint.Join.kBevel_Join,
+)
 
 
 class TextStyle:
