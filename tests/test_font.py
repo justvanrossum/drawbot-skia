@@ -2,7 +2,6 @@ import os
 import pathlib
 import skia
 from drawbot_skia.font import makeTTFontFromSkiaTypeface
-from drawbot_skia.drawing import GraphicsState
 
 
 testDir = pathlib.Path(__file__).resolve().parent
