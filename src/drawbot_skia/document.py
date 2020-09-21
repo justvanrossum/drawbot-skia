@@ -15,7 +15,7 @@ class Document(ABC):
         return ...
 
     @abstractmethod
-    def beginPage(self, w: int, h: int) -> skia.Canvas:
+    def beginPage(self, width: int, height: int) -> skia.Canvas:
         return ...
 
     @abstractmethod
