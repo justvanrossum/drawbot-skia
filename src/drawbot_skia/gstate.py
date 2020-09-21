@@ -26,18 +26,15 @@ class cached_property(object):
 
 class GraphicsState:
 
-    def __init__(self, cachedTypefaces=None, _doInitialize=True):
-        if cachedTypefaces is None and _doInitialize:
-            cachedTypefaces = {}
-
+    def __init__(self, _doInitialize=True):
         if _doInitialize:
             # see self.copy()
             self.fillPaint = FillPaint()
             self.strokePaint = StrokePaint(somethingToDraw=False)
-            self.textStyle = TextStyle(cachedTypefaces)
+            self.textStyle = TextStyle()
 
     def copy(self):
-        result = GraphicsState(None, _doInitialize=False)
+        result = GraphicsState(_doInitialize=False)
         # Our main attributes are copy-on-write, so we can share them with
         # our copy
         result.fillPaint = self.fillPaint
@@ -108,10 +105,10 @@ class _ImmutableContainer:
         self.__dict__.update(properties)
         self._names = set(properties)
 
-    def _copyDict(self, properties):
+    def copy(self, **properties):
         dct = {n: self.__dict__[n] for n in self._names}
         dct.update(properties)
-        return dct
+        return self.__class__(**dct)
 
     def __eq__(self, other):
         if type(self) != type(other):
@@ -125,9 +122,6 @@ class FillPaint(_ImmutableContainer):
 
     somethingToDraw = True
     color = (255, 0, 0, 0)  # ARGB
-
-    def copy(self, **properties):
-        return self.__class__(**self._copyDict(properties))
 
     @cached_property
     def paint(self):
@@ -181,15 +175,8 @@ class TextStyle(_ImmutableContainer):
     features = {}  # won't get mutated
     variations = {}  # won't get mutated
 
-    def __init__(self, cachedTypefaces, **styleProperties):
-        super().__init__(**styleProperties)
-        self._cachedTypefaces = cachedTypefaces
-
-    def copy(self, **styleProperties):
-        return self.__class__(
-            self._cachedTypefaces,
-            **self._copyDict(styleProperties),
-        )
+    def __init__(self, **properties):
+        super().__init__(**properties)
 
     @cached_property
     def skFont(self):
@@ -205,7 +192,7 @@ class TextStyle(_ImmutableContainer):
         return ttFont
 
     def _getTypefaceAndTTFont(self, font):
-        if font not in self._cachedTypefaces:
+        if font not in _fontCache:
             if not os.path.exists(font):
                 typeface = skia.Typeface(font)
             else:
@@ -213,8 +200,8 @@ class TextStyle(_ImmutableContainer):
                 if typeface is None:
                     raise DrawbotError(f"can't load font: {font}")
             ttFont = makeTTFontFromSkiaTypeface(typeface)
-            self._cachedTypefaces[font] = typeface, ttFont
-        return self._cachedTypefaces[font]
+            _fontCache[font] = typeface, ttFont
+        return _fontCache[font]
 
     @staticmethod
     def _makeFontFromTypeface(typeface, size):
@@ -268,3 +255,13 @@ class TextStyle(_ImmutableContainer):
             startPos = runInfo.endPos
         glyphsInfo.baseLevel = baseLevel
         return glyphsInfo
+
+
+# Font cache dict
+# - keys: font name or pathlib.Path object
+# - values: (skTypeface, ttFont) tuples
+_fontCache = {}
+
+
+def clearFontCache():
+    _fontCache.clear()
