@@ -27,17 +27,19 @@ class cached_property(object):
 class GraphicsState:
 
     def __init__(self, cachedTypefaces=None, _doInitialize=True):
-        if cachedTypefaces is None:
+        if cachedTypefaces is None and _doInitialize:
             cachedTypefaces = {}
-        self._cachedTypefaces = cachedTypefaces
 
         if _doInitialize:
+            # see self.copy()
             self.fillPaint = FillPaint()
             self.strokePaint = StrokePaint(somethingToDraw=False)
             self.textStyle = TextStyle(cachedTypefaces)
 
     def copy(self):
-        result = GraphicsState(self._cachedTypefaces, _doInitialize=False)
+        result = GraphicsState(None, _doInitialize=False)
+        # Our main attributes are copy-on-write, so we can share them with
+        # our copy
         result.fillPaint = self.fillPaint
         result.strokePaint = self.strokePaint
         result.textStyle = self.textStyle
