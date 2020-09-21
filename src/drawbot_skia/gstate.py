@@ -182,8 +182,10 @@ class TextStyle(_ImmutableContainerMixin):
         self._cachedTypefaces = cachedTypefaces
 
     def copy(self, **styleProperties):
-        dct = self._copyDict(styleProperties)
-        return self.__class__(self._cachedTypefaces, **dct)
+        return self.__class__(
+            self._cachedTypefaces,
+            **self._copyDict(styleProperties),
+        )
 
     @cached_property
     def skFont(self):
