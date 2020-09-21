@@ -54,6 +54,20 @@ class GraphicsState:
             self.doStroke = True
             self.strokePaint.setARGB(*color)
 
+    # Text style
+
+    def setFont(self, fontNameOrPath):
+        self.textStyle.setFont(fontNameOrPath)
+
+    def setFontSize(self, size):
+        self.textStyle.font.setSize(size)
+
+    def setOpenTypeFeatures(self, features, resetFeatures):
+        return self.textStyle.setOpenTypeFeatures(features, resetFeatures)
+
+    def setFontVariations(self, location, resetVariations):
+        return self.textStyle.setFontVariations(location, resetVariations)
+
 
 class TextStyle:
 
