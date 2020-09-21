@@ -20,7 +20,7 @@ class Drawing:
     @property
     def _canvas(self):
         if self._skia_canvas is None:
-            self.size(1000, 1000)
+            self.size(1000, 1000)  # This will create the canvas
         return self._skia_canvas
 
     @_canvas.setter
