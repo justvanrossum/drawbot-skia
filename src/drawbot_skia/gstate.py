@@ -187,7 +187,8 @@ class TextStyle(_ImmutableContainer):
         _, ttFont = self._getTypefaceAndTTFont(self.font)
         return ttFont
 
-    def _getTypefaceAndTTFont(self, fontNameOrPath):
+    @staticmethod
+    def _getTypefaceAndTTFont(fontNameOrPath):
         cacheKey = fontNameOrPath
         if cacheKey not in _fontCache:
             fontNameOrPath = os.fspath(fontNameOrPath)
