@@ -8,6 +8,8 @@ from .segmenting import textSegments, reorderedSegments
 
 class cached_property(object):
 
+    # This exitsts in the stdlib in Python 3.8, but not earlier
+
     """A property that is only computed once per instance and then replaces itself
     with an ordinary attribute. Deleting the attribute resets the property."""
 
