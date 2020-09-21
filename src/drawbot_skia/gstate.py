@@ -101,7 +101,7 @@ class GraphicsState:
 class FillPaint:
 
     somethingToDraw = True
-    color = (255, 0, 0, 0)
+    color = (255, 0, 0, 0)  # ARGB
 
     def __init__(self, **properties):
         self.__dict__.update(properties)
