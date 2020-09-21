@@ -31,18 +31,16 @@ class GraphicsState:
             cachedTypefaces = {}
         self._cachedTypefaces = cachedTypefaces
 
-        if not _doInitialize:
-            # self.copy() will initialize further
-            return
-
-        self.fillPaint = FillPaint()
-        self.strokePaint = StrokePaint(somethingToDraw=False)
-        self.textStyle = TextStyle(cachedTypefaces)
+        if _doInitialize:
+            self.fillPaint = FillPaint()
+            self.strokePaint = StrokePaint(somethingToDraw=False)
+            self.textStyle = TextStyle(cachedTypefaces)
 
     def copy(self):
         result = GraphicsState(self._cachedTypefaces, _doInitialize=False)
-        for name in ["fillPaint", "strokePaint", "textStyle"]:
-            setattr(result, name, getattr(self, name))
+        result.fillPaint = self.fillPaint
+        result.strokePaint = self.strokePaint
+        result.textStyle = self.textStyle
         return result
 
     def setFillColor(self, color):
