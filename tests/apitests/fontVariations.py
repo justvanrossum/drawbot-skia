@@ -11,5 +11,5 @@ variations = fontVariations(wdth=200)
 assert {'wdth': 200, 'wght': 600.0} == variations, variations
 text("ABCXYZ", (10, 215))
 variations = fontVariations(wdth=1000, resetVariations=True)
-assert {'wdth': 1000, 'wght': 0.0} == variations, variations
+assert {'wdth': 1000} == variations, variations
 text("ABCXYZ", (10, 315))

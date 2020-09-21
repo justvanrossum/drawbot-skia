@@ -16,9 +16,3 @@ def test_font():
     fvar = ttf["fvar"]
     assert fvar.axes[0].axisTag == "wdth"
     assert ["name", "fvar"] == list(ttf.tables.keys())
-
-
-def test_font_gs():
-    gs = GraphicsState()
-    gs.textStyle.setFont(fontPath)
-    assert "fvar" in gs.textStyle.ttFont

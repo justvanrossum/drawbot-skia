@@ -110,7 +110,7 @@ class Drawing:
         # the same text parameters.
         glyphsInfo = self._gstate.textStyle.shape(txt)
         textWidth = glyphsInfo.endPos[0]
-        return (textWidth, self._gstate.textStyle.font.getSpacing())
+        return (textWidth, self._gstate.textStyle.skFont.getSpacing())
 
     def text(self, txt, position, align=None):
         if not txt:
@@ -119,7 +119,7 @@ class Drawing:
 
         glyphsInfo = self._gstate.textStyle.shape(txt)
         builder = skia.TextBlobBuilder()
-        builder.allocRunPos(self._gstate.textStyle.font, glyphsInfo.gids, glyphsInfo.positions)
+        builder.allocRunPos(self._gstate.textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions)
         blob = builder.make()
 
         x, y = position

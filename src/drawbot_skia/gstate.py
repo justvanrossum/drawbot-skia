@@ -1,8 +1,25 @@
 import os
 import skia
 from .errors import DrawbotError
+from .font import makeTTFontFromSkiaTypeface, tagToInt
 from .text import getShapeFuncForSkiaTypeface
 from .segmenting import textSegments, reorderedSegments
+
+
+class cached_property(object):
+
+    """A property that is only computed once per instance and then replaces itself
+    with an ordinary attribute. Deleting the attribute resets the property."""
+
+    def __init__(self, func):
+        self.__doc__ = getattr(func, '__doc__')
+        self.func = func
+
+    def __get__(self, obj, cls):
+        if obj is None:
+            return self
+        value = obj.__dict__[self.func.__name__] = self.func(obj)
+        return value
 
 
 class GraphicsState:
@@ -33,11 +50,10 @@ class GraphicsState:
 
     def copy(self):
         result = GraphicsState(self._cachedTypefaces, _doInitialize=False)
-        for name in ["doFill", "doStroke"]:
+        for name in ["doFill", "doStroke", "textStyle"]:
             setattr(result, name, getattr(self, name))
         result.fillPaint = _copyPaint(self.fillPaint)
         result.strokePaint = _copyPaint(self.strokePaint)
-        result.textStyle = self.textStyle.copy()
         return result
 
     def setFillColor(self, color):
@@ -57,121 +73,106 @@ class GraphicsState:
     # Text style
 
     def setFont(self, fontNameOrPath):
-        self.textStyle.setFont(fontNameOrPath)
+        if os.path.exists(fontNameOrPath):
+            font = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
+        else:
+            font = font
+        self.textStyle = self.textStyle.copy(font=font)
 
     def setFontSize(self, size):
-        self.textStyle.font.setSize(size)
+        self.textStyle = self.textStyle.copy(fontSize=size)
 
     def setOpenTypeFeatures(self, features, resetFeatures):
-        return self.textStyle.setOpenTypeFeatures(features, resetFeatures)
+        if resetFeatures:
+            currentFeatures = {}
+        else:
+            currentFeatures = dict(self.textStyle.features)
+        currentFeatures.update(features)
+        self.textStyle = self.textStyle.copy(features=currentFeatures)
+        return currentFeatures
 
     def setFontVariations(self, location, resetVariations):
-        return self.textStyle.setFontVariations(location, resetVariations)
+        if resetVariations:
+            currentVariations = {}
+        else:
+            currentVariations = dict(self.textStyle.variations)
+        currentVariations.update(location)
+        self.textStyle = self.textStyle.copy(variations=currentVariations)
+        return currentVariations
 
 
 class TextStyle:
 
-    def __init__(self, cachedTypefaces, _doInitialize=True):
+    fontSize = 10
+    features = {}  # won't get mutated
+    variations = {}  # won't get mutated
+
+    def __init__(self, cachedTypefaces, **styleProperties):
         self._cachedTypefaces = cachedTypefaces
-        self._ttFont = None
-        self._shape = None
+        self.__dict__.update(styleProperties)
+        self._names = set(styleProperties)
 
-        if not _doInitialize:
-            # self.copy() will initialize further
-            return
+    def copy(self, **styleProperties):
+        d = {n: self.__dict__[n] for n in self._names}
+        d.update(styleProperties)
+        return self.__class__(self._cachedTypefaces, **d)
 
-        self.font = skia.Font(skia.Typeface(None), 10)
-        self.font.setForceAutoHinting(False)
-        self.font.setHinting(skia.FontHinting.kNone)
-        self.font.setSubpixel(True)
-        self.font.setEdging(skia.Font.Edging.kAntiAlias)
-        self.features = {}
-        self.variations = {}
+    @cached_property
+    def skFont(self):
+        typeface, ttFont = self._getTypefaceAndTTFont(self.font)
+        if self.variations and "fvar" in ttFont:
+            typeface = self._cloneTypeface(typeface, ttFont, self.variations)
+        font = self._makeFont(typeface, self.fontSize)
+        return font
 
-    def copy(self):
-        result = TextStyle(self._cachedTypefaces, _doInitialize=False)
-        result.font = _copyFont(self.font)
-        result.features = dict(self.features)
-        result.variations = dict(self.variations)
+    def _getTypefaceAndTTFont(self, font):
+        if font not in self._cachedTypefaces:
+            if not os.path.exists(font):
+                typeface = skia.Typeface(font)
+            else:
+                typeface = skia.Typeface.MakeFromFile(font)
+                if typeface is None:
+                    raise DrawbotError(f"can't load font: {font}")
+            ttFont = makeTTFontFromSkiaTypeface(typeface)
+            self._cachedTypefaces[font] = typeface, ttFont
+        return self._cachedTypefaces[font]
 
-    def setFont(self, fontNameOrPath):
-        if os.path.exists(fontNameOrPath):
-            path = os.path.normpath(os.path.abspath(os.fspath(fontNameOrPath)))
-            tf = self._getFontFromFile(path)
-        else:
-            tf = skia.Typeface(fontNameOrPath)
-        self.font.setTypeface(tf)
-        # purge cached items:
-        self._ttFont = None
-        self._shape = None
+    @staticmethod
+    def _makeFont(typeface, size):
+        font = skia.Font(typeface, size)
+        font.setForceAutoHinting(False)
+        font.setHinting(skia.FontHinting.kNone)
+        font.setSubpixel(True)
+        font.setEdging(skia.Font.Edging.kAntiAlias)
+        return font
 
-    def _getFontFromFile(self, fontPath):
-        if fontPath not in self._cachedTypefaces:
-            tf = skia.Typeface.MakeFromFile(fontPath)
-            if tf is None:
-                raise DrawbotError(f"can't load font: {fontPath}")
-            self._cachedTypefaces[fontPath] = tf
-        return self._cachedTypefaces[fontPath]
-
-    def setOpenTypeFeatures(self, features, resetFeatures):
-        if resetFeatures:
-            self.features = {}
-        self.features.update(features)
-        return dict(self.features)
-
-    def setFontVariations(self, location, resetVariations):
-        from .font import intToTag
-        fvar = self.ttFont.get("fvar")
-        if fvar is None:
-            # TODO: warn?
-            return
-
-        if resetVariations:
-            currentLocation = {a.axisTag: location.get(a.axisTag, a.defaultValue) for a in fvar.axes}
-        else:
-            pos = self.font.getTypeface().getVariationDesignPosition()
-            # XXX: With MutatorSans.ttf, this is "overcomplete" on macOS
-            # (hence the p.axis != 0 condition), and incomplete on Linux:
-            # the wght axis is not reported there.
-            # https://github.com/kyamagu/skia-python/issues/113
-            currentLocation = {intToTag(p.axis): p.value for p in pos if p.axis != 0}
-
+    @staticmethod
+    def _cloneTypeface(typeface, ttFont, location):
+        fvar = ttFont.get("fvar")
+        defaultLocation = {a.axisTag: location.get(a.axisTag, a.defaultValue) for a in fvar.axes}
         tags = [a.axisTag for a in fvar.axes]
-        location = [(tag, location.get(tag, currentLocation[tag])) for tag in tags]
-        self._setFontVariationDesignPosition(location)
-        self.variations = dict(location)
-        return dict(self.variations)
-
-    def _setFontVariationDesignPosition(self, location):
-        from .font import tagToInt
+        location = [(tag, location.get(tag, defaultLocation[tag])) for tag in tags]
         makeCoord = skia.FontArguments.VariationPosition.Coordinate
         rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location]
         coords = skia.FontArguments.VariationPosition.Coordinates(rawCoords)
         pos = skia.FontArguments.VariationPosition(coords)
         fontArgs = skia.FontArguments()
         fontArgs.setVariationDesignPosition(pos)
-        tf = self.font.getTypeface().makeClone(fontArgs)
-        self.font.setTypeface(tf)
+        return typeface.makeClone(fontArgs)
 
-    @property
-    def ttFont(self):
-        if self._ttFont is None:
-            from .font import makeTTFontFromSkiaTypeface
-            self._ttFont = makeTTFontFromSkiaTypeface(self.font.getTypeface())
-        return self._ttFont
+    @cached_property
+    def _shapeFunc(self):
+        return getShapeFuncForSkiaTypeface(self.skFont.getTypeface())
 
     def shape(self, txt):
-        if self._shape is None:
-            self._shape = getShapeFuncForSkiaTypeface(self.font.getTypeface())
-
         segments, baseLevel = textSegments(txt)
         segments = reorderedSegments(segments, baseLevel)
         startPos = (0, 0)
         glyphsInfo = None
         for runChars, script, bidiLevel, index in segments:
-            runInfo = self._shape(
+            runInfo = self._shapeFunc(
                 runChars,
-                fontSize=self.font.getSize(),
+                fontSize=self.skFont.getSize(),
                 startPos=startPos,
                 startCluster=index,
                 flippedCanvas=True,
