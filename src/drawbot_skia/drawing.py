@@ -101,8 +101,8 @@ class Drawing:
     def openTypeFeatures(self, *, resetFeatures=False, **features):
         return self._gstate.setOpenTypeFeatures(features, resetFeatures)
 
-    def fontVariations(self, *, resetVariations=False, **location):
-        return self._gstate.setFontVariations(location, resetVariations)
+    def fontVariations(self, *, resetVariations=False, **variations):
+        return self._gstate.setFontVariations(variations, resetVariations)
 
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a

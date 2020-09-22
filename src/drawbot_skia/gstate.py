@@ -85,12 +85,12 @@ class GraphicsState:
         self.textStyle = self.textStyle.copy(features=currentFeatures)
         return currentFeatures
 
-    def setFontVariations(self, location, resetVariations):
+    def setFontVariations(self, variations, resetVariations):
         if resetVariations:
             currentVariations = {}
         else:
             currentVariations = dict(self.textStyle.variations)
-        currentVariations.update(location)
+        currentVariations.update(variations)
         self.textStyle = self.textStyle.copy(variations=currentVariations)
         return currentVariations
 
