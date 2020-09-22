@@ -54,13 +54,11 @@ Potentially, some higher level code could be shared (for example, drawing code t
 
 ## Install
 
-For now, just install from the repo. The quickest way is:
+The quickest way to install the latest release is with pip:
 
-`pip install git+https://github.com/justvanrossum/drawbot-skia.git`
+`pip install drawbot-skia`
 
 If you want to see the source code and possibly contribute: clone the repo, and do `pip install -e .` in the root directory.
-
-Once things settle a bit I want to upload to PyPI.
 
 ## Usage
 
