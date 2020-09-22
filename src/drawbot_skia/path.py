@@ -10,11 +10,11 @@ class BezierPath(BasePen):
             path = skia.Path()
         self.path = path
 
-    def _moveTo(self, xy):
-        self.path.moveTo(*xy)
+    def _moveTo(self, pt):
+        self.path.moveTo(*pt)
 
-    def _lineTo(self, xy):
-        self.path.lineTo(*xy)
+    def _lineTo(self, pt):
+        self.path.lineTo(*pt)
 
     def _curveToOne(self, pt1, pt2, pt3):
         x1, y1 = pt1
