@@ -124,7 +124,7 @@ class FillPaint(_ImmutableContainer):
     color = (255, 0, 0, 0)  # ARGB
 
     @cached_property
-    def paint(self):
+    def skPaint(self):
         paint = skia.Paint(
             Color=0,
             AntiAlias=True,
@@ -142,7 +142,7 @@ class StrokePaint(FillPaint):
     lineJoin = "miter"
 
     @cached_property
-    def paint(self):
+    def skPaint(self):
         paint = skia.Paint(
             Color=0,
             AntiAlias=True,

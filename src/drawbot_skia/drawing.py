@@ -189,9 +189,9 @@ class Drawing:
 
     def _drawItem(self, canvasMethod, *items):
         if self._gstate.fillPaint.somethingToDraw:
-            canvasMethod(*items, self._gstate.fillPaint.paint)
+            canvasMethod(*items, self._gstate.fillPaint.skPaint)
         if self._gstate.strokePaint.somethingToDraw:
-            canvasMethod(*items, self._gstate.strokePaint.paint)
+            canvasMethod(*items, self._gstate.strokePaint.skPaint)
 
 
 def _colorArgs(args):
