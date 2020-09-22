@@ -1,10 +1,8 @@
 from setuptools import setup, find_packages
 
 
-long_description = """\
-drawbot-skia is a cross-plantform reimplementation of the drawing API
-of the [DrawBot application for macOS](https://www.drawbot.com/).
-"""
+with open("README.md", encoding="utf-8") as f:
+    long_description = f.read()
 
 
 setup(
