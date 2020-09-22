@@ -30,6 +30,8 @@ Work in progress!
 1. `textBox()` 🔴 _(Major Obstacle)_
 1. Fill further gaps in DrawBot API
 
+The currently supported subset of Drawbot is [tracked here](https://github.com/justvanrossum/drawbot-skia/issues/5).
+
 ## Vision
 
 This project is purely a Python package that implements (part of) the DrawBot drawing API. Using Skia ([skia-python](https://github.com/kyamagu/skia-python)) ensures this can be done in a cross-platform way.
