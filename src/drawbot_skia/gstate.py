@@ -216,11 +216,11 @@ class TextStyle(_ImmutableContainer):
         return font
 
     @staticmethod
-    def _cloneTypeface(typeface, ttFont, location):
+    def _cloneTypeface(typeface, ttFont, variations):
         fvar = ttFont.get("fvar")
-        defaultLocation = {a.axisTag: location.get(a.axisTag, a.defaultValue) for a in fvar.axes}
+        defaultLocation = {a.axisTag: variations.get(a.axisTag, a.defaultValue) for a in fvar.axes}
         tags = [a.axisTag for a in fvar.axes]
-        location = [(tag, location.get(tag, defaultLocation[tag])) for tag in tags]
+        location = [(tag, variations.get(tag, defaultLocation[tag])) for tag in tags]
         makeCoord = skia.FontArguments.VariationPosition.Coordinate
         rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location]
         coords = skia.FontArguments.VariationPosition.Coordinates(rawCoords)
