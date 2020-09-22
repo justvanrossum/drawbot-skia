@@ -58,6 +58,8 @@ The quickest way to install the latest release is with pip:
 
 `pip install drawbot-skia`
 
+_Note for Windows: skia-python is only supported for the 64-bit version of Python, so that goes for drawbot-skia as well, so make sure you use one of the x86-64 Python installers._
+
 If you want to see the source code and possibly contribute: clone the repo, and do `pip install -e .` in the root directory.
 
 ## Usage
