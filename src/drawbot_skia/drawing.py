@@ -167,10 +167,16 @@ class Drawing:
         else:
             self._canvas.skew(math.radians(sx), math.radians(sy))
 
-    def transform(self, matrix):
+    def transform(self, matrix, center=(0, 0)):
         m = skia.Matrix()
         m.setAffine(matrix)
-        self._canvas.concat(m)
+        cx, cy = center
+        if cx != 0 or cy != 0:
+            self._canvas.translate(cx, cy)
+            self._canvas.concat(m)
+            self._canvas.translate(-cx, -cy)
+        else:
+            self._canvas.concat(m)
 
     @contextlib.contextmanager
     def savedState(self):
