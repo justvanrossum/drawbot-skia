@@ -61,6 +61,15 @@ class BezierPath(BasePen):
     def _endPath(self):
         pass
 
+    def arc(self, center, radius, startAngle, endAngle, clockwise):
+        cx, cy = center
+        diameter = radius * 2
+        rect = (cx - radius, cy - radius, diameter, diameter)
+        sweepAngle = (endAngle - startAngle) % 360
+        if clockwise:
+            sweepAngle -= 360
+        self.path.arcTo(rect, startAngle, sweepAngle, False)
+
     def rect(self, x, y, w, h):
         self.path.addRect((x, y, w, h))
 

@@ -14,6 +14,7 @@
 - Added `path.rotate(angle, center=(0, 0))`
 - Added `path.skew(x, y=0, center=(0, 0))`
 - Added `path.transform(transform, center=(0, 0))`
+- Added `path.arc(center, radius, startAngle, endAngle, clockwise)`
 
 ## [0.2.0] - 2020-09-26
 
