@@ -10,6 +10,10 @@
 - Added `path.appendPath(other)`
 - Added `path.copy()`
 - Added `path.translate(x, y)`
+- Added `path.scale(x, y=None, center=(0, 0))`
+- Added `path.rotate(angle, center=(0, 0))`
+- Added `path.skew(x, y=0, center=(0, 0))`
+- Added `path.transform(transform, center=(0, 0))`
 
 ## [0.2.0] - 2020-09-26
 

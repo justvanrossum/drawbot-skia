@@ -1,4 +1,6 @@
+import math
 import skia
+from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
 
 
@@ -70,3 +72,28 @@ class BezierPath(BasePen):
 
     def translate(self, x, y):
         self.path.offset(x, y)
+
+    def scale(self, x, y=None, center=(0, 0)):
+        if y is None:
+            y = x
+        self.transform((x, 0, 0, y, 0, 0), center=center)
+
+    def rotate(self, angle, center=(0, 0)):
+        t = Transform()
+        t = t.rotate(math.radians(angle))
+        self.transform(t, center=center)
+
+    def skew(self, x, y=0, center=(0, 0)):
+        t = Transform()
+        t = t.skew(math.radians(x), math.radians(y))
+        self.transform(t, center=center)
+
+    def transform(self, transform, center=(0, 0)):
+        cx, cy = center
+        t = Transform()
+        t = t.translate(cx, cy)
+        t = t.transform(transform)
+        t = t.translate(-cx, -cy)
+        matrix = skia.Matrix()
+        matrix.setAffine(t)
+        self.path.transform(matrix)

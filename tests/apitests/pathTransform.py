@@ -1,0 +1,12 @@
+size(200, 200)
+fill(1)
+rect(0, 0, 200, 200)
+fill(0)
+
+path = BezierPath()
+path.rect(0, 0, 100, 100)
+path.scale(0.9, center=(50, 50))
+path.rotate(30, center=(50, 50))
+path.skew(15, 0, center=(50, 50))
+path.translate(20, 20)
+drawPath(path)
