@@ -151,11 +151,11 @@ class Drawing:
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)
+        paint = skia.Paint()
         if alpha != 1.0:
-            paint = skia.Paint()
             paint.setAlpha(round(alpha * 255))
-        else:
-            paint = None
+        if self._gstate.fillPaint.blendMode != "normal":
+            paint.setBlendMode(self._gstate.fillPaint.skPaint.getBlendMode())
         x, y = position
         self._canvas.save()
         try:
