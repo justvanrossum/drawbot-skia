@@ -105,6 +105,9 @@ class Drawing:
     def fontVariations(self, *, resetVariations=False, **variations):
         return self._gstate.setFontVariations(variations, resetVariations)
 
+    def language(self, language):
+        return self._gstate.setLanguage(language)
+
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a
         # textSize()/text() call combination with the same text and

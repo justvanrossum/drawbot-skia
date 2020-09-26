@@ -94,6 +94,9 @@ class GraphicsState:
         self.textStyle = self.textStyle.copy(variations=currentVariations)
         return currentVariations
 
+    def setLanguage(self, language):
+        self.textStyle = self.textStyle.copy(language=language)
+
 
 class _ImmutableContainer:
 
@@ -174,6 +177,7 @@ class TextStyle(_ImmutableContainer):
     fontSize = 10
     features = {}  # won't get mutated
     variations = {}  # won't get mutated
+    language = None
 
     def __init__(self, **properties):
         super().__init__(**properties)
@@ -247,6 +251,7 @@ class TextStyle(_ImmutableContainer):
                 flippedCanvas=True,
                 features=self.features,
                 variations=self.variations,
+                language=self.language,
             )
             if glyphsInfo is None:
                 glyphsInfo = runInfo
