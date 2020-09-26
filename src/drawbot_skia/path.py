@@ -5,8 +5,6 @@ from fontTools.pens.basePen import BasePen
 
 
 # TODO:
-# - arc
-# - arcTo
 # - drawToPen
 # - drawToPointPen
 # - text
