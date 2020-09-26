@@ -70,6 +70,9 @@ class BezierPath(BasePen):
             sweepAngle -= 360
         self.path.arcTo(rect, startAngle, sweepAngle, False)
 
+    def arcTo(self, point1, point2, radius):
+        self.path.arcTo(point1, point2, radius)
+
     def rect(self, x, y, w, h):
         self.path.addRect((x, y, w, h))
 
