@@ -4,6 +4,8 @@
 
 - Added `clipPath(path)`
 - Added `path.pointInside(point)`
+- Added `path.bounds()`
+- Added `path.controlPointBounds()`
 
 ## [0.2.0] - 2020-09-26
 

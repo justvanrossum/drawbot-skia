@@ -45,3 +45,15 @@ class BezierPath(BasePen):
     def pointInside(self, point):
         x, y = point
         return self.path.contains(x, y)
+
+    def bounds(self):
+        if self.path.countVerbs() == 0:
+            return None
+        xMin, yMin, xMax, yMax = self.path.computeTightBounds()
+        return (xMin, yMin, xMax, yMax)
+
+    def controlPointBounds(self):
+        if self.path.countVerbs() == 0:
+            return None
+        xMin, yMin, xMax, yMax = self.path.getBounds()
+        return (xMin, yMin, xMax, yMax)
