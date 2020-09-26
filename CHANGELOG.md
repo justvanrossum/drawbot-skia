@@ -1,6 +1,6 @@
 # Changelog for drawbot-skia
 
-## [0.2.0] - 2020-09-2?
+## [0.2.0] - 2020-09-26
 
 - Added `image(imagePath, position, alpha=1.0)`
 - Added `language(language)`
