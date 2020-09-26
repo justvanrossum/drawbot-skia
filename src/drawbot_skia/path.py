@@ -49,11 +49,9 @@ class BezierPath(BasePen):
     def bounds(self):
         if self.path.countVerbs() == 0:
             return None
-        xMin, yMin, xMax, yMax = self.path.computeTightBounds()
-        return (xMin, yMin, xMax, yMax)
+        return tuple(self.path.computeTightBounds())
 
     def controlPointBounds(self):
         if self.path.countVerbs() == 0:
             return None
-        xMin, yMin, xMax, yMax = self.path.getBounds()
-        return (xMin, yMin, xMax, yMax)
+        return tuple(self.path.getBounds())
