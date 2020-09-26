@@ -5,6 +5,7 @@
 - Added `image(imagePath, position, alpha=1.0)`
 - Added `language(language)`
 - Fixed signature of `transform(matrix, center=(0, 0))`
+- Added `blendMode(blendMode)`
 
 ## [0.1.1] - 2020-09-22
 
