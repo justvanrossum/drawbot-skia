@@ -138,7 +138,7 @@ class BezierPath(BasePen):
         it = skia.Path.Iter(self.path, False)
         needEndPath = False
         for verb, points in it:
-            penVerb, startIndex, numPoints = _pathVerbsToPenMethod.get(verb, (None, None))
+            penVerb, startIndex, numPoints = _pathVerbsToPenMethod.get(verb, (None, None, None))
             if penVerb is None:
                 continue
             assert len(points) == numPoints, (verb, numPoints, len(points))
@@ -164,7 +164,7 @@ class BezierPath(BasePen):
 
 
 def _convertConicToCubicDirty(pt1, pt2, pt3):
-    # NOTE: we do a crude and non-general conversion to a cubic bezier
+    # NOTE: we do a crude and non-general conversion to a cubic bezier,
     # based on the following assumptions:
     # - drawbot itself does not allow conics to be drawn
     # - skia draws conics implicitly for oval(), arc() and arcTo()
