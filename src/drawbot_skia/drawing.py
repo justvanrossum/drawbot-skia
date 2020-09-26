@@ -79,6 +79,11 @@ class Drawing:
     def stroke(self, *args):
         self._gstate.setStrokeColor(_colorArgs(args))
 
+    def blendMode(self, blendMode):
+        if blendMode not in _blendModes:
+            raise DrawbotError(f"blendMode must be one of: {_blendModesList}")
+        self._gstate.setBlendMode(blendMode)
+
     def strokeWidth(self, value):
         self._gstate.setStrokeWidth(value)
 
@@ -246,3 +251,37 @@ def _colorArgs(args):
     else:
         assert 0
     return tuple(min(255, max(0, round(v * 255))) for v in (alpha, r, g, b))
+
+
+_blendModesList = [
+    'normal',
+    'multiply',
+    'screen',
+    'overlay',
+    'darken',
+    'lighten',
+    'colorDodge',
+    'colorBurn',
+    'softLight',
+    'hardLight',
+    'difference',
+    'exclusion',
+    'hue',
+    'saturation',
+    'color',
+    'luminosity',
+    'clear',
+    'copy',
+    'sourceIn',
+    'sourceOut',
+    'sourceAtop',
+    'destinationOver',
+    'destinationIn',
+    'destinationOut',
+    'destinationAtop',
+    'xOR',
+    'plusDarker',
+    'plusLighter',
+]
+
+_blendModes = set(_blendModesList)

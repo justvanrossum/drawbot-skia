@@ -56,6 +56,10 @@ class GraphicsState:
         else:
             self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True)
 
+    def setBlendMode(self, blendMode):
+        self.fillPaint = self.fillPaint.copy(blendMode=blendMode)
+        self.strokePaint = self.strokePaint.copy(blendMode=blendMode)
+
     def setStrokeWidth(self, strokeWidth):
         self.strokePaint = self.strokePaint.copy(strokeWidth=strokeWidth)
 
@@ -125,6 +129,7 @@ class FillPaint(_ImmutableContainer):
 
     somethingToDraw = True
     color = (255, 0, 0, 0)  # ARGB
+    blendMode = "normal"
 
     @cached_property
     def skPaint(self):
@@ -134,6 +139,7 @@ class FillPaint(_ImmutableContainer):
             Style=skia.Paint.kFill_Style,
         )
         paint.setARGB(*self.color)
+        paint.setBlendMode(_blendModeMapping[self.blendMode])
         return paint
 
 
@@ -152,6 +158,7 @@ class StrokePaint(FillPaint):
             Style=skia.Paint.kStroke_Style,
         )
         paint.setARGB(*self.color)
+        paint.setBlendMode(_blendModeMapping[self.blendMode])
         paint.setStrokeMiter(self.miterLimit)
         paint.setStrokeWidth(self.strokeWidth)
         paint.setStrokeCap(_strokeCapMapping[self.lineCap])
@@ -170,6 +177,43 @@ _strokeJoinMapping = dict(
     round=skia.Paint.Join.kRound_Join,
     bevel=skia.Paint.Join.kBevel_Join,
 )
+
+# NOTE: 'plusDarker' is missing
+_blendModeMapping = {
+    "softLight": skia.BlendMode.kSoftLight, # lighten or darken, depending on source
+    "destinationOut": skia.BlendMode.kDstOut, # destination trimmed outside source
+    "clear": skia.BlendMode.kClear, # replaces destination with zero: fully transparent
+    "sourceIn": skia.BlendMode.kSrcIn, # source trimmed inside destination
+    "destinationOver": skia.BlendMode.kDstOver, # destination over source
+    "hardLight": skia.BlendMode.kHardLight, # multiply or screen, depending on source
+    # "???": skia.BlendMode.kDst, # preserves destination
+    "xOR": skia.BlendMode.kXor, # each of source and destination trimmed outside the other
+    "hue": skia.BlendMode.kHue, # hue of source with saturation and luminosity of destination
+    "screen": skia.BlendMode.kScreen, # multiply inverse of pixels, inverting result; brightens destination
+    # "???": skia.BlendMode.kLastMode, # last valid value
+    "difference": skia.BlendMode.kDifference, # subtract darker from lighter with higher contrast
+    "overlay": skia.BlendMode.kOverlay, # multiply or screen, depending on destination
+    # "???": skia.BlendMode.kModulate, # product of premultiplied colors; darkens destination
+    "colorBurn": skia.BlendMode.kColorBurn, # darken destination to reflect source
+    # "???": skia.BlendMode.kSrc, # replaces destination
+    "plusLighter": skia.BlendMode.kPlus, # sum of colors
+    "destinationIn": skia.BlendMode.kDstIn, # destination trimmed by source
+    "destinationAtop": skia.BlendMode.kDstATop, # destination inside source blended with source
+    "saturation": skia.BlendMode.kSaturation, # saturation of source with hue and luminosity of destination
+    # "???": skia.BlendMode.kLastSeparableMode, # last blend mode operating separately on components
+    "sourceAtop": skia.BlendMode.kSrcATop, # source inside destination blended with destination
+    "sourceOut": skia.BlendMode.kSrcOut, # source trimmed outside destination
+    # "???": skia.BlendMode.kLastCoeffMode, # last porter duff blend mode
+    "normal": skia.BlendMode.kSrcOver, # source over destination
+    "copy": skia.BlendMode.kSrcOver, # source over destination
+    "colorDodge": skia.BlendMode.kColorDodge, # brighten destination to reflect source
+    "darken": skia.BlendMode.kDarken, # darker of source and destination
+    "luminosity": skia.BlendMode.kLuminosity, # luminosity of source with hue and saturation of destination
+    "multiply": skia.BlendMode.kMultiply, # multiply source with destination, darkening image
+    "lighten": skia.BlendMode.kLighten, # lighter of source and destination
+    "color": skia.BlendMode.kColor, # hue and saturation of source with luminosity of destination
+    "exclusion": skia.BlendMode.kExclusion, # subtract darker from lighter with lower contrast
+}
 
 
 class TextStyle(_ImmutableContainer):
