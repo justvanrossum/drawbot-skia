@@ -3,6 +3,7 @@
 ## [0.?.?] - 2020-09-??
 
 - Added `clipPath(path)`
+- Added `path.pointInside(point)`
 
 ## [0.2.0] - 2020-09-26
 

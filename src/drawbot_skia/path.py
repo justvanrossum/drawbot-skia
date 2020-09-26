@@ -45,3 +45,7 @@ class BezierPath(BasePen):
             self.lineTo(point)
         if close:
             self.closePath()
+
+    def pointInside(self, point):
+        x, y = point
+        return self.path.contains(x, y)
