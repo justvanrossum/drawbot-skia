@@ -93,7 +93,7 @@ class Drawing:
     def lineJoin(self, lineJoin):
         self._gstate.setLineJoin(lineJoin)
 
-    def lineDash(self, firstValue, *values):
+    def lineDash(self, firstValue=None, *values):
         if firstValue is None:
             if values:
                 raise TypeError("lineDash() argument(s) should be None, or one or more numbers")
