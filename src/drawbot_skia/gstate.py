@@ -69,6 +69,13 @@ class GraphicsState:
     def setLineJoin(self, lineJoin):
         self.strokePaint = self.strokePaint.copy(lineJoin=lineJoin)
 
+    def setLineDash(self, firstValue, *values):
+        if firstValue is None:
+            assert not values
+            self.strokePaint = self.strokePaint.copy(lineDash=None)
+        else:
+            self.strokePaint = self.strokePaint.copy(lineDash=(firstValue,) + values)
+
     def setMiterLimit(self, miterLimit):
         self.strokePaint = self.strokePaint.copy(miterLimit=miterLimit)
 
@@ -152,6 +159,7 @@ class StrokePaint(FillPaint):
     strokeWidth = 1
     lineCap = "butt"
     lineJoin = "miter"
+    lineDash = None
 
     @cached_property
     def skPaint(self):
@@ -160,6 +168,13 @@ class StrokePaint(FillPaint):
         paint.setStrokeWidth(self.strokeWidth)
         paint.setStrokeCap(_strokeCapMapping[self.lineCap])
         paint.setStrokeJoin(_strokeJoinMapping[self.lineJoin])
+        if self.lineDash is not None:
+            intervals = self.lineDash
+            if len(intervals) % 2:
+                # Skia requires the intervals list to be of even length;
+                # doubling the list matches macOS/CoreGraphics behavior
+                intervals = intervals * 2
+            paint.setPathEffect(skia.DashPathEffect.Make(intervals, 0))
         return paint
 
 

@@ -6,6 +6,7 @@
 - Added `language(language)`
 - Fixed signature of `transform(matrix, center=(0, 0))`
 - Added `blendMode(blendMode)`
+- Added `lineDash(firstValue, *values)`
 
 ## [0.1.1] - 2020-09-22
 

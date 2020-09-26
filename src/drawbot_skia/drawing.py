@@ -93,6 +93,12 @@ class Drawing:
     def lineJoin(self, lineJoin):
         self._gstate.setLineJoin(lineJoin)
 
+    def lineDash(self, firstValue, *values):
+        if firstValue is None:
+            if values:
+                raise TypeError("lineDash() argument(s) should be None, or one or more numbers")
+        self._gstate.setLineDash(firstValue, *values)
+
     def miterLimit(self, miterLimit):
         self._gstate.setMiterLimit(miterLimit)
 
