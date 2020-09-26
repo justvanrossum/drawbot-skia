@@ -234,6 +234,7 @@ class TextStyle(_ImmutableContainer):
     features = {}  # won't get mutated
     variations = {}  # won't get mutated
     language = None
+    font = None
 
     def __init__(self, **properties):
         super().__init__(**properties)
@@ -255,13 +256,16 @@ class TextStyle(_ImmutableContainer):
     def _getTypefaceAndTTFont(fontNameOrPath):
         cacheKey = fontNameOrPath
         if cacheKey not in _fontCache:
-            fontNameOrPath = os.fspath(fontNameOrPath)
-            if not os.path.exists(fontNameOrPath):
-                typeface = skia.Typeface(fontNameOrPath)
+            if fontNameOrPath is None:
+                typeface = skia.Typeface(None)
             else:
-                typeface = skia.Typeface.MakeFromFile(fontNameOrPath)
-                if typeface is None:
-                    raise DrawbotError(f"can't load font: {fontNameOrPath}")
+                fontNameOrPath = os.fspath(fontNameOrPath)
+                if not os.path.exists(fontNameOrPath):
+                    typeface = skia.Typeface(fontNameOrPath)
+                else:
+                    typeface = skia.Typeface.MakeFromFile(fontNameOrPath)
+                    if typeface is None:
+                        raise DrawbotError(f"can't load font: {fontNameOrPath}")
             ttFont = makeTTFontFromSkiaTypeface(typeface)
             _fontCache[cacheKey] = typeface, ttFont
         return _fontCache[cacheKey]
