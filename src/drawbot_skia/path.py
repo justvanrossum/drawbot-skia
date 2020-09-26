@@ -63,3 +63,10 @@ class BezierPath(BasePen):
 
     def appendPath(self, other):
         self.path.addPath(other.path)
+
+    def copy(self):
+        path = skia.Path(self.path)
+        return BezierPath(path=path)
+
+    def translate(self, x, y):
+        self.path.offset(x, y)

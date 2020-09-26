@@ -8,6 +8,8 @@
 - Added `path.controlPointBounds()`
 - Added `path.reverse()`
 - Added `path.appendPath(other)`
+- Added `path.copy()`
+- Added `path.translate(x, y)`
 
 ## [0.2.0] - 2020-09-26
 

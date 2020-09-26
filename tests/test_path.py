@@ -15,3 +15,12 @@ def test_path_controlPointBounds():
     path.curveTo((50, 100), (100, 100), (150, 0))
     assert path.bounds() == (0.0, 0.0, 150.0, 75.0)
     assert path.controlPointBounds() == (0.0, 0.0, 150.0, 100.0)
+
+
+def test_path_copy():
+    path1 = BezierPath()
+    path1.rect(0, 0, 100, 100)
+    path2 = path1.copy()
+    path1.translate(50, 20)
+    assert path1.bounds() == (50.0, 20.0, 150.0, 120.0)
+    assert path2.bounds() == (0.0, 0.0, 100.0, 100.0)
