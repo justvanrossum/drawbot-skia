@@ -4,6 +4,32 @@ from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
 
 
+# TODO:
+# - arc
+# - arcTo
+# - drawToPen
+# - drawToPointPen
+# - text
+# - textBox
+# - removeOverlap
+# - difference
+# - intersection
+# - union
+# - xor
+# MAYBE:
+# - contours
+# - expandStroke
+# - intersectionPoints
+# - offCurvePoints
+# - onCurvePoints
+# - optimizePath
+# - points
+# - svgClass
+# - svgID
+# - svgLink
+# - traceImage
+
+
 class BezierPath(BasePen):
 
     def __init__(self, path=None, glyphSet=None):
