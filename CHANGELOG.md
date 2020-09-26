@@ -7,6 +7,7 @@
 - Added `path.bounds()`
 - Added `path.controlPointBounds()`
 - Added `path.reverse()`
+- Added `path.appendPath(other)`
 
 ## [0.2.0] - 2020-09-26
 

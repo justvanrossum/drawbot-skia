@@ -60,3 +60,6 @@ class BezierPath(BasePen):
         path = skia.Path()
         path.reverseAddPath(self.path)
         self.path = path
+
+    def appendPath(self, other):
+        self.path.addPath(other.path)
