@@ -1,12 +1,12 @@
+import logging
 import math
 import skia
 from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
+from fontTools.pens.pointPen import SegmentToPointPen
 
 
 # TODO:
-# - drawToPen
-# - drawToPointPen
 # - text
 # - textBox
 # - removeOverlap
@@ -133,3 +133,82 @@ class BezierPath(BasePen):
         matrix = skia.Matrix()
         matrix.setAffine(t)
         self.path.transform(matrix)
+
+    def drawToPen(self, pen):
+        it = skia.Path.Iter(self.path, False)
+        needEndPath = False
+        for verb, points in it:
+            penVerb, startIndex, numPoints = _pathVerbsToPenMethod.get(verb, (None, None))
+            if penVerb is None:
+                continue
+            assert len(points) == numPoints, (verb, numPoints, len(points))
+            if penVerb == "conicTo":
+                if abs(it.conicWeight()) > 1e-10:
+                    logging.warning("unsupported conic form (weight != 0): conic to cubic conversion will be bad")
+                pen.curveTo(*_convertConicToCubicDirty(*points))
+            elif penVerb == "closePath":
+                needEndPath = False
+                pen.closePath()
+            else:
+                if penVerb == "moveTo":
+                    if needEndPath:
+                        pen.endPath()
+                    needEndPath = True
+                pointArgs = ((x, y) for x, y in points[startIndex:])
+                getattr(pen, penVerb)(*pointArgs)
+        if needEndPath:
+            pen.endPath()
+
+    def drawToPointPen(self, pen):
+        self.drawToPen(SegmentToPointPen(pen))
+
+
+def _convertConicToCubicDirty(pt1, pt2, pt3):
+    # NOTE: we do a crude and non-general conversion to a cubic bezier
+    # based on the following assumptions:
+    # - drawbot itself does not allow conics to be drawn
+    # - skia draws conics implicitly for oval(), arc() and arcTo()
+    # - for oval the conic segments span 90 degrees
+    # - for arc and arcTo the conic segments do not span more than 90 degrees
+    # - for arc and arcTo the conic segments are circular, never elliptical
+    # For all these cases, the conic weight will be (close to) zero.
+    (x1, y1), (x2, y2), (x3, y3) = pt1, pt2, pt3
+    dx1 = x2 - x1
+    dy1 = y2 - y1
+    dx2 = x2 - x3
+    dy2 = y2 - y3
+    angle1 = math.atan2(dy1, dx1)
+    angle2 = math.atan2(-dy2, -dx2)
+    angleDiff = (angle1 - angle2) % (2 * math.pi)
+    if angleDiff > math.pi:
+        angleDiff = 2 * math.pi - angleDiff
+    if abs(angleDiff - math.pi / 2) < 0.0001:
+        # angle is close enough to 90 degrees, we use stupid old BEZIER_ARC_MAGIC
+        handleRatio = 0.5522847498
+    else:
+        # Fall back to the circular assumption: |pt1 pt2| == |pt2 pt3|
+        d1 = math.hypot(dx1, dy1)
+        d2 = math.hypot(dx2, dy2)
+        if abs(d1 - d2) > 0.00001:
+            logging.warning("unsupported conic form (non-circular, non-90-degrees): conic to cubic conversion will be bad")
+        angleHalf = angleDiff / 2
+        radius = d1 / math.tan(angleHalf)
+        D = radius * (1 - math.cos(angleHalf))
+        handleLength = (4 * D / 3) / math.sin(angleHalf)  # length of the bcp line
+        handleRatio = handleLength / d1
+    return (
+        (x1 + dx1 * handleRatio, y1 + dy1 * handleRatio),
+        (x3 + dx2 * handleRatio, y3 + dy2 * handleRatio),
+        (x3, y3),
+    )
+
+
+_pathVerbsToPenMethod = {
+    skia.Path.Verb.kMove_Verb: ("moveTo", 0, 1),
+    skia.Path.Verb.kLine_Verb: ("lineTo", 1, 2),
+    skia.Path.Verb.kCubic_Verb: ("curveTo", 1, 4),
+    skia.Path.Verb.kQuad_Verb: ("qCurveTo", 1, 3),
+    skia.Path.Verb.kConic_Verb: ("conicTo", 1, 3),
+    skia.Path.Verb.kClose_Verb: ("closePath", 1, 1),
+    # skia.Path.Verb.kDone_Verb: (None, None),
+}
