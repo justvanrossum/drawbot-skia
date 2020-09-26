@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.?.?] - 2020-09-??
+
+- Added `clipPath(path)`
+
 ## [0.2.0] - 2020-09-26
 
 - Added `image(imagePath, position, alpha=1.0)`

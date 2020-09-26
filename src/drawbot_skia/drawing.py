@@ -73,6 +73,9 @@ class Drawing:
     def drawPath(self, path):
         self._drawItem(self._canvas.drawPath, path.path)
 
+    def clipPath(self, path):
+        self._canvas.clipPath(path.path, doAntiAlias=True)
+
     def fill(self, *args):
         self._gstate.setFillColor(_colorArgs(args))
 
