@@ -48,6 +48,12 @@ def test_saveImage_multipage(tmpdir):
     assert expected_filenames == [p.name for p in sorted(tmpdir.glob("*.png"))]
 
 
+def test_noFont(tmpdir):
+    db = Drawing()
+    # Ensure we don't get an error when font is not set
+    db.text("Hallo", (0, 0))
+
+
 def readbytes(path):
     with open(path, "rb") as f:
         return f.read()
