@@ -55,3 +55,8 @@ class BezierPath(BasePen):
         if self.path.countVerbs() == 0:
             return None
         return tuple(self.path.getBounds())
+
+    def reverse(self):
+        path = skia.Path()
+        path.reverseAddPath(self.path)
+        self.path = path
