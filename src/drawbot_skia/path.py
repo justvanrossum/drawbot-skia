@@ -226,5 +226,5 @@ _pathVerbsToPenMethod = {
     skia.Path.Verb.kQuad_Verb: ("qCurveTo", 1, 3),
     skia.Path.Verb.kConic_Verb: ("conicTo", 1, 3),
     skia.Path.Verb.kClose_Verb: ("closePath", 1, 1),
-    # skia.Path.Verb.kDone_Verb: (None, None),
+    # skia.Path.Verb.kDone_Verb: (None, None),  # "StopIteration", not receiving when using Python iterator
 }
