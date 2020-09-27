@@ -136,16 +136,9 @@ class Drawing:
             return
 
         glyphsInfo = self._gstate.textStyle.shape(txt)
-        blob = self._gstate.textStyle.makeTextBlob(glyphsInfo)
+        blob = self._gstate.textStyle.makeTextBlob(glyphsInfo, align)
 
         x, y = position
-        textWidth = glyphsInfo.endPos[0]
-        if align is None:
-            align = "left" if not glyphsInfo.baseLevel else "right"
-        if align == "right":
-            x -= textWidth
-        elif align == "center":
-            x -= textWidth / 2
 
         self._canvas.save()
         try:
