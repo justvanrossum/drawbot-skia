@@ -12,6 +12,8 @@ path.closePath()
 path.oval(0, 0, 200, 90)
 path.moveTo((250, 250))
 path.arc((250, 250), 200, 0, 120, False)
+# path.skew() will trigger bad results
+# https://github.com/justvanrossum/drawbot-skia/issues/7
 # path.skew(10, 20)
 
 fill(None)
