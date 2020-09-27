@@ -1,6 +1,6 @@
 # Changelog for drawbot-skia
 
-## [0.?.?] - 2020-09-??
+## [0.3.0] - 2020-09-27
 
 - Added `clipPath(path)`
 - Added `path.pointInside(point)`
