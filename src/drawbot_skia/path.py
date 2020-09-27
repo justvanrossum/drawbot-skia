@@ -224,6 +224,34 @@ class BezierPath(BasePen):
         path.draw(resultPath)
         self.path = resultPath.path
 
+    __mod__ = difference
+
+    def __imod__(self, other):
+        result = self.difference(other)
+        self.path = result.path
+        return self
+
+    __or__ = union
+
+    def __ior__(self, other):
+        result = self.union(other)
+        self.path = result.path
+        return self
+
+    __and__ = intersection
+
+    def __iand__(self, other):
+        result = self.intersection(other)
+        self.path = result.path
+        return self
+
+    __xor__ = xor
+
+    def __ixor__(self, other):
+        result = self.xor(other)
+        self.path = result.path
+        return self
+
 
 FLIP_MATRIX = skia.Matrix()
 FLIP_MATRIX.setAffine((1, 0, 0, -1, 0, 0))

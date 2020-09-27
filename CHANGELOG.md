@@ -1,5 +1,13 @@
 # Changelog for drawbot-skia
 
+## [0.3.1] - 2020-09-27
+
+- Added `path.removeOverlap()`
+- Added `path.union(other)` and `path.__or__(other)`
+- Added `path.intersection(other)` and `path.__and__(other)`
+- Added `path.difference(other)` and `path.__mod__(other)`
+- Added `path.xor(other)` and `path.__xor__(other)`
+
 ## [0.3.0] - 2020-09-27
 
 - Added `clipPath(path)`
