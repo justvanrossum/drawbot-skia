@@ -143,10 +143,14 @@ class BezierPath(BasePen):
                 continue
             assert len(points) == numPoints, (verb, numPoints, len(points))
             if penVerb == "conicTo":
-                if abs(it.conicWeight()) > 1e-10:
-                    logging.warning("unsupported conic form (weight != 0): conic to cubic conversion will be bad")
-                    # TODO: we should fall back to skia.Path.ConvertConicToQuads(),
-                    # but that call is currently not working.
+                # We should only call _convertConicToCubicDirty()
+                # if it.conicWeight() == sqrt(2)/2, but skia-python doesn't
+                # give the correct value.
+                # https://github.com/kyamagu/skia-python/issues/116
+                # if abs(it.conicWeight() - 0.707...) > 1e-10:
+                #     logging.warning("unsupported conic form (weight != sqrt(2)/2): conic to cubic conversion will be bad")
+                # TODO: we should fall back to skia.Path.ConvertConicToQuads(),
+                # but that call is currently also not working.
                 pen.curveTo(*_convertConicToCubicDirty(*points))
             elif penVerb == "closePath":
                 needEndPath = False
