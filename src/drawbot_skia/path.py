@@ -180,6 +180,7 @@ def _convertConicToCubicDirty(pt1, pt2, pt3):
     # scale, in which case we need to fall back to
     # skia.Path.ConvertConicToQuads(), but that is blocked by
     # https://github.com/kyamagu/skia-python/issues/115
+    # https://github.com/justvanrossum/drawbot-skia/issues/7
     #
     (x1, y1), (x2, y2), (x3, y3) = pt1, pt2, pt3
     dx1 = x2 - x1
