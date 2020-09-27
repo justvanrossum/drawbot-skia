@@ -145,6 +145,8 @@ class BezierPath(BasePen):
             if penVerb == "conicTo":
                 if abs(it.conicWeight()) > 1e-10:
                     logging.warning("unsupported conic form (weight != 0): conic to cubic conversion will be bad")
+                    # TODO: we should fall back to skia.Path.ConvertConicToQuads(),
+                    # but that call is currently not working.
                 pen.curveTo(*_convertConicToCubicDirty(*points))
             elif penVerb == "closePath":
                 needEndPath = False
@@ -164,14 +166,21 @@ class BezierPath(BasePen):
 
 
 def _convertConicToCubicDirty(pt1, pt2, pt3):
-    # NOTE: we do a crude and non-general conversion to a cubic bezier,
-    # based on the following assumptions:
+    #
+    # NOTE: we do a crude conversion from a conic segment to a cubic bezier,
+    # for two common cases, based on the following assumptions:
     # - drawbot itself does not allow conics to be drawn
     # - skia draws conics implicitly for oval(), arc() and arcTo()
     # - for oval the conic segments span 90 degrees
     # - for arc and arcTo the conic segments do not span more than 90 degrees
     # - for arc and arcTo the conic segments are circular, never elliptical
     # For all these cases, the conic weight will be (close to) zero.
+    #
+    # This no longer holds once a path has been transformed with skew or x/y
+    # scale, in which case we need to fall back to
+    # skia.Path.ConvertConicToQuads(), but that is blocked by
+    # https://github.com/kyamagu/skia-python/issues/115
+    #
     (x1, y1), (x2, y2), (x3, y3) = pt1, pt2, pt3
     dx1 = x2 - x1
     dy1 = y2 - y1
@@ -191,6 +200,8 @@ def _convertConicToCubicDirty(pt1, pt2, pt3):
         d2 = math.hypot(dx2, dy2)
         if abs(d1 - d2) > 0.00001:
             logging.warning("unsupported conic form (non-circular, non-90-degrees): conic to cubic conversion will be bad")
+            # TODO: we should fall back to skia.Path.ConvertConicToQuads(),
+            # but that call is currently not working.
         angleHalf = angleDiff / 2
         radius = d1 / math.tan(angleHalf)
         D = radius * (1 - math.cos(angleHalf))
