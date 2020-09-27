@@ -18,6 +18,7 @@
 - Added `path.arcTo(point1, point2, radius)`
 - Added `path.drawToPen(pen)`
 - Added `path.drawToPointPen(pen)`
+- Added `path.text(txt, ...)`
 - Fixed bug when `font()` was not set
 
 ## [0.2.0] - 2020-09-26

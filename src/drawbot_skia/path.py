@@ -4,10 +4,10 @@ import skia
 from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
 from fontTools.pens.pointPen import SegmentToPointPen
+from .gstate import TextStyle
 
 
 # TODO:
-# - text
 # - textBox
 # - removeOverlap
 # - difference
@@ -167,6 +167,29 @@ class BezierPath(BasePen):
 
     def drawToPointPen(self, pen):
         self.drawToPen(SegmentToPointPen(pen))
+
+    def text(self, txt, offset=None, font=None, fontSize=10, align=None):
+        if not txt:
+            return
+
+        if offset is None:
+            x, y = 0, 0
+        else:
+            x, y = offset
+
+        textStyle = TextStyle(font=font, fontSize=fontSize)
+        glyphsInfo = textStyle.shape(txt)
+        textStyle.alignGlyphPositions(glyphsInfo, align)
+        gids = sorted(set(glyphsInfo.gids))
+        flipMatrix = skia.Matrix()
+        flipMatrix.setAffine((1, 0, 0, -1, 0, 0))
+        paths = [textStyle.skFont.getPath(gid) for gid in gids]
+        for path in paths:
+            path.transform(flipMatrix)
+        paths = dict(zip(gids, paths))
+        for gid, pos in zip(glyphsInfo.gids, glyphsInfo.positions):
+            path = paths[gid]
+            self.path.addPath(path, pos[0] + x, pos[1] + y)
 
 
 def _convertConicToCubicDirty(pt1, pt2, pt3):
