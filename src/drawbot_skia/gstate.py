@@ -324,6 +324,11 @@ class TextStyle(_ImmutableContainer):
         glyphsInfo.baseLevel = baseLevel
         return glyphsInfo
 
+    def makeTextBlob(self, glyphsInfo):
+        builder = skia.TextBlobBuilder()
+        builder.allocRunPos(self.skFont, glyphsInfo.gids, glyphsInfo.positions)
+        return builder.make()
+
 
 # Font cache dict
 # - keys: font name or path string

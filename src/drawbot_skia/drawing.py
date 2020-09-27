@@ -136,9 +136,7 @@ class Drawing:
             return
 
         glyphsInfo = self._gstate.textStyle.shape(txt)
-        builder = skia.TextBlobBuilder()
-        builder.allocRunPos(self._gstate.textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions)
-        blob = builder.make()
+        blob = self._gstate.textStyle.makeTextBlob(glyphsInfo)
 
         x, y = position
         textWidth = glyphsInfo.endPos[0]
