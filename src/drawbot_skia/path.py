@@ -171,25 +171,22 @@ class BezierPath(BasePen):
     def text(self, txt, offset=None, font=None, fontSize=10, align=None):
         if not txt:
             return
-
-        if offset is None:
-            x, y = 0, 0
-        else:
-            x, y = offset
-
         textStyle = TextStyle(font=font, fontSize=fontSize)
         glyphsInfo = textStyle.shape(txt)
         textStyle.alignGlyphPositions(glyphsInfo, align)
         gids = sorted(set(glyphsInfo.gids))
-        flipMatrix = skia.Matrix()
-        flipMatrix.setAffine((1, 0, 0, -1, 0, 0))
         paths = [textStyle.skFont.getPath(gid) for gid in gids]
         for path in paths:
-            path.transform(flipMatrix)
+            path.transform(FLIP_MATRIX)
         paths = dict(zip(gids, paths))
+        x, y = (0, 0) if offset is None else offset
         for gid, pos in zip(glyphsInfo.gids, glyphsInfo.positions):
             path = paths[gid]
             self.path.addPath(path, pos[0] + x, pos[1] + y)
+
+
+FLIP_MATRIX = skia.Matrix()
+FLIP_MATRIX.setAffine((1, 0, 0, -1, 0, 0))
 
 
 def _convertConicToCubicDirty(pt1, pt2, pt3):
