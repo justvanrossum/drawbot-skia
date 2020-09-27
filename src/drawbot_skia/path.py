@@ -9,11 +9,6 @@ from .gstate import TextStyle
 
 # TODO:
 # - textBox
-# - removeOverlap
-# - difference
-# - intersection
-# - union
-# - xor
 # MAYBE:
 # - contours
 # - expandStroke
@@ -183,6 +178,51 @@ class BezierPath(BasePen):
         for gid, pos in zip(glyphsInfo.gids, glyphsInfo.positions):
             path = paths[gid]
             self.path.addPath(path, pos[0] + x, pos[1] + y)
+
+    def _doPathOp(self, other, operator):
+        from pathops import Path, op
+        path1 = Path()
+        path2 = Path()
+        self.drawToPen(path1.getPen())
+        other.drawToPen(path2.getPen())
+        result = op(
+            path1,
+            path2,
+            operator,
+            fix_winding=True,
+            keep_starting_points=True,
+        )
+        resultPath = BezierPath()
+        result.draw(resultPath)
+        return resultPath
+
+    def union(self, other):
+        from pathops import PathOp
+        return self._doPathOp(other, PathOp.UNION)
+
+    def intersection(self, other):
+        from pathops import PathOp
+        return self._doPathOp(other, PathOp.INTERSECTION)
+
+    def difference(self, other):
+        from pathops import PathOp
+        return self._doPathOp(other, PathOp.DIFFERENCE)
+
+    def xor(self, other):
+        from pathops import PathOp
+        return self._doPathOp(other, PathOp.XOR)
+
+    def removeOverlap(self):
+        from pathops import Path
+        path = Path()
+        self.drawToPen(path.getPen())
+        path.simplify(
+            fix_winding=True,
+            keep_starting_points=False,
+        )
+        resultPath = BezierPath()
+        path.draw(resultPath)
+        self.path = resultPath.path
 
 
 FLIP_MATRIX = skia.Matrix()
