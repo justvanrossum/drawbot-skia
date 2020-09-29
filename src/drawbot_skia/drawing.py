@@ -7,7 +7,7 @@ from .errors import DrawbotError
 from .gstate import GraphicsState
 
 
-class gstateDelegate:
+class gstateDelegateMethod:
 
     def __set_name__(self, owner, name):
         self.name = name
@@ -88,19 +88,19 @@ class Drawing:
         self._canvas.clipPath(path.path, doAntiAlias=True)
 
     # The following methods will be directly delegated to self._gstate
-    fill = gstateDelegate()
-    stroke = gstateDelegate()
-    blendMode = gstateDelegate()
-    strokeWidth = gstateDelegate()
-    lineCap = gstateDelegate()
-    lineJoin = gstateDelegate()
-    lineDash = gstateDelegate()
-    miterLimit = gstateDelegate()
-    font = gstateDelegate()
-    fontSize = gstateDelegate()
-    openTypeFeatures = gstateDelegate()
-    fontVariations = gstateDelegate()
-    language = gstateDelegate()
+    fill = gstateDelegateMethod()
+    stroke = gstateDelegateMethod()
+    blendMode = gstateDelegateMethod()
+    strokeWidth = gstateDelegateMethod()
+    lineCap = gstateDelegateMethod()
+    lineJoin = gstateDelegateMethod()
+    lineDash = gstateDelegateMethod()
+    miterLimit = gstateDelegateMethod()
+    font = gstateDelegateMethod()
+    fontSize = gstateDelegateMethod()
+    openTypeFeatures = gstateDelegateMethod()
+    fontVariations = gstateDelegateMethod()
+    language = gstateDelegateMethod()
 
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a
