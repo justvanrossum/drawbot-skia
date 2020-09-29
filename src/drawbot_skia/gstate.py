@@ -52,9 +52,13 @@ class GraphicsStateMixin:
         self.strokePaint = self.strokePaint.copy(strokeWidth=strokeWidth)
 
     def lineCap(self, lineCap):
+        if lineCap not in _strokeCapMapping:
+            raise DrawbotError(f"lineCap must be one of: {sorted(_strokeCapMapping)}")
         self.strokePaint = self.strokePaint.copy(lineCap=lineCap)
 
     def lineJoin(self, lineJoin):
+        if lineJoin not in _strokeJoinMapping:
+            raise DrawbotError(f"lineJoin must be one of: {sorted(_strokeJoinMapping)}")
         self.strokePaint = self.strokePaint.copy(lineJoin=lineJoin)
 
     def lineDash(self, firstValue=None, *values):
