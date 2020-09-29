@@ -44,13 +44,15 @@ class GraphicsState:
 
     # Paint style
 
-    def setFillColor(self, color):
+    def fill(self, *args):
+        color = _colorArgs(args)
         if color is None:
             self.fillPaint = self.fillPaint.copy(somethingToDraw=False)
         else:
             self.fillPaint = self.fillPaint.copy(color=color, somethingToDraw=True)
 
-    def setStrokeColor(self, color):
+    def stroke(self, *args):
+        color = _colorArgs(args)
         if color is None:
             self.strokePaint = self.strokePaint.copy(somethingToDraw=False)
         else:
@@ -350,3 +352,25 @@ _fontCache = {}
 
 def clearFontCache():
     _fontCache.clear()
+
+
+def _colorArgs(args):
+    """Convert drawbot-style fill/stroke arguments to a tuple containing
+    ARGB int values."""
+    if not args:
+        return None
+    alpha = 1
+    if len(args) == 1:
+        if args[0] is None:
+            return None
+        r = g = b = args[0]
+    elif len(args) == 2:
+        r = g = b = args[0]
+        alpha = args[1]
+    elif len(args) == 3:
+        r, g, b = args
+    elif len(args) == 4:
+        r, g, b, alpha = args
+    else:
+        assert 0
+    return tuple(min(255, max(0, round(v * 255))) for v in (alpha, r, g, b))

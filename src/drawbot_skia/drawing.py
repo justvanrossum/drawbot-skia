@@ -77,10 +77,10 @@ class Drawing:
         self._canvas.clipPath(path.path, doAntiAlias=True)
 
     def fill(self, *args):
-        self._gstate.setFillColor(_colorArgs(args))
+        self._gstate.fill(*args)
 
     def stroke(self, *args):
-        self._gstate.setStrokeColor(_colorArgs(args))
+        self._gstate.stroke(*args)
 
     def blendMode(self, blendMode):
         if blendMode not in _blendModes:
@@ -229,28 +229,6 @@ class Drawing:
             canvasMethod(*items, self._gstate.fillPaint.skPaint)
         if self._gstate.strokePaint.somethingToDraw:
             canvasMethod(*items, self._gstate.strokePaint.skPaint)
-
-
-def _colorArgs(args):
-    """Convert drawbot-style fill/stroke arguments to a tuple containing
-    ARGB int values."""
-    if not args:
-        return None
-    alpha = 1
-    if len(args) == 1:
-        if args[0] is None:
-            return None
-        r = g = b = args[0]
-    elif len(args) == 2:
-        r = g = b = args[0]
-        alpha = args[1]
-    elif len(args) == 3:
-        r, g, b = args
-    elif len(args) == 4:
-        r, g, b, alpha = args
-    else:
-        assert 0
-    return tuple(min(255, max(0, round(v * 255))) for v in (alpha, r, g, b))
 
 
 _blendModesList = [
