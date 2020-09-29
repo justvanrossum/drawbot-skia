@@ -24,23 +24,7 @@ class cached_property(object):
         return value
 
 
-class GraphicsState:
-
-    def __init__(self, _doInitialize=True):
-        if _doInitialize:
-            # see self.copy()
-            self.fillPaint = FillPaint()
-            self.strokePaint = StrokePaint(somethingToDraw=False)
-            self.textStyle = TextStyle()
-
-    def copy(self):
-        result = GraphicsState(_doInitialize=False)
-        # Our main attributes are copy-on-write, so we can share them with
-        # our copy
-        result.fillPaint = self.fillPaint
-        result.strokePaint = self.strokePaint
-        result.textStyle = self.textStyle
-        return result
+class GraphicsStateMixin:
 
     # Paint style
 
@@ -116,6 +100,25 @@ class GraphicsState:
 
     def language(self, language):
         self.textStyle = self.textStyle.copy(language=language)
+
+
+class GraphicsState(GraphicsStateMixin):
+
+    def __init__(self, _doInitialize=True):
+        if _doInitialize:
+            # see self.copy()
+            self.fillPaint = FillPaint()
+            self.strokePaint = StrokePaint(somethingToDraw=False)
+            self.textStyle = TextStyle()
+
+    def copy(self):
+        result = GraphicsState(_doInitialize=False)
+        # Our main attributes are copy-on-write, so we can share them with
+        # our copy
+        result.fillPaint = self.fillPaint
+        result.strokePaint = self.strokePaint
+        result.textStyle = self.textStyle
+        return result
 
 
 class _ImmutableContainer:
