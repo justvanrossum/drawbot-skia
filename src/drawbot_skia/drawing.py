@@ -83,8 +83,6 @@ class Drawing:
         self._gstate.stroke(*args)
 
     def blendMode(self, blendMode):
-        if blendMode not in _blendModes:
-            raise DrawbotError(f"blendMode must be one of: {_blendModesList}")
         self._gstate.blendMode(blendMode)
 
     def strokeWidth(self, value):
@@ -97,9 +95,6 @@ class Drawing:
         self._gstate.lineJoin(lineJoin)
 
     def lineDash(self, firstValue=None, *values):
-        if firstValue is None:
-            if values:
-                raise TypeError("lineDash() argument(s) should be None, or one or more numbers")
         self._gstate.lineDash(firstValue, *values)
 
     def miterLimit(self, miterLimit):
@@ -229,37 +224,3 @@ class Drawing:
             canvasMethod(*items, self._gstate.fillPaint.skPaint)
         if self._gstate.strokePaint.somethingToDraw:
             canvasMethod(*items, self._gstate.strokePaint.skPaint)
-
-
-_blendModesList = [
-    'normal',
-    'multiply',
-    'screen',
-    'overlay',
-    'darken',
-    'lighten',
-    'colorDodge',
-    'colorBurn',
-    'softLight',
-    'hardLight',
-    'difference',
-    'exclusion',
-    'hue',
-    'saturation',
-    'color',
-    'luminosity',
-    'clear',
-    'copy',
-    'sourceIn',
-    'sourceOut',
-    'sourceAtop',
-    'destinationOver',
-    'destinationIn',
-    'destinationOut',
-    'destinationAtop',
-    'xOR',
-    'plusDarker',
-    'plusLighter',
-]
-
-_blendModes = set(_blendModesList)

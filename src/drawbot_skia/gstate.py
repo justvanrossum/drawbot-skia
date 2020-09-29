@@ -59,6 +59,8 @@ class GraphicsState:
             self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True)
 
     def blendMode(self, blendMode):
+        if blendMode not in _blendModes:
+            raise DrawbotError(f"blendMode must be one of: {_blendModesList}")
         self.fillPaint = self.fillPaint.copy(blendMode=blendMode)
         self.strokePaint = self.strokePaint.copy(blendMode=blendMode)
 
@@ -72,6 +74,9 @@ class GraphicsState:
         self.strokePaint = self.strokePaint.copy(lineJoin=lineJoin)
 
     def lineDash(self, firstValue, *values):
+        if firstValue is None:
+            if values:
+                raise TypeError("lineDash() argument(s) should be None, or one or more numbers")
         if firstValue is None:
             assert not values
             self.strokePaint = self.strokePaint.copy(lineDash=None)
@@ -374,3 +379,37 @@ def _colorArgs(args):
     else:
         assert 0
     return tuple(min(255, max(0, round(v * 255))) for v in (alpha, r, g, b))
+
+
+_blendModesList = [
+    'normal',
+    'multiply',
+    'screen',
+    'overlay',
+    'darken',
+    'lighten',
+    'colorDodge',
+    'colorBurn',
+    'softLight',
+    'hardLight',
+    'difference',
+    'exclusion',
+    'hue',
+    'saturation',
+    'color',
+    'luminosity',
+    'clear',
+    'copy',
+    'sourceIn',
+    'sourceOut',
+    'sourceAtop',
+    'destinationOver',
+    'destinationIn',
+    'destinationOut',
+    'destinationAtop',
+    'xOR',
+    'plusDarker',
+    'plusLighter',
+]
+
+_blendModes = set(_blendModesList)
