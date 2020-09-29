@@ -101,12 +101,10 @@ class Drawing:
         self._gstate.literLimit(miterLimit)
 
     def font(self, fontNameOrPath, fontSize=None):
-        if fontSize is not None:
-            self.fontSize(fontSize)
-        self._gstate.setFont(fontNameOrPath)
+        self._gstate.font(fontNameOrPath, fontSize)
 
     def fontSize(self, size):
-        self._gstate.setFontSize(size)
+        self._gstate.fontSize(size)
 
     def openTypeFeatures(self, *, resetFeatures=False, **features):
         return self._gstate.setOpenTypeFeatures(features, resetFeatures)

@@ -88,10 +88,12 @@ class GraphicsState:
 
     # Text style
 
-    def setFont(self, fontNameOrPath):
+    def font(self, fontNameOrPath, fontSize=None):
+        if fontSize is not None:
+            self.fontSize(fontSize)
         self.textStyle = self.textStyle.copy(font=fontNameOrPath)
 
-    def setFontSize(self, size):
+    def fontSize(self, size):
         self.textStyle = self.textStyle.copy(fontSize=size)
 
     def setOpenTypeFeatures(self, features, resetFeatures):
