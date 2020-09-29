@@ -104,6 +104,10 @@ class GraphicsStateMixin:
 
 class GraphicsState(GraphicsStateMixin):
 
+    # The graphics state object only deals with paint and text properties,
+    # other state, such as the current transformation and clip path is
+    # managed by the Skia Canvas itself.
+
     def __init__(self, _doInitialize=True):
         if _doInitialize:
             # see self.copy()
