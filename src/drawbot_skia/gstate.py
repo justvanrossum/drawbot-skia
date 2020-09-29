@@ -96,7 +96,7 @@ class GraphicsState:
     def fontSize(self, size):
         self.textStyle = self.textStyle.copy(fontSize=size)
 
-    def setOpenTypeFeatures(self, features, resetFeatures):
+    def openTypeFeatures(self, *, resetFeatures=False, **features):
         if resetFeatures:
             currentFeatures = {}
         else:
@@ -105,7 +105,7 @@ class GraphicsState:
         self.textStyle = self.textStyle.copy(features=currentFeatures)
         return currentFeatures
 
-    def setFontVariations(self, variations, resetVariations):
+    def fontVariations(self, *, resetVariations=False, **variations):
         if resetVariations:
             currentVariations = {}
         else:
@@ -114,7 +114,7 @@ class GraphicsState:
         self.textStyle = self.textStyle.copy(variations=currentVariations)
         return currentVariations
 
-    def setLanguage(self, language):
+    def language(self, language):
         self.textStyle = self.textStyle.copy(language=language)
 
 
