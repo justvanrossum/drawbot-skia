@@ -58,27 +58,27 @@ class GraphicsState:
         else:
             self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True)
 
-    def setBlendMode(self, blendMode):
+    def blendMode(self, blendMode):
         self.fillPaint = self.fillPaint.copy(blendMode=blendMode)
         self.strokePaint = self.strokePaint.copy(blendMode=blendMode)
 
-    def setStrokeWidth(self, strokeWidth):
+    def strokeWidth(self, strokeWidth):
         self.strokePaint = self.strokePaint.copy(strokeWidth=strokeWidth)
 
-    def setLineCap(self, lineCap):
+    def lineCap(self, lineCap):
         self.strokePaint = self.strokePaint.copy(lineCap=lineCap)
 
-    def setLineJoin(self, lineJoin):
+    def lineJoin(self, lineJoin):
         self.strokePaint = self.strokePaint.copy(lineJoin=lineJoin)
 
-    def setLineDash(self, firstValue, *values):
+    def lineDash(self, firstValue, *values):
         if firstValue is None:
             assert not values
             self.strokePaint = self.strokePaint.copy(lineDash=None)
         else:
             self.strokePaint = self.strokePaint.copy(lineDash=(firstValue,) + values)
 
-    def setMiterLimit(self, miterLimit):
+    def miterLimit(self, miterLimit):
         self.strokePaint = self.strokePaint.copy(miterLimit=miterLimit)
 
     # Text style

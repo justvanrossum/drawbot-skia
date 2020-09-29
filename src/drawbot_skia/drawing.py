@@ -85,25 +85,25 @@ class Drawing:
     def blendMode(self, blendMode):
         if blendMode not in _blendModes:
             raise DrawbotError(f"blendMode must be one of: {_blendModesList}")
-        self._gstate.setBlendMode(blendMode)
+        self._gstate.blendMode(blendMode)
 
     def strokeWidth(self, value):
-        self._gstate.setStrokeWidth(value)
+        self._gstate.strokeWidth(value)
 
     def lineCap(self, lineCap):
-        self._gstate.setLineCap(lineCap)
+        self._gstate.lineCap(lineCap)
 
     def lineJoin(self, lineJoin):
-        self._gstate.setLineJoin(lineJoin)
+        self._gstate.lineJoin(lineJoin)
 
     def lineDash(self, firstValue=None, *values):
         if firstValue is None:
             if values:
                 raise TypeError("lineDash() argument(s) should be None, or one or more numbers")
-        self._gstate.setLineDash(firstValue, *values)
+        self._gstate.lineDash(firstValue, *values)
 
     def miterLimit(self, miterLimit):
-        self._gstate.setMiterLimit(miterLimit)
+        self._gstate.literLimit(miterLimit)
 
     def font(self, fontNameOrPath, fontSize=None):
         if fontSize is not None:
