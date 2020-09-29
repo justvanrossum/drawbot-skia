@@ -87,6 +87,7 @@ class Drawing:
     def clipPath(self, path):
         self._canvas.clipPath(path.path, doAntiAlias=True)
 
+    # The following methods will be directly delegated to self._gstate
     fill = gstateDelegate()
     stroke = gstateDelegate()
     blendMode = gstateDelegate()
