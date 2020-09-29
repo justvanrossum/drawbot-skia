@@ -7,6 +7,17 @@ from .errors import DrawbotError
 from .gstate import GraphicsState
 
 
+class gstateDelegate:
+
+    def __set_name__(self, owner, name):
+        self.name = name
+
+    def __get__(self, obj, cls):
+        if obj is None:
+            return self
+        return getattr(obj._gstate, self.name)
+
+
 class Drawing:
 
     def __init__(self, document=None, flipCanvas=True):
@@ -76,44 +87,19 @@ class Drawing:
     def clipPath(self, path):
         self._canvas.clipPath(path.path, doAntiAlias=True)
 
-    def fill(self, *args):
-        self._gstate.fill(*args)
-
-    def stroke(self, *args):
-        self._gstate.stroke(*args)
-
-    def blendMode(self, blendMode):
-        self._gstate.blendMode(blendMode)
-
-    def strokeWidth(self, value):
-        self._gstate.strokeWidth(value)
-
-    def lineCap(self, lineCap):
-        self._gstate.lineCap(lineCap)
-
-    def lineJoin(self, lineJoin):
-        self._gstate.lineJoin(lineJoin)
-
-    def lineDash(self, firstValue=None, *values):
-        self._gstate.lineDash(firstValue, *values)
-
-    def miterLimit(self, miterLimit):
-        self._gstate.literLimit(miterLimit)
-
-    def font(self, fontNameOrPath, fontSize=None):
-        self._gstate.font(fontNameOrPath, fontSize)
-
-    def fontSize(self, size):
-        self._gstate.fontSize(size)
-
-    def openTypeFeatures(self, *, resetFeatures=False, **features):
-        return self._gstate.openTypeFeatures(resetFeatures=resetFeatures, **features)
-
-    def fontVariations(self, *, resetVariations=False, **variations):
-        return self._gstate.fontVariations(resetVariations=resetVariations, **variations)
-
-    def language(self, language):
-        return self._gstate.language(language)
+    fill = gstateDelegate()
+    stroke = gstateDelegate()
+    blendMode = gstateDelegate()
+    strokeWidth = gstateDelegate()
+    lineCap = gstateDelegate()
+    lineJoin = gstateDelegate()
+    lineDash = gstateDelegate()
+    miterLimit = gstateDelegate()
+    font = gstateDelegate()
+    fontSize = gstateDelegate()
+    openTypeFeatures = gstateDelegate()
+    fontVariations = gstateDelegate()
+    language = gstateDelegate()
 
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a
