@@ -31,7 +31,7 @@ setup(
     setup_requires=["setuptools_scm"],
     extras_require={
         "mp4": ["pyffmpeg"],
-    }
+    },
     python_requires=">=3.6",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
