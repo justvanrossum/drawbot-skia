@@ -50,8 +50,7 @@ def test_saveImage_multipage(tmpdir):
 
 def test_saveImage_mp4(tmpdir):
     from drawbot_skia import ffmpeg
-    from pyffmpeg import FFMPEG_FILE
-    ffmpeg.FFMPEG_PATH = FFMPEG_FILE  # Force ffmpeg from pyffmpeg
+    ffmpeg.FFMPEG_PATH = ffmpeg.getPyFFmpegPath()  # Force ffmpeg from pyffmpeg
     tmpdir = pathlib.Path(tmpdir)
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
