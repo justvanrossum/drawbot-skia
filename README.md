@@ -18,8 +18,8 @@ Work in progress!
 1. Get OpenType features working ✅
 1. Get PNG, JPEG image export working ✅
 1. Get PDF export working ✅
+1. Get MP4 export working ✅
 1. Get SVG export working
-1. Get MP4 export working
 1. Get Animated GIF export working
 1. Get multi-line, single style `text()` working
 1. Get `FormattedString` working
