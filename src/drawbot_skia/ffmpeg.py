@@ -38,7 +38,7 @@ def getPyFFmpegPath():
     except ImportError:
         raise ImportError("ffmpeg not found: install ffmpeg manually, or do 'pip install pyffmpeg'")
     # "pip uninstall pyffmpeg" leaves the unpacked executable in a way
-    # that it remains importable, but not functional:
+    # so that pyffmpeg remains importable, but not functional:
     assert hasattr(pyffmpeg, "FFMPEG_FILE"), "pyffmpeg not properly (un)installed"
     ffmpegPath = os.path.normpath(pyffmpeg.FFMPEG_FILE)
     st = os.stat(ffmpegPath)
