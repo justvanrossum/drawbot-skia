@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.4.0] - 2020-09-30
+
+- Added `mp4` export support for `saveImage()`
+
 ## [0.3.1] - 2020-09-27
 
 - Added `path.removeOverlap()`
