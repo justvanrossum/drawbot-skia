@@ -26,7 +26,7 @@ def generateMP4(
         "-i", imageTemplate,    # input sequence
         "-c:v", codec,          # codec
         "-crf", "20",           # Constant Rate Factor
-        "-pix_fmt", "yuv420p",  # pixel format
+        "-pix_fmt", "yuv420p10le",  # pixel format. 8bit: yuv420p 10bit: yuv420p10le, yuv422p10le, yuv444p10le
         mp4path,                # output path
     ]
     runExternalProcess(cmds)
