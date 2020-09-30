@@ -103,13 +103,20 @@ class RecordingDocument(Document):
         with tempfile.TemporaryDirectory(prefix="drawbot-skia-") as tempDir:
             tempDir = pathlib.Path(tempDir)
             imagePath = tempDir / "frame.png"
-            _savePictures(self._pictures, imagePath, skia.kPNG, whiteBackground=True)
+            _savePictures(
+                self._pictures,
+                imagePath,
+                skia.kPNG,
+                whiteBackground=True,
+                singlePage=False,
+            )
             imagesTemplate = os.fspath(tempDir / "frame_%d.png")
             generateMP4(imagesTemplate, path, frameRate)
 
 
-def _savePictures(pictures, path, format, whiteBackground=False):
-    singlePage = len(pictures) == 1
+def _savePictures(pictures, path, format, whiteBackground=False, singlePage=None):
+    if singlePage is None:
+        singlePage = len(pictures) == 1
     for index, picture in enumerate(pictures):
         if singlePage:
             framePath = path
