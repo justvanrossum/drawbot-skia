@@ -58,6 +58,9 @@ class Drawing:
             self._canvas.translate(0, height)
             self._canvas.scale(1, -1)
 
+    def frameDuration(self, duration):
+        self._document.setFrameDuration(duration)
+
     def width(self):
         return self._document.pageWidth
 

@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+import logging
 import os
 import pathlib
+import tempfile
 import skia
 
 
@@ -23,15 +25,24 @@ class Document(ABC):
         ...
 
     @abstractmethod
+    def setFrameDuration(self, duration):
+        ...
+
+    @abstractmethod
     def saveImage(self, path, **kwargs):
         ...
+
+
+DEFAULT_FRAMEDURATION = 1/10
 
 
 class RecordingDocument(Document):
 
     def __init__(self):
         self._pictures = []
+        self._frameDurations = []
         self._currentRecorder = None
+        self._currentFrameDuration = DEFAULT_FRAMEDURATION
         self.pageWidth = self.pageHeight = None
 
     @property
@@ -47,8 +58,13 @@ class RecordingDocument(Document):
 
     def endPage(self):
         self._pictures.append(self._currentRecorder.finishRecordingAsPicture())
+        self._frameDurations.append(self._currentFrameDuration)
         self._currentRecorder = None
+        self._currentFrameDuration = DEFAULT_FRAMEDURATION
         self.pageWidth = self.pageHeight = None
+
+    def setFrameDuration(self, duration):
+        self._currentFrameDuration = duration
 
     def saveImage(self, path, **kwargs):
         path = pathlib.Path(path).resolve()
@@ -75,6 +91,21 @@ class RecordingDocument(Document):
         _savePictures(self._pictures, path, skia.kJPEG, whiteBackground=True)
 
     _saveImage_jpg = _saveImage_jpeg
+
+    def _saveImage_mp4(self, path, **kwargs):
+        from .ffmpeg import generateMP4
+        if not self._pictures:
+            # Empty mp4?
+            return
+        frameRate = max(1, round(1 / self._frameDurations[-1]))
+        if len(set(self._frameDurations)) != 1:
+            logging.warning("ignoring varying frame durations for mp4 export")
+        with tempfile.TemporaryDirectory(prefix="drawbot-skia-") as tempDir:
+            tempDir = pathlib.Path(tempDir)
+            imagePath = tempDir / "frame.png"
+            _savePictures(self._pictures, imagePath, skia.kPNG, whiteBackground=True)
+            imagesTemplate = os.fspath(tempDir / "frame_%d.png")
+            generateMP4(imagesTemplate, path, frameRate)
 
 
 def _savePictures(pictures, path, format, whiteBackground=False):
