@@ -3,9 +3,18 @@ import subprocess
 import sys
 
 
-def generateMP4(imageTemplate, mp4path, frameRate, codec="libx264", preferPyFFmpeg=False):
-    ffmpegPath = None
-    if not preferPyFFmpeg:
+# Monkeypatch this variable to override the ffmpeg executable location
+FFMPEG_PATH = None
+
+
+def generateMP4(
+        imageTemplate,
+        mp4path,
+        frameRate,
+        codec="libx264",
+        preferPyFFmpeg=False):
+    ffmpegPath = FFMPEG_PATH
+    if ffmpegPath is None and not preferPyFFmpeg:
         ffmpegPath = findExecutable("ffmpeg")
     if ffmpegPath is None:
         ffmpegPath = getPyFFmpegPath()
