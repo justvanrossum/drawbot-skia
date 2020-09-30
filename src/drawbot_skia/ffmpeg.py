@@ -10,8 +10,7 @@ def generateMP4(imageTemplate, mp4path, frameRate, codec="libx264", preferPyFFmp
     if ffmpegPath is None:
         ffmpegPath = getPyFFmpegPath()
     cmds = [
-        # ffmpeg path
-        ffmpegPath,
+        ffmpegPath,             # path to the ffmpeg executable
         "-y",                   # overwrite existing files
         "-loglevel", "16",      # 'error, 16' Show all errors, including ones which can be recovered from.
         "-r", str(frameRate),   # frame rate
@@ -71,18 +70,24 @@ def runExternalProcess(cmds, cwd=None):
         >>> runExternalProcess(["which", "fooooo"])
         Traceback (most recent call last):
             ...
-        RuntimeError: 'which' failed with error code 1
+        subprocess.CalledProcessError: Command '['which', 'fooooo']' returned non-zero exit status 1.
         >>> stdout, stderr = runExternalProcess(["python", "-S", "-c", "print('hello')"])
         >>> stdout
         'hello\n'
     """
-    p = subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd, universal_newlines=True)
+    p = subprocess.Popen(
+        cmds,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=cwd,
+        universal_newlines=True,
+    )
     stdoutdata, stderrdata = p.communicate()
     assert p.returncode is not None
     if p.returncode != 0:
         sys.stdout.write(stdoutdata)
         sys.stderr.write(stderrdata)
-        raise RuntimeError("%r failed with error code %s" % (os.path.basename(cmds[0]), p.returncode))
+        raise subprocess.CalledProcessError(p.returncode, cmds)
     return stdoutdata, stderrdata
 
 
