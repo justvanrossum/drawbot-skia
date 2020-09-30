@@ -56,10 +56,12 @@ def test_saveImage_mp4(tmpdir):
     namespace = makeDrawbotNamespace(db)
     runScriptSource(multipageSource, "<string>", namespace)
     assert [] == sorted(tmpdir.glob("*.png"))
-    outputPath = tmpdir / "test.mp4"
-    db.saveImage(outputPath)
-    expected_filenames = ['test.mp4']
-    assert expected_filenames == [p.name for p in sorted(tmpdir.glob("*.mp4"))]
+    db.saveImage(tmpdir / "test.mp4")
+    db.saveImage(tmpdir / "test2.mp4", codec="mpeg4")
+    expected_filenames = ['test.mp4', 'test2.mp4']
+    paths = sorted(tmpdir.glob("*.mp4"))
+    assert paths[0].stat().st_size < paths[1].stat().st_size
+    assert expected_filenames == [p.name for p in paths]
 
 
 def test_noFont(tmpdir):

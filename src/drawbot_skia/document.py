@@ -73,7 +73,7 @@ class RecordingDocument(Document):
         method = getattr(self, methodName, None)
         if method is None:
             raise ValueError(f"unsupported file type: {suffix}")
-        method(path)
+        method(path, **kwargs)
 
     def _saveImage_pdf(self, path, **kwargs):
         stream = skia.FILEWStream(os.fspath(path))
@@ -92,7 +92,7 @@ class RecordingDocument(Document):
 
     _saveImage_jpg = _saveImage_jpeg
 
-    def _saveImage_mp4(self, path, **kwargs):
+    def _saveImage_mp4(self, path, codec="libx264", **kwargs):
         from .ffmpeg import generateMP4
         if not self._pictures:
             # Empty mp4?
@@ -111,7 +111,7 @@ class RecordingDocument(Document):
                 singlePage=False,
             )
             imagesTemplate = os.fspath(tempDir / "frame_%d.png")
-            generateMP4(imagesTemplate, path, frameRate)
+            generateMP4(imagesTemplate, path, frameRate, codec=codec)
 
 
 def _savePictures(pictures, path, format, whiteBackground=False, singlePage=None):
