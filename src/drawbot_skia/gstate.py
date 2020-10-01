@@ -85,9 +85,10 @@ class GraphicsStateMixin:
         #   localMatrix: skia.Matrix = None) -> skia.Shader
         colors = [_colorTupleToInt(_colorArgs(c)) for c in colors]
         shader = skia.GradientShader.MakeLinear(
-                points=[startPoint, endPoint],
-                colors=colors,
-                positions=locations)
+            points=[startPoint, endPoint],
+            colors=colors,
+            positions=locations,
+        )
         self.fillPaint = self.fillPaint.copy(shader=shader, fill=None, somethingToDraw=True)
 
     def radialGradient(self, startPoint, endPoint=None, colors=None, locations=None, startRadius=0, endRadius=100):
@@ -105,10 +106,11 @@ class GraphicsStateMixin:
             logging.warning("radialGradient: endPoint argument ignored (it's not supported in drawbot-skia)")
         colors = [_colorTupleToInt(_colorArgs(c)) for c in colors]
         shader = skia.GradientShader.MakeRadial(
-                center=startPoint,
-                radius=endRadius,
-                colors=colors,
-                positions=locations)
+            center=startPoint,
+            radius=endRadius,
+            colors=colors,
+            positions=locations,
+        )
         self.fillPaint = self.fillPaint.copy(shader=shader, fill=None, somethingToDraw=True)
 
     # Text style
