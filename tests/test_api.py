@@ -70,6 +70,22 @@ def test_noFont(tmpdir):
     db.text("Hallo", (0, 0))
 
 
+def test_newPage_newGState():
+    # Test a bug with the delegate properties of Drawing: they should
+    # not return the delegate method itself, but a wrapper that calls the
+    # delegate method, as the delegate object does not have a fixed
+    # identity
+    db = Drawing()
+    fill = db.fill  # Emulate a db namespace: all methods are retrieved once
+    db.newPage(50, 50)
+    with db.savedState():
+        fill(0.5)
+        assert (255, 128, 128, 128) == db._gstate.fillPaint.color
+    db.newPage(50, 50)
+    fill(1)
+    assert (255, 255, 255, 255) == db._gstate.fillPaint.color
+
+
 def readbytes(path):
     with open(path, "rb") as f:
         return f.read()

@@ -15,7 +15,12 @@ class gstateDelegateMethod:
     def __get__(self, obj, cls):
         if obj is None:
             return self
-        return getattr(obj._gstate, self.name)
+
+        @functools.wraps(getattr(GraphicsState, self.name))
+        def wrappedMethod(*args, **kwargs):
+            method = getattr(obj._gstate, self.name)
+            return method(*args, **kwargs)
+        return wrappedMethod
 
 
 class Drawing:
@@ -53,6 +58,7 @@ class Drawing:
     def newPage(self, width, height):
         if self._document.isDrawing:
             self._document.endPage()
+            self._gstate = GraphicsState()
         self._canvas = self._document.beginPage(width, height)
         if self._flipCanvas:
             self._canvas.translate(0, height)
