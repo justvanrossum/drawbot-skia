@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.?.?] - 2020-10-??
+
+- Add `random`, `randint`, `choice` and `shuffle` from the random module to the default namespace.
+
 ## [0.4.1] - 2020-10-01
 
 - Fixed a serious issue with the graphics state and multiple pages, that caused wrong paint properties on pages after the first.
