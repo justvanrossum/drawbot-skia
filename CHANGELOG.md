@@ -3,6 +3,7 @@
 ## [0.?.?] - 2020-10-??
 
 - Added `linearGradient(...)`
+- Added `radialGradient(...)` (limited to a single center point and a zero start radius)
 - Add `random`, `randint`, `choice` and `shuffle` from the random module to the default namespace.
 
 ## [0.4.1] - 2020-10-01
