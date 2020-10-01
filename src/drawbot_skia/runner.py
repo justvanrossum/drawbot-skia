@@ -13,7 +13,11 @@ def makeNamespace(*objects, **kwargs):
 def makeDrawbotNamespace(drawbot):
     from .path import BezierPath
     import math
-    return makeNamespace(math, drawbot, BezierPath=BezierPath)
+    import random
+    additionalNames = dict(BezierPath=BezierPath)
+    for name in ["random", "randint", "choice", "shuffle"]:
+        additionalNames[name] = getattr(random, name)
+    return makeNamespace(math, drawbot, **additionalNames)
 
 
 def runScript(sourcePath, namespace=None):
