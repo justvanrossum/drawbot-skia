@@ -2,6 +2,7 @@
 
 ## [0.?.?] - 2020-10-??
 
+- Added `linearGradient(...)`
 - Add `random`, `randint`, `choice` and `shuffle` from the random module to the default namespace.
 
 ## [0.4.1] - 2020-10-01
