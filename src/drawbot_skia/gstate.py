@@ -31,16 +31,16 @@ class GraphicsStateMixin:
     def fill(self, *args):
         color = _colorArgs(args)
         if color is None:
-            self.fillPaint = self.fillPaint.copy(somethingToDraw=False)
+            self.fillPaint = self.fillPaint.copy(somethingToDraw=False, shader=None)
         else:
-            self.fillPaint = self.fillPaint.copy(color=color, somethingToDraw=True)
+            self.fillPaint = self.fillPaint.copy(color=color, somethingToDraw=True, shader=None)
 
     def stroke(self, *args):
         color = _colorArgs(args)
         if color is None:
-            self.strokePaint = self.strokePaint.copy(somethingToDraw=False)
+            self.strokePaint = self.strokePaint.copy(somethingToDraw=False, shader=None)
         else:
-            self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True)
+            self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True, shader=None)
 
     def blendMode(self, blendMode):
         if blendMode not in _blendModes:
@@ -73,6 +73,21 @@ class GraphicsStateMixin:
 
     def miterLimit(self, miterLimit):
         self.strokePaint = self.strokePaint.copy(miterLimit=miterLimit)
+
+    def linearGradient(self, startPoint, endPoint, colors, locations=None):
+        # MakeLinear(
+        #   points: List[skia.Point],
+        #   colors: List[int],
+        #   positions: object = None,
+        #   mode: skia.TileMode = TileMode.kClamp,
+        #   flags: int = 0,
+        #   localMatrix: skia.Matrix = None) -> skia.Shader
+        colors = [_colorTupleToInt(_colorArgs(c)) for c in colors]
+        shader = skia.GradientShader.MakeLinear(
+                points=[startPoint, endPoint],
+                colors=colors,
+                positions=locations)
+        self.fillPaint = self.fillPaint.copy(shader=shader, fill=None, somethingToDraw=True)
 
     # Text style
 
@@ -158,6 +173,7 @@ class FillPaint(_ImmutableContainer):
     somethingToDraw = True
     color = (255, 0, 0, 0)  # ARGB
     blendMode = "normal"
+    shader = None
 
     @cached_property
     def skPaint(self):
@@ -171,6 +187,8 @@ class FillPaint(_ImmutableContainer):
         )
         paint.setARGB(*self.color)
         paint.setBlendMode(_blendModeMapping[self.blendMode])
+        if self.shader is not None:
+            paint.setShader(self.shader)
         return paint
 
 
@@ -371,6 +389,13 @@ _fontCache = {}
 
 def clearFontCache():
     _fontCache.clear()
+
+
+def _colorTupleToInt(color):
+    intColor = 0
+    for channel, shift in zip(color, (24, 16, 8, 0)):
+        intColor |= channel << shift
+    return intColor
 
 
 def _colorArgs(args):

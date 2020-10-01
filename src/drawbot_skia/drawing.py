@@ -105,6 +105,7 @@ class Drawing:
     lineJoin = gstateDelegateMethod()
     lineDash = gstateDelegateMethod()
     miterLimit = gstateDelegateMethod()
+    linearGradient = gstateDelegateMethod()
     font = gstateDelegateMethod()
     fontSize = gstateDelegateMethod()
     openTypeFeatures = gstateDelegateMethod()
