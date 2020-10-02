@@ -73,7 +73,8 @@ class BezierPath(BasePen):
         self.path.addOval((x, y, w, h))
 
     def polygon(self, firstPoint, *points, close=True):
-        self.path.addPoly((firstPoint,) + points, close)
+        points = [(x, y) for x, y in (firstPoint,) + points]
+        self.path.addPoly(points, close)
 
     def pointInside(self, point):
         x, y = point

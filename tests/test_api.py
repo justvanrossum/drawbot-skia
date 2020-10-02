@@ -86,6 +86,16 @@ def test_newPage_newGState():
     assert (255, 255, 255, 255) == db._gstate.fillPaint.color
 
 
+def test_polygon_args():
+    db = Drawing()
+    db.polygon([0, 0], [0, 100], [100, 0])
+
+
+def test_line_args():
+    db = Drawing()
+    db.line([0, 0], [0, 100])
+
+
 def readbytes(path):
     with open(path, "rb") as f:
         return f.read()
