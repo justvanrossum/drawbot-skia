@@ -1,7 +1,8 @@
 # Changelog for drawbot-skia
 
-## [0.?.?] - 2020-10-??
+## [0.4.2] - 2020-10-02
 
+- Pinned optional pyffmpeg requirement to 1.6.1 for now.
 - Added `linearGradient(...)`
 - Added `radialGradient(...)` (limited to a single center point and a zero start radius)
 - Add `random`, `randint`, `choice` and `shuffle` from the random module to the default namespace.
