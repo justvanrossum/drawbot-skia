@@ -24,3 +24,15 @@ def test_path_copy():
     path1.translate(50, 20)
     assert path1.bounds() == (50.0, 20.0, 150.0, 120.0)
     assert path2.bounds() == (0.0, 0.0, 100.0, 100.0)
+
+
+def test_path_point_args():
+    path1 = BezierPath()
+    path1.moveTo([0, 0])
+    path1.lineTo([0, 100])
+    path1.curveTo([50, 100], [100, 100], [200, 0])
+
+
+def test_path_line_args():
+    path1 = BezierPath()
+    path1.line([0, 0], [0, 100])
