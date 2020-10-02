@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.?.?] - 2020-10-??
+
+- Added `shadow()`, but it is not 100% compatible with DrawBot's in some unavoidable ways.
+
 ## [0.4.2] - 2020-10-02
 
 - Pinned optional pyffmpeg requirement to 1.6.1 for now.
