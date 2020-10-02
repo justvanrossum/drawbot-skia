@@ -30,7 +30,7 @@ setup(
     ],
     setup_requires=["setuptools_scm"],
     extras_require={
-        "mp4": ["pyffmpeg"],
+        "mp4": ["pyffmpeg==1.6.1"],  # pin for now, this package is not very stable
     },
     python_requires=">=3.6",
     classifiers=[
