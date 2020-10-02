@@ -211,13 +211,13 @@ class FillPaint(_ImmutableContainer):
 
     @cached_property
     def skPaint(self):
-        return self._makePaint(self._skPaintStyle)
+        return self._makePaint()
 
-    def _makePaint(self, style):
+    def _makePaint(self):
         paint = skia.Paint(
             Color=0,
             AntiAlias=True,
-            Style=style,
+            Style=self._skPaintStyle,
         )
         paint.setARGB(*self.color)
         paint.setBlendMode(_blendModeMapping[self.blendMode])
@@ -258,7 +258,7 @@ class StrokePaint(FillPaint):
 
     @cached_property
     def skPaint(self):
-        paint = self._makePaint(self._skPaintStyle)
+        paint = self._makePaint()
         paint.setStrokeMiter(self.miterLimit)
         paint.setStrokeWidth(self.strokeWidth)
         paint.setStrokeCap(_strokeCapMapping[self.lineCap])
