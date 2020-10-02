@@ -107,6 +107,7 @@ class Drawing:
     miterLimit = gstateDelegateMethod()
     linearGradient = gstateDelegateMethod()
     radialGradient = gstateDelegateMethod()
+    shadow = gstateDelegateMethod()
     font = gstateDelegateMethod()
     fontSize = gstateDelegateMethod()
     openTypeFeatures = gstateDelegateMethod()
@@ -208,6 +209,12 @@ class Drawing:
         self._canvas.restore()
         self._gstate = self._stack.pop()
 
+    @contextlib.contextmanager
+    def _savedCanvasState(self):
+        self._canvas.save()
+        yield
+        self._canvas.restore()
+
     def saveImage(self, fileName, **kwargs):
         if self._document.isDrawing:
             self._document.endPage()
@@ -216,6 +223,17 @@ class Drawing:
     # Helpers
 
     def _drawItem(self, canvasMethod, *items):
+        shadowPaintFill, offset = self._gstate.fillPaint.skPaintShadowAndOffset
+        if shadowPaintFill is not None:
+            shadowPaintStroke, _ = self._gstate.strokePaint.skPaintShadowAndOffset
+            dx, dy = offset
+            with self._savedCanvasState():
+                self._canvas.translate(dx, dy)
+                if self._gstate.fillPaint.somethingToDraw:
+                    canvasMethod(*items, shadowPaintFill)
+                if self._gstate.strokePaint.somethingToDraw:
+                    canvasMethod(*items, shadowPaintStroke)
+
         if self._gstate.fillPaint.somethingToDraw:
             canvasMethod(*items, self._gstate.fillPaint.skPaint)
         if self._gstate.strokePaint.somethingToDraw:

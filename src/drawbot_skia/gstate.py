@@ -113,6 +113,14 @@ class GraphicsStateMixin:
         )
         self.fillPaint = self.fillPaint.copy(shader=shader, fill=None, somethingToDraw=True)
 
+    def shadow(self, offset, blur=None, color=None):
+        if offset is None:
+            shadow = None
+        else:
+            shadow = (offset, blur, color)
+        self.fillPaint = self.fillPaint.copy(shadow=shadow)
+        self.strokePaint = self.strokePaint.copy(shadow=shadow)
+
     # Text style
 
     def font(self, fontNameOrPath, fontSize=None):
@@ -198,10 +206,12 @@ class FillPaint(_ImmutableContainer):
     color = (255, 0, 0, 0)  # ARGB
     blendMode = "normal"
     shader = None
+    shadow = None
+    _skPaintStyle = skia.Paint.kFill_Style
 
     @cached_property
     def skPaint(self):
-        return self._makePaint(skia.Paint.kFill_Style)
+        return self._makePaint(self._skPaintStyle)
 
     def _makePaint(self, style):
         paint = skia.Paint(
@@ -215,6 +225,27 @@ class FillPaint(_ImmutableContainer):
             paint.setShader(self.shader)
         return paint
 
+    @cached_property
+    def skPaintShadowAndOffset(self):
+        if self.shadow is None:
+            return None, None
+        offset, blur, color = self.shadow
+        color = _colorTupleToInt(_colorArgs(color))
+        if not blur:
+            blur = 1
+        # MaskFilter.MakeBlur(
+        #   style: skia.BlurStyle,
+        #   sigma: float,
+        #   respectCTM: bool = True) → skia.MaskFilter
+        blurMask = skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 0.45 * blur, False)
+
+        paint = skia.Paint(
+            Color=color,
+            MaskFilter=blurMask,
+            Style=self._skPaintStyle,
+        )
+        return paint, offset
+
 
 class StrokePaint(FillPaint):
 
@@ -223,10 +254,11 @@ class StrokePaint(FillPaint):
     lineCap = "butt"
     lineJoin = "miter"
     lineDash = None
+    _skPaintStyle = skia.Paint.kStroke_Style
 
     @cached_property
     def skPaint(self):
-        paint = self._makePaint(skia.Paint.kStroke_Style)
+        paint = self._makePaint(self._skPaintStyle)
         paint.setStrokeMiter(self.miterLimit)
         paint.setStrokeWidth(self.strokeWidth)
         paint.setStrokeCap(_strokeCapMapping[self.lineCap])
