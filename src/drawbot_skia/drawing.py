@@ -132,14 +132,11 @@ class Drawing:
 
         x, y = position
 
-        self._canvas.save()
-        try:
+        with self._savedCanvasState():
             self._canvas.translate(x, y)
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
             self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
-        finally:
-            self._canvas.restore()
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)
@@ -149,14 +146,11 @@ class Drawing:
         if self._gstate.fillPaint.blendMode != "normal":
             paint.setBlendMode(self._gstate.fillPaint.skPaint.getBlendMode())
         x, y = position
-        self._canvas.save()
-        try:
+        with self._savedCanvasState():
             self._canvas.translate(x, y + im.height())
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
             self._canvas.drawImage(im, 0, 0, paint)
-        finally:
-            self._canvas.restore()
 
     @staticmethod
     @functools.lru_cache(maxsize=32)
