@@ -2,6 +2,7 @@
 
 ## [0.?.?] - 2020-10-??
 
+- Added `path.line(pt1, pt2)`
 - Added `shadow()`, but it is not 100% compatible with DrawBot's in some unavoidable ways.
 
 ## [0.4.2] - 2020-10-02
