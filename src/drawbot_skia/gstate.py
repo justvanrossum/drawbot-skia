@@ -237,7 +237,7 @@ class FillPaint(_ImmutableContainer):
         #   style: skia.BlurStyle,
         #   sigma: float,
         #   respectCTM: bool = True) → skia.MaskFilter
-        blurMask = skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 0.45 * blur, False)
+        blurMask = skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 0.5 * blur, False)
 
         paint = skia.Paint(
             Color=color,
