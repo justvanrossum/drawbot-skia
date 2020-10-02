@@ -36,7 +36,7 @@ def getPyFFmpegPath():
     try:
         import pyffmpeg
     except ImportError:
-        raise ImportError("ffmpeg not found: install ffmpeg manually, or do 'pip install pyffmpeg'")
+        raise ImportError("ffmpeg not found: install ffmpeg manually, or do 'pip install pyffmpeg==1.6.1'")
     ffmpegPath = os.path.normpath(pyffmpeg.FFmpeg().get_ffmpeg_bin())
     st = os.stat(ffmpegPath)
     if sys.platform != "win32" and not st.st_mode & 0o00100:
