@@ -37,10 +37,7 @@ def getPyFFmpegPath():
         import pyffmpeg
     except ImportError:
         raise ImportError("ffmpeg not found: install ffmpeg manually, or do 'pip install pyffmpeg'")
-    # "pip uninstall pyffmpeg" leaves the unpacked executable in a way
-    # so that pyffmpeg remains importable, but not functional:
-    assert hasattr(pyffmpeg, "FFMPEG_FILE"), "pyffmpeg not properly (un)installed"
-    ffmpegPath = os.path.normpath(pyffmpeg.FFMPEG_FILE)
+    ffmpegPath = os.path.normpath(pyffmpeg.FFmpeg().get_ffmpeg_bin())
     st = os.stat(ffmpegPath)
     if sys.platform != "win32" and not st.st_mode & 0o00100:
         # https://github.com/deuteronomy-works/pyffmpeg/issues/33
