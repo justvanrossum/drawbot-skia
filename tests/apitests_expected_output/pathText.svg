@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="100">
+	<rect fill="white" transform="matrix(1 0 -0 -1 0 100)" width="200" height="100"/>
+	<clipPath id="cl_5">
+		<path d="M12.42 82L36.835 82L36.835 78.58L28.38 77.155C28.285 72.12 28.19 67.085 28.19 62.05L28.19 41.91L49.565 41.91C49.755 46.755 49.85 50.555 49.85 57.205L49.85 62.05C49.85 66.23 49.755 72.5 49.66 77.25L42.535 78.58L42.535 82L64.575 82L64.575 78.58L58.115 77.25C58.02 72.5 57.925 66.23 57.925 62.05L57.925 49.035L58.21 36.59L56.69 35.64L49.66 36.875L28 36.875C27.715 27.565 29.14 22.245 32.465 18.92C35.03 16.355 38.735 14.645 43.01 14.36L47.19 20.155C48.995 22.625 50.895 24.05 53.27 24.05C55.835 24.05 57.545 22.435 58.02 20.345C58.02 14.55 51.56 10.845 43.295 10.845C37.5 10.845 31.42 12.745 27.905 16.355C23.06 21.2 21.16 25.76 20.21 36.685L12.23 37.73L12.23 41.91L20.115 41.91L20.115 62.05C20.115 67.085 20.02 72.215 19.925 77.25L12.42 78.58L12.42 82ZM93.17 40.01C99.06 40.01 103.525 44.855 103.525 50.27C103.525 53.025 102.48 55.21 97.92 55.21L80.63 55.21C81.675 44.19 87.85 40.01 93.17 40.01ZM93.075 83.235C101.72 83.235 107.8 78.96 111.315 72.215L109.035 70.41C105.615 74.4 101.91 77.06 95.83 77.06C86.71 77.06 80.63 70.885 80.44 59.2L110.745 59.2C111.125 57.965 111.41 56.065 111.41 53.88C111.41 42.385 103.62 35.64 93.74 35.64C81.865 35.64 71.89 45.33 71.89 59.865C71.89 74.4 80.25 83.235 93.075 83.235ZM135.54 83.235C140.385 83.235 144.28 81.43 146.75 78.2L144.47 75.73C142.095 77.44 140.195 78.295 138.105 78.295C134.875 78.295 132.88 76.205 132.88 71.36L132.88 41.91L145.8 41.91L145.8 36.875L132.975 36.875L133.545 23.955L127.845 23.955L125.375 36.685L116.92 37.73L116.92 41.91L124.805 41.91L124.805 64.33C124.805 68.035 124.71 70.03 124.71 72.405C124.71 79.815 128.89 83.235 135.54 83.235ZM165.94 83.235C178.195 83.235 184.465 76.87 184.465 69.65C184.465 63.665 180.855 59.2 171.355 55.685L168.41 54.64C161.95 52.265 159.67 50.65 159.67 46.47C159.67 42.575 162.71 40.01 168.505 40.01C170.785 40.01 172.97 40.58 175.06 41.625L176.58 49.225L181.52 49.225L181.9 39.535C177.815 37.065 173.73 35.64 168.6 35.64C157.96 35.64 152.07 42.1 152.07 49.035C152.07 55.495 156.63 59.295 163.565 61.86L167.935 63.475C173.92 65.565 176.77 67.655 176.77 71.74C176.77 76.015 173.35 78.96 166.13 78.96C163.185 78.96 160.715 78.485 158.435 77.44L156.63 69.175L151.405 69.175L151.785 79.625C156.44 82 160.62 83.235 165.94 83.235Z"/>
+	</clipPath>
+	<g clip-path="url(#cl_5)">
+		<ellipse fill="#3AF580" fill-opacity="0.1254902" transform="matrix(1 0 -0 -1 0 100)" cx="31" cy="41" rx="20" ry="20"/>
+		<ellipse fill="#23CF80" fill-opacity="0.50588238" transform="matrix(1 0 -0 -1 0 100)" cx="122" cy="27" rx="20" ry="20"/>
+		<ellipse fill="#68E680" fill-opacity="0.38039216" transform="matrix(1 0 -0 -1 0 100)" cx="49" cy="86" rx="20" ry="20"/>
+		<ellipse fill="#19D080" fill-opacity="0.3882353" transform="matrix(1 0 -0 -1 0 100)" cx="116" cy="47" rx="20" ry="20"/>
+		<ellipse fill="#F2D780" fill-opacity="0.50196081" transform="matrix(1 0 -0 -1 0 100)" cx="70" cy="99" rx="20" ry="20"/>
+		<ellipse fill="#E98B80" fill-opacity="0.34509805" transform="matrix(1 0 -0 -1 0 100)" cx="23" cy="95" rx="20" ry="20"/>
+		<ellipse fill="#584480" fill-opacity="0.42352942" transform="matrix(1 0 -0 -1 0 100)" cx="116" cy="96" rx="20" ry="20"/>
+		<ellipse fill="#D5E380" fill-opacity="0.17647059" transform="matrix(1 0 -0 -1 0 100)" cx="121" cy="49" rx="20" ry="20"/>
+		<ellipse fill="#2AA980" fill-opacity="0.97647059" transform="matrix(1 0 -0 -1 0 100)" cx="71" cy="61" rx="20" ry="20"/>
+		<ellipse fill="#4D0380" fill-opacity="0.7647059" transform="matrix(1 0 -0 -1 0 100)" cx="107" cy="63" rx="20" ry="20"/>
+		<ellipse fill="#681480" fill-opacity="0.070588239" transform="matrix(1 0 -0 -1 0 100)" cx="44" cy="28" rx="20" ry="20"/>
+		<ellipse fill="#161B80" fill-opacity="0.52156866" transform="matrix(1 0 -0 -1 0 100)" cx="112" cy="59" rx="20" ry="20"/>
+		<ellipse fill="#CE8180" fill-opacity="0.70980394" transform="matrix(1 0 -0 -1 0 100)" cx="174" cy="36" rx="20" ry="20"/>
+		<ellipse fill="#30E980" fill-opacity="0.34117648" transform="matrix(1 0 -0 -1 0 100)" cx="166" cy="50" rx="20" ry="20"/>
+		<ellipse fill="#36DF80" fill-opacity="0.031372551" transform="matrix(1 0 -0 -1 0 100)" cx="168" cy="64" rx="20" ry="20"/>
+		<ellipse fill="#2DF780" fill-opacity="0.44313726" transform="matrix(1 0 -0 -1 0 100)" cx="41" cy="71" rx="20" ry="20"/>
+		<ellipse fill="#E7A780" fill-opacity="0.82745099" transform="matrix(1 0 -0 -1 0 100)" cx="155" cy="43" rx="20" ry="20"/>
+		<ellipse fill="#FABF80" fill-opacity="0.60000002" transform="matrix(1 0 -0 -1 0 100)" cx="165" cy="71" rx="20" ry="20"/>
+		<ellipse fill="#805380" fill-opacity="0.38431373" transform="matrix(1 0 -0 -1 0 100)" cx="153" cy="70" rx="20" ry="20"/>
+		<ellipse fill="#394C80" fill-opacity="0.54901963" transform="matrix(1 0 -0 -1 0 100)" cx="114" cy="102" rx="20" ry="20"/>
+		<ellipse fill="#849F80" fill-opacity="0.95686275" transform="matrix(1 0 -0 -1 0 100)" cx="95" cy="47" rx="20" ry="20"/>
+		<ellipse fill="#325E80" fill-opacity="0.95686275" transform="matrix(1 0 -0 -1 0 100)" cx="99" cy="72" rx="20" ry="20"/>
+		<ellipse fill="#D19A80" fill-opacity="0.36078432" transform="matrix(1 0 -0 -1 0 100)" cx="129" cy="70" rx="20" ry="20"/>
+		<ellipse fill="#7D8780" fill-opacity="0.8392157" transform="matrix(1 0 -0 -1 0 100)" cx="88" cy="61" rx="20" ry="20"/>
+		<ellipse fill="#11BB80" fill-opacity="0.27058825" transform="matrix(1 0 -0 -1 0 100)" cx="127" cy="49" rx="20" ry="20"/>
+		<ellipse fill="#3F3F80" fill-opacity="0.50588238" transform="matrix(1 0 -0 -1 0 100)" cx="137" cy="83" rx="20" ry="20"/>
+		<ellipse fill="#7F1B80" fill-opacity="0.10980392" transform="matrix(1 0 -0 -1 0 100)" cx="41" cy="63" rx="20" ry="20"/>
+		<ellipse fill="#C7FD80" fill-opacity="0.92156863" transform="matrix(1 0 -0 -1 0 100)" cx="55" cy="25" rx="20" ry="20"/>
+		<ellipse fill="#DEE780" fill-opacity="0.9254902" transform="matrix(1 0 -0 -1 0 100)" cx="43" cy="52" rx="20" ry="20"/>
+		<ellipse fill="#9BDD80" fill-opacity="0.65098041" transform="matrix(1 0 -0 -1 0 100)" cx="101" cy="29" rx="20" ry="20"/>
+		<ellipse fill="#D51580" fill-opacity="0.13725491" transform="matrix(1 0 -0 -1 0 100)" cx="113" cy="39" rx="20" ry="20"/>
+		<ellipse fill="#D0B980" fill-opacity="0.60000002" transform="matrix(1 0 -0 -1 0 100)" cx="101" cy="76" rx="20" ry="20"/>
+		<ellipse fill="#4C5B80" fill-opacity="0.32549021" transform="matrix(1 0 -0 -1 0 100)" cx="153" cy="49" rx="20" ry="20"/>
+		<ellipse fill="#EA9B80" fill-opacity="0.43529412" transform="matrix(1 0 -0 -1 0 100)" cx="60" cy="85" rx="20" ry="20"/>
+		<ellipse fill="#E42680" fill-opacity="0.72941178" transform="matrix(1 0 -0 -1 0 100)" cx="36" cy="45" rx="20" ry="20"/>
+		<ellipse fill="#881580" fill-opacity="0.9254902" transform="matrix(1 0 -0 -1 0 100)" cx="106" cy="70" rx="20" ry="20"/>
+		<ellipse fill="#1C0D80" fill-opacity="0.55686277" transform="matrix(1 0 -0 -1 0 100)" cx="65" cy="63" rx="20" ry="20"/>
+		<ellipse fill="#1CB780" fill-opacity="0.082352944" transform="matrix(1 0 -0 -1 0 100)" cx="55" cy="53" rx="20" ry="20"/>
+		<ellipse fill="#10E280" fill-opacity="0.58431375" transform="matrix(1 0 -0 -1 0 100)" cx="177" cy="93" rx="20" ry="20"/>
+		<ellipse fill="#FB7D80" fill-opacity="0.36470589" transform="matrix(1 0 -0 -1 0 100)" cx="155" cy="67" rx="20" ry="20"/>
+		<ellipse fill="#4FAD80" fill-opacity="0.47450981" transform="matrix(1 0 -0 -1 0 100)" cx="52" cy="90" rx="20" ry="20"/>
+		<ellipse fill="#7FF880" fill-opacity="0.53333336" transform="matrix(1 0 -0 -1 0 100)" cx="151" cy="94" rx="20" ry="20"/>
+		<ellipse fill="#A1F680" fill-opacity="0.10980392" transform="matrix(1 0 -0 -1 0 100)" cx="148" cy="30" rx="20" ry="20"/>
+		<ellipse fill="#FCB780" fill-opacity="0.36862746" transform="matrix(1 0 -0 -1 0 100)" cx="111" cy="47" rx="20" ry="20"/>
+		<ellipse fill="#F1A680" fill-opacity="0.47843137" transform="matrix(1 0 -0 -1 0 100)" cx="63" cy="80" rx="20" ry="20"/>
+		<ellipse fill="#BDAB80" fill-opacity="0.73333335" transform="matrix(1 0 -0 -1 0 100)" cx="100" cy="35" rx="20" ry="20"/>
+		<ellipse fill="#BD9580" fill-opacity="0.26274511" transform="matrix(1 0 -0 -1 0 100)" cx="95" cy="94" rx="20" ry="20"/>
+	</g>
+</svg>

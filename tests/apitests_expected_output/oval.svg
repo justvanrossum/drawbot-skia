@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+	<ellipse fill="yellow" transform="matrix(1 0 -0 -1 0 200)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#EDED00" transform="matrix(1 0 -0 -1 10 190)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#DBDB00" transform="matrix(1 0 -0 -1 20 180)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#C8C800" transform="matrix(1 0 -0 -1 30 170)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#B6B600" transform="matrix(1 0 -0 -1 40 160)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#A4A400" transform="matrix(1 0 -0 -1 50 150)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#929200" transform="matrix(1 0 -0 -1 60 140)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="olive" transform="matrix(1 0 -0 -1 70 130)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#6D6D00" transform="matrix(1 0 -0 -1 80 120)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#5B5B00" transform="matrix(1 0 -0 -1 90 110)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#494900" transform="matrix(1 0 -0 -1 100 100)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#373700" transform="matrix(1 0 -0 -1 110 90)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#242400" transform="matrix(1 0 -0 -1 120 80)" cx="35" cy="35" rx="25" ry="25"/>
+	<ellipse fill="#121200" transform="matrix(1 0 -0 -1 130 70)" cx="35" cy="35" rx="25" ry="25"/>
+</svg>

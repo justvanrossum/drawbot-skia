@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="275" height="400">
+	<rect transform="matrix(1 0 -0 -1 0 400)" width="275" height="400"/>
+	<text fill="white" transform="translate(10 385)" font-size="100" font-family="MutatorMathTest" x="0, 40, 84.300003, 134.2, 174.2, 216.2, " y="0, ">
+			ABCXYZ
+	</text>
+	<text fill="white" transform="translate(10 285)" font-size="100" font-weight="200" font-stretch="condensed" font-family="MutatorMathTest" x="0, 60.400002, 122, 191.3, 252.3, 313.5, " y="0, ">
+			ABCXYZ
+	</text>
+	<text fill="white" transform="translate(10 185)" font-size="100" font-weight="200" font-stretch="condensed" font-family="MutatorMathTest" x="0, 73.099998, 147.3, 229.60001, 301.89999, 373.29999, " y="0, ">
+			ABCXYZ
+	</text>
+	<text fill="white" transform="translate(10 85)" font-size="100" font-weight="200" font-stretch="ultra-expanded" font-family="MutatorMathTest" x="0, 110.5, 227.8, 358.10001, 460.10001, 559.09998, " y="0, ">
+			ABCXYZ
+	</text>
+</svg>

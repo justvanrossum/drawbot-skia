@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+	<path fill="#FF4C00" transform="matrix(1 0 -0 -1 0 200)" d="M40 40L40 160L40 40Z"/>
+	<path fill="none" stroke="black" stroke-width="10" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 200)" d="M40 40L40 160L40 40Z"/>
+	<path fill="#FF4C00" transform="matrix(1 0 -0 -1 0 200)" d="M60 40L60 160L130 160L60 40Z"/>
+	<path fill="none" stroke="black" stroke-width="10" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 200)" d="M60 40L60 160L130 160L60 40Z"/>
+	<path fill="#FF4C00" transform="matrix(1 0 -0 -1 0 200)" d="M100 40L160 160L160 40"/>
+	<path fill="none" stroke="black" stroke-width="10" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 200)" d="M100 40L160 160L160 40"/>
+</svg>

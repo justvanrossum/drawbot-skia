@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+	<rect transform="matrix(0.965926 -0.258819 -0.258819 -0.965926 14.6447 211.237)" x="25" y="25" width="50" height="50"/>
+	<rect transform="matrix(1.2 0 -0 -1.2 -30 210)" x="125" y="25" width="50" height="50"/>
+	<rect transform="matrix(1 -0.174533 0.261799 -1 -39.2699 208.727)" x="25" y="125" width="50" height="50"/>
+	<rect transform="matrix(0.88206 -0.218536 -0.178802 -1.07807 44.5114 244.491)" x="125" y="125" width="50" height="50"/>
+</svg>

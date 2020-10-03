@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="275" height="100">
+	<rect transform="matrix(1 0 -0 -1 0 100)" width="275" height="100"/>
+	<text fill="white" transform="translate(10 85)" font-size="100" font-family="MutatorMathTest" x="0, 40, 84.300003, 134.2, 174.2, 216.2, " y="0, ">
+			ABCXYZ
+	</text>
+</svg>

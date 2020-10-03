@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="500">
+	<rect fill="white" transform="matrix(1 0 -0 -1 0 500)" width="600" height="500"/>
+	<text transform="translate(50 450)" font-size="100" font-family="IBM Plex Sans Arabic" x="0, 64.400002, 117.8, " y="0, ">
+			Aag
+	</text>
+	<text transform="translate(280.6 450)" font-size="100" font-family="IBM Plex Sans Arabic" x="0, 39.900002, 79.800003, " y="0, ">
+			---
+	</text>
+	<text transform="translate(550 350)" font-size="60" font-family="IBM Plex Sans Arabic" x="-495.06, -468.17999, -436.32001, -396.54001, -377.94, -362.94, -349.5, -335.34, -303.29999, -268.5, -238.67999, -203.88, -170.94, -156.78, -140.58, -109.14, -81.059998, -65.879997, -34.02, -15.18, " y="0, ">
+			ةﺪﺤﺘﳌا abcde ﺎﻤﻬﻳﺪﻠﺑ
+	</text>
+	<text transform="translate(300 280)" font-size="60" font-family="IBM Plex Sans Arabic" x="0, 38.459999, 54.779999, 74.220001, 106.26, 141.06, 174, " y="0, ">
+			Alfabet
+	</text>
+	<text transform="translate(300 210)" font-size="60" font-family="IBM Plex Sans Arabic" x="-150.72, -158.94, -130.38, -109.8, -48.18, -29.58, -13.44, " y="-24.66, 0, 0, 0, 0, 0, 0, ">
+			ًﺔﻳﴩﺒﻟا
+	</text>
+</svg>

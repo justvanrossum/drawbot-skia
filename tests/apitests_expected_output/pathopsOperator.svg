@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="1000">
+	<rect fill="white" transform="matrix(1 0 -0 -1 0 1000)" width="200" height="1000"/>
+	<path fill="#E6E6E6" transform="matrix(1 0 -0 -1 0 1000)" d="M25 25L125 25L125 75C152.614 75 175 97.3858 175 125C175 152.614 152.614 175 125 175C97.3858 175 75 152.614 75 125L25 125L25 25Z"/>
+	<path fill="none" stroke="black" stroke-width="4" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 1000)" d="M25 25L125 25L125 75C152.614 75 175 97.3858 175 125C175 152.614 152.614 175 125 175C97.3858 175 75 152.614 75 125L25 125L25 25Z"/>
+	<path fill="#E6E6E6" transform="matrix(1 0 -0 -1 0 800)" d="M125 75L125 125L75 125C75 97.3858 97.3858 75 125 75Z"/>
+	<path fill="none" stroke="black" stroke-width="4" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 800)" d="M125 75L125 125L75 125C75 97.3858 97.3858 75 125 75Z"/>
+	<path fill="#E6E6E6" transform="matrix(1 0 -0 -1 0 600)" d="M25 25L125 25L125 75C97.3858 75 75 97.3858 75 125L25 125L25 25Z"/>
+	<path fill="none" stroke="black" stroke-width="4" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 600)" d="M25 25L125 25L125 75C97.3858 75 75 97.3858 75 125L25 125L25 25Z"/>
+	<path fill="#E6E6E6" transform="matrix(1 0 -0 -1 0 400)" d="M175 125C175 152.614 152.614 175 125 175C97.3858 175 75 152.614 75 125L125 125L125 75C152.614 75 175 97.3858 175 125Z"/>
+	<path fill="none" stroke="black" stroke-width="4" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 400)" d="M175 125C175 152.614 152.614 175 125 175C97.3858 175 75 152.614 75 125L125 125L125 75C152.614 75 175 97.3858 175 125Z"/>
+	<path fill="#E6E6E6" transform="matrix(1 0 -0 -1 0 200)" d="M25 25L125 25L125 75C152.614 75 175 97.3858 175 125C175 152.614 152.614 175 125 175C97.3858 175 75 152.614 75 125L25 125L25 25ZM125 75C97.3858 75 75 97.3858 75 125L125 125L125 75Z"/>
+	<path fill="none" stroke="black" stroke-width="4" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 200)" d="M25 25L125 25L125 75C152.614 75 175 97.3858 175 125C175 152.614 152.614 175 125 175C97.3858 175 75 152.614 75 125L25 125L25 25ZM125 75C97.3858 75 75 97.3858 75 125L125 125L125 75Z"/>
+</svg>

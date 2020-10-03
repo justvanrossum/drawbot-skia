@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="275" height="100">
+	<rect transform="matrix(1 0 -0 -1 0 100)" width="275" height="100"/>
+	<text fill="white" transform="translate(10 85)" font-size="60" font-family="IBM Plex Sans Arabic" x="0, 38.459999, 77.639999, 114.9, 146.94, 181.74001, 211.92, 247.92, " y="0, ">
+			ABCabc12
+	</text>
+</svg>
