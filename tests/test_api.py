@@ -1,5 +1,6 @@
 import os
 import pathlib
+import sys
 import pytest
 from PIL import Image
 import numpy as np
@@ -17,21 +18,22 @@ apiScripts = apiTestsDir.glob("*.py")
 
 
 expectedFailures = [
-    ("clip", "pdf"),
-    ("clip", "svg"),
-    ("fontFromPath", "pdf"),
-    ("fontFromPath", "svg"),  # Windows
-    ("fontFromPath2", "pdf"),
-    ("fontVariations", "pdf"),
-    ("fontVariations", "svg"),
-    ("image", "pdf"),
-    ("imageBlendMode", "pdf"),
-    ("language", "pdf"),
-    ("pathText", "pdf"),
-    ("pathText", "svg"),
-    ("pathTextRemoveOverlap", "pdf"),
-    ("pathTextRemoveOverlap", "svg"),
-    ("text_shaping", "pdf"),
+    ("clip", "pdf", "linux"),
+    ("clip", "svg", "darwin"),
+    ("clip", "svg", "linux"),
+    ("fontFromPath", "pdf", "linux"),
+    ("fontFromPath", "svg", "win32"),
+    ("fontFromPath2", "pdf", "linux"),
+    ("fontVariations", "pdf", "linux"),
+    ("fontVariations", "svg", "linux"),
+    ("image", "pdf", "linux"),
+    ("imageBlendMode", "pdf", "linux"),
+    ("language", "pdf", "linux"),
+    ("pathText", "pdf", "linux"),
+    ("pathText", "svg", "linux"),
+    ("pathTextRemoveOverlap", "pdf", "linux"),
+    ("pathTextRemoveOverlap", "svg", "linux"),
+    ("text_shaping", "pdf", "linux"),
 ]
 
 
@@ -48,7 +50,7 @@ def test_apitest(apiTestPath, imageType):
     outputPath = apiTestsOutputDir / fileName
     expectedOutputPath = apiTestsExpectedOutputDir / fileName
     db.saveImage(outputPath)
-    if (apiTestPath.stem, imageType) in expectedFailures:
+    if (apiTestPath.stem, imageType, sys.platform) in expectedFailures:
         # Skip late, so we can still inspect the output
         pytest.skip(f"Skipping expected failure {apiTestPath.stem}.{imageType}")
     same, reason = compareImages(outputPath, expectedOutputPath)
