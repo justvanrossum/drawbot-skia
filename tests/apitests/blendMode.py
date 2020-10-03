@@ -31,6 +31,8 @@ modes = [
 
 cellSize = 100
 size(cellSize, cellSize * len(modes))
+fill(0.5)
+rect(0, 0, width(), height())
 
 for mode in modes:
     blendMode(mode)
