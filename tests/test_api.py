@@ -1,5 +1,6 @@
 import os
 import pathlib
+import sys
 import pytest
 from PIL import Image
 import numpy as np
@@ -17,21 +18,36 @@ apiScripts = apiTestsDir.glob("*.py")
 
 
 expectedFailures = [
-    ("clip", "pdf"),
-    ("clip", "svg"),
-    ("fontFromPath", "pdf"),
-    ("fontFromPath", "svg"),  # Windows
-    ("fontFromPath2", "pdf"),
-    ("fontVariations", "pdf"),
-    ("fontVariations", "svg"),
-    ("image", "pdf"),
-    ("imageBlendMode", "pdf"),
-    ("language", "pdf"),
-    ("pathText", "pdf"),
-    ("pathText", "svg"),
-    ("pathTextRemoveOverlap", "pdf"),
-    ("pathTextRemoveOverlap", "svg"),
-    ("text_shaping", "pdf"),
+    ("clip", "svg", "darwin"),
+    ("clip", "pdf", "linux"),
+    ("clip", "svg", "linux"),
+    ("clip", "pdf", "win32"),
+    ("clip", "svg", "win32"),
+    ("fontFromPath", "pdf", "linux"),
+    ("fontFromPath", "pdf", "win32"),
+    ("fontFromPath", "svg", "win32"),
+    ("fontFromPath2", "pdf", "linux"),
+    ("fontFromPath2", "pdf", "win32"),
+    ("fontVariations", "pdf", "linux"),
+    ("fontVariations", "svg", "linux"),
+    ("fontVariations", "pdf", "win32"),
+    ("fontVariations", "svg", "win32"),
+    ("image", "pdf", "linux"),
+    ("image", "pdf", "win32"),
+    ("imageBlendMode", "pdf", "linux"),
+    ("imageBlendMode", "pdf", "win32"),
+    ("language", "pdf", "linux"),
+    ("language", "pdf", "win32"),
+    ("pathText", "pdf", "linux"),
+    ("pathText", "svg", "linux"),
+    ("pathText", "pdf", "win32"),
+    ("pathText", "svg", "win32"),
+    ("pathTextRemoveOverlap", "pdf", "linux"),
+    ("pathTextRemoveOverlap", "svg", "linux"),
+    ("pathTextRemoveOverlap", "pdf", "win32"),
+    ("pathTextRemoveOverlap", "svg", "win32"),
+    ("textShaping", "pdf", "linux"),
+    ("textShaping", "pdf", "win32"),
 ]
 
 
@@ -48,7 +64,7 @@ def test_apitest(apiTestPath, imageType):
     outputPath = apiTestsOutputDir / fileName
     expectedOutputPath = apiTestsExpectedOutputDir / fileName
     db.saveImage(outputPath)
-    if (apiTestPath.stem, imageType) in expectedFailures:
+    if (apiTestPath.stem, imageType, sys.platform) in expectedFailures:
         # Skip late, so we can still inspect the output
         pytest.skip(f"Skipping expected failure {apiTestPath.stem}.{imageType}")
     same, reason = compareImages(outputPath, expectedOutputPath)
