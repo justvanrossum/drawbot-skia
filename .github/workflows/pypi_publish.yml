@@ -40,7 +40,6 @@ jobs:
       env:
         GITHUB_REF: ${{ github.ref }}
       run: |
-        source venv/bin/activate
         echo "::set-output name=body::$(python .github/workflows/extract_changes.py)"
 
     - name: Create Release
