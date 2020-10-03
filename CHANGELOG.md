@@ -1,6 +1,6 @@
 # Changelog for drawbot-skia
 
-## [0.?.?] - 2020-10-??
+## [0.4.3] - 2020-10-03
 
 - Added `svg` export support for `saveImage()`
 - Added `path.line(pt1, pt2)`
