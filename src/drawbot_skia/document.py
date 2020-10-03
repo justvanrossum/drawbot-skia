@@ -83,12 +83,13 @@ class RecordingDocument(Document):
                 assert x == 0 and y == 0
                 with document.page(width, height) as canvas:
                     canvas.drawPicture(picture)
+        stream.flush()
 
     def _saveImage_png(self, path, **kwargs):
-        _savePictures(self._pictures, path, skia.kPNG)
+        _savePixelImages(self._pictures, path, skia.kPNG)
 
     def _saveImage_jpeg(self, path, **kwargs):
-        _savePictures(self._pictures, path, skia.kJPEG, whiteBackground=True)
+        _savePixelImages(self._pictures, path, skia.kJPEG, whiteBackground=True)
 
     _saveImage_jpg = _saveImage_jpeg
 
@@ -103,7 +104,7 @@ class RecordingDocument(Document):
         with tempfile.TemporaryDirectory(prefix="drawbot-skia-") as tempDir:
             tempDir = pathlib.Path(tempDir)
             imagePath = tempDir / "frame.png"
-            _savePictures(
+            _savePixelImages(
                 self._pictures,
                 imagePath,
                 skia.kPNG,
@@ -114,7 +115,7 @@ class RecordingDocument(Document):
             generateMP4(imagesTemplate, path, frameRate, codec=codec)
 
 
-def _savePictures(pictures, path, format, whiteBackground=False, singlePage=None):
+def _savePixelImages(pictures, path, format, whiteBackground=False, singlePage=None):
     if singlePage is None:
         singlePage = len(pictures) == 1
     for index, picture in enumerate(pictures):
