@@ -129,6 +129,9 @@ def compareImages(path1, path2):
     data2 = readbytes(path2)
     if data1 == data2:
         return True, "data identical"
+    _, ext = os.path.splitext(path1)
+    if ext not in {".png", ".jpg"}:
+        return False, "image data differs"
     im1 = Image.open(path1)
     im2 = Image.open(path2)
     if im1 == im2:
