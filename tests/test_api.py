@@ -150,9 +150,12 @@ def readbytes(path):
 def compareImages(path1, path2):
     data1 = readbytes(path1)
     data2 = readbytes(path2)
+    _, ext = os.path.splitext(path1)
+    if ext == ".svg":
+        data1 = data1.splitlines()
+        data2 = data2.splitlines()
     if data1 == data2:
         return True, "data identical"
-    _, ext = os.path.splitext(path1)
     if ext not in {".png", ".jpg"}:
         return False, "image data differs"
     im1 = Image.open(path1)
