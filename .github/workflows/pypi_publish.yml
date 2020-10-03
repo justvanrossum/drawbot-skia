@@ -34,3 +34,23 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.pypi_token }}
+
+    - name: Read CHANGELOG.md
+      id: changelog
+      env:
+        GITHUB_REF: ${{ github.ref }}
+      run: |
+        source venv/bin/activate
+        echo "::set-output name=body::$(python .github/workflows/extract_changes.py)"
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: ${{ steps.changelog.outputs.body }}
+        draft: true
+        prerelease: false
