@@ -116,6 +116,11 @@ class RecordingDocument(Document):
 
 
 def _savePixelImages(pictures, path, format, whiteBackground=False, singlePage=None):
+    for picture, framePath in _iteratePictures(pictures, path, singlePage):
+        _savePixelImage(picture, framePath, format, whiteBackground=whiteBackground)
+
+
+def _iteratePictures(pictures, path, singlePage):
     if singlePage is None:
         singlePage = len(pictures) == 1
     for index, picture in enumerate(pictures):
@@ -123,7 +128,7 @@ def _savePixelImages(pictures, path, format, whiteBackground=False, singlePage=N
             framePath = path
         else:
             framePath = path.parent / f"{path.stem}_{index}{path.suffix}"
-        _savePixelImage(picture, framePath, format, whiteBackground=whiteBackground)
+        yield picture, framePath
 
 
 def _savePixelImage(picture, path, format, whiteBackground=False):
