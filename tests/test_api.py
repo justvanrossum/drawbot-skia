@@ -169,6 +169,7 @@ def compareImages(path1, path2):
     data2 = readbytes(path2)
     _, ext = os.path.splitext(path1)
     if ext == ".svg":
+        # Ignore line endings for svg
         data1 = data1.splitlines()
         data2 = data2.splitlines()
     if data1 == data2:
