@@ -1,10 +1,10 @@
-from drawbot_skia.runner import makeDrawbotNamespace, runScript, runScriptSource
-from drawbot_skia.drawing import Drawing
 import os
 import pathlib
 import pytest
 from PIL import Image
 import numpy as np
+from drawbot_skia.runner import makeDrawbotNamespace, runScript, runScriptSource
+from drawbot_skia.drawing import Drawing
 
 
 testDir = pathlib.Path(__file__).resolve().parent
