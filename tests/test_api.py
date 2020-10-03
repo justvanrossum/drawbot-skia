@@ -56,17 +56,17 @@ test_data_saveImage = [
 ]
 
 
-@pytest.mark.parametrize("script, image_type, expected_filenames", test_data_saveImage)
-def test_saveImage_multipage(tmpdir, script, image_type, expected_filenames):
-    glob_pattern = f"*.{image_type}"
+@pytest.mark.parametrize("script, imageType, expectedFilenames", test_data_saveImage)
+def test_saveImage_multipage(tmpdir, script, imageType, expectedFilenames):
+    glob_pattern = f"*.{imageType}"
     tmpdir = pathlib.Path(tmpdir)
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
     runScriptSource(script, "<string>", namespace)
     assert [] == sorted(tmpdir.glob(glob_pattern))
-    outputPath = tmpdir / f"test.{image_type}"
+    outputPath = tmpdir / f"test.{imageType}"
     db.saveImage(outputPath)
-    assert expected_filenames == [p.name for p in sorted(tmpdir.glob(glob_pattern))]
+    assert expectedFilenames == [p.name for p in sorted(tmpdir.glob(glob_pattern))]
 
 
 def test_saveImage_mp4_codec(tmpdir):
@@ -79,10 +79,10 @@ def test_saveImage_mp4_codec(tmpdir):
     assert [] == sorted(tmpdir.glob("*.png"))
     db.saveImage(tmpdir / "test.mp4")
     db.saveImage(tmpdir / "test2.mp4", codec="mpeg4")
-    expected_filenames = ['test.mp4', 'test2.mp4']
+    expectedFilenames = ['test.mp4', 'test2.mp4']
     paths = sorted(tmpdir.glob("*.mp4"))
     assert paths[0].stat().st_size < paths[1].stat().st_size
-    assert expected_filenames == [p.name for p in paths]
+    assert expectedFilenames == [p.name for p in paths]
 
 
 def test_noFont(tmpdir):
