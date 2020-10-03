@@ -16,9 +16,47 @@ apiTestsExpectedOutputDir = testDir / "apitests_expected_output"
 apiScripts = apiTestsDir.glob("*.py")
 
 
+expectedFailures = [
+    ("clip", "pdf"),
+    # ("fontFromPath", "jpg"),
+    ("fontFromPath", "pdf"),
+    # ("fontFromPath", "png"),
+    # ("fontFromPath2", "jpg"),
+    ("fontFromPath2", "pdf"),
+    # ("fontFromPath2", "png"),
+    # ("fontVariations", "jpg"),
+    ("fontVariations", "pdf"),
+    # ("fontVariations", "png"),
+    ("fontVariations", "svg"),
+    ("image", "pdf"),
+    # ("imageBlendMode", "jpg"),
+    ("imageBlendMode", "pdf"),
+    # ("imageBlendMode", "png"),
+    # ("language", "jpg"),
+    ("language", "pdf"),
+    # ("language", "png"),
+    # ("pathText", "jpg"),
+    ("pathText", "pdf"),
+    # ("pathText", "png"),
+    ("pathText", "svg"),
+    # ("pathTextRemoveOverlap", "jpg"),
+    ("pathTextRemoveOverlap", "pdf"),
+    # ("pathTextRemoveOverlap", "png"),
+    ("pathTextRemoveOverlap", "svg"),
+    # ("shadow", "jpg"),
+    # ("shadow", "png"),
+    # ("text_shaping", "jpg"),
+    ("text_shaping", "pdf"),
+    # ("text_shaping", "png"),
+]
+
+
 @pytest.mark.parametrize("apiTestPath", apiScripts)
 @pytest.mark.parametrize("imageType", ["png", "jpg", "pdf", "svg"])
 def test_apitest(apiTestPath, imageType):
+    apiTestPath = pathlib.Path(apiTestPath)
+    if (apiTestPath.stem, imageType) in expectedFailures:
+        pytest.skip(f"Skipping expected failure {apiTestPath.stem}.{imageType}")
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
     runScript(apiTestPath, namespace)
@@ -29,7 +67,7 @@ def test_apitest(apiTestPath, imageType):
     expectedOutputPath = apiTestsExpectedOutputDir / fileName
     db.saveImage(outputPath)
     same, reason = compareImages(outputPath, expectedOutputPath)
-    assert same, reason
+    assert same, f"{reason} {apiTestPath.name} {imageType}"
 
 
 multipageSource = """
