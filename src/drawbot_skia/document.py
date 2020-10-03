@@ -85,6 +85,16 @@ class RecordingDocument(Document):
                     canvas.drawPicture(picture)
         stream.flush()
 
+    def _saveImage_svg(self, path, **kwargs):
+        for picture, framePath in _iteratePictures(self._pictures, path):
+            x, y, width, height = picture.cullRect()
+            assert x == 0 and y == 0
+            stream = skia.FILEWStream(os.fspath(framePath))
+            canvas = skia.SVGCanvas.Make((width, height), stream)
+            canvas.drawPicture(picture)
+            del canvas
+            stream.flush()
+
     def _saveImage_png(self, path, **kwargs):
         _savePixelImages(self._pictures, path, skia.kPNG)
 
@@ -120,7 +130,7 @@ def _savePixelImages(pictures, path, format, whiteBackground=False, singlePage=N
         _savePixelImage(picture, framePath, format, whiteBackground=whiteBackground)
 
 
-def _iteratePictures(pictures, path, singlePage):
+def _iteratePictures(pictures, path, singlePage=None):
     if singlePage is None:
         singlePage = len(pictures) == 1
     for index, picture in enumerate(pictures):
