@@ -20,6 +20,7 @@ expectedFailures = [
     ("clip", "pdf"),
     ("clip", "svg"),
     ("fontFromPath", "pdf"),
+    ("fontFromPath", "svg"),  # Windows
     ("fontFromPath2", "pdf"),
     ("fontVariations", "pdf"),
     ("fontVariations", "svg"),
