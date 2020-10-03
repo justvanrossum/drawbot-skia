@@ -18,22 +18,32 @@ apiScripts = apiTestsDir.glob("*.py")
 
 
 expectedFailures = [
-    ("clip", "pdf", "linux"),
     ("clip", "svg", "darwin"),
+    ("clip", "pdf", "linux"),
     ("clip", "svg", "linux"),
+    ("clip", "pdf", "win32"),
     ("fontFromPath", "pdf", "linux"),
+    ("fontFromPath", "pdf", "win32"),
     ("fontFromPath", "svg", "win32"),
     ("fontFromPath2", "pdf", "linux"),
+    ("fontFromPath2", "pdf", "win32"),
     ("fontVariations", "pdf", "linux"),
     ("fontVariations", "svg", "linux"),
+    ("fontVariations", "pdf", "win32"),
     ("image", "pdf", "linux"),
+    ("image", "pdf", "win32"),
     ("imageBlendMode", "pdf", "linux"),
+    ("imageBlendMode", "pdf", "win32"),
     ("language", "pdf", "linux"),
+    ("language", "pdf", "win32"),
     ("pathText", "pdf", "linux"),
     ("pathText", "svg", "linux"),
+    ("pathText", "pdf", "win32"),
     ("pathTextRemoveOverlap", "pdf", "linux"),
     ("pathTextRemoveOverlap", "svg", "linux"),
+    ("pathTextRemoveOverlap", "pdf", "win32"),
     ("text_shaping", "pdf", "linux"),
+    ("text_shaping", "pdf", "win32"),
 ]
 
 
