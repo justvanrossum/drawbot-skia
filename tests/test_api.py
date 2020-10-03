@@ -46,8 +46,8 @@ expectedFailures = [
     ("pathTextRemoveOverlap", "svg", "linux"),
     ("pathTextRemoveOverlap", "pdf", "win32"),
     ("pathTextRemoveOverlap", "svg", "win32"),
-    ("text_shaping", "pdf", "linux"),
-    ("text_shaping", "pdf", "win32"),
+    ("textShaping", "pdf", "linux"),
+    ("textShaping", "pdf", "win32"),
 ]
 
 
