@@ -36,22 +36,33 @@ for i in range(3):
 """
 
 
+singlepageSource = """
+newPage(200, 200)
+rect(50, 50, 100, 100)
+"""
+
+
 test_data_saveImage = [
-    ("png", ['test_0.png', 'test_1.png', 'test_2.png']),
-    ("jpg", ['test_0.jpg', 'test_1.jpg', 'test_2.jpg']),
-    ("svg", ['test_0.svg', 'test_1.svg', 'test_2.svg']),
-    ("pdf", ['test.pdf']),
-    ("mp4", ['test.mp4']),
+    (singlepageSource, "png", ['test.png']),
+    (singlepageSource, "jpg", ['test.jpg']),
+    (singlepageSource, "svg", ['test.svg']),
+    (singlepageSource, "pdf", ['test.pdf']),
+    (singlepageSource, "mp4", ['test.mp4']),
+    (multipageSource, "png", ['test_0.png', 'test_1.png', 'test_2.png']),
+    (multipageSource, "jpg", ['test_0.jpg', 'test_1.jpg', 'test_2.jpg']),
+    (multipageSource, "svg", ['test_0.svg', 'test_1.svg', 'test_2.svg']),
+    (multipageSource, "pdf", ['test.pdf']),
+    (multipageSource, "mp4", ['test.mp4']),
 ]
 
 
-@pytest.mark.parametrize("image_type, expected_filenames", test_data_saveImage)
-def test_saveImage_multipage(tmpdir, image_type, expected_filenames):
+@pytest.mark.parametrize("script, image_type, expected_filenames", test_data_saveImage)
+def test_saveImage_multipage(tmpdir, script, image_type, expected_filenames):
     glob_pattern = f"*.{image_type}"
     tmpdir = pathlib.Path(tmpdir)
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
-    runScriptSource(multipageSource, "<string>", namespace)
+    runScriptSource(script, "<string>", namespace)
     assert [] == sorted(tmpdir.glob(glob_pattern))
     outputPath = tmpdir / f"test.{image_type}"
     db.saveImage(outputPath)
