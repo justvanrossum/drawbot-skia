@@ -123,10 +123,10 @@ def _savePixelImages(pictures, path, format, whiteBackground=False, singlePage=N
             framePath = path
         else:
             framePath = path.parent / f"{path.stem}_{index}{path.suffix}"
-        _savePicture(picture, framePath, format, whiteBackground=whiteBackground)
+        _savePixelImage(picture, framePath, format, whiteBackground=whiteBackground)
 
 
-def _savePicture(picture, path, format, whiteBackground=False):
+def _savePixelImage(picture, path, format, whiteBackground=False):
     x, y, width, height = picture.cullRect()
     assert x == 0 and y == 0
     surface = skia.Surface(int(width), int(height))
