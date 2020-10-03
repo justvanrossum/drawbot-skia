@@ -16,7 +16,7 @@ apiScripts = apiTestsDir.glob("*.py")
 
 
 @pytest.mark.parametrize("apiTestPath", apiScripts)
-@pytest.mark.parametrize("imageType", ["png", "jpg"])
+@pytest.mark.parametrize("imageType", ["png", "jpg", "pdf", "svg"])
 def test_apitest(apiTestPath, imageType):
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
