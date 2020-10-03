@@ -36,19 +36,29 @@ for i in range(3):
 """
 
 
-def test_saveImage_multipage(tmpdir):
+test_data_saveImage = [
+    ("png", ['test_0.png', 'test_1.png', 'test_2.png']),
+    ("jpg", ['test_0.jpg', 'test_1.jpg', 'test_2.jpg']),
+    ("svg", ['test_0.svg', 'test_1.svg', 'test_2.svg']),
+    ("pdf", ['test.pdf']),
+    ("mp4", ['test.mp4']),
+]
+
+
+@pytest.mark.parametrize("image_type, expected_filenames", test_data_saveImage)
+def test_saveImage_multipage(tmpdir, image_type, expected_filenames):
+    glob_pattern = f"*.{image_type}"
     tmpdir = pathlib.Path(tmpdir)
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
     runScriptSource(multipageSource, "<string>", namespace)
-    assert [] == sorted(tmpdir.glob("*.png"))
-    outputPath = tmpdir / "test.png"
+    assert [] == sorted(tmpdir.glob(glob_pattern))
+    outputPath = tmpdir / f"test.{image_type}"
     db.saveImage(outputPath)
-    expected_filenames = ['test_0.png', 'test_1.png', 'test_2.png']
-    assert expected_filenames == [p.name for p in sorted(tmpdir.glob("*.png"))]
+    assert expected_filenames == [p.name for p in sorted(tmpdir.glob(glob_pattern))]
 
 
-def test_saveImage_mp4(tmpdir):
+def test_saveImage_mp4_codec(tmpdir):
     from drawbot_skia import ffmpeg
     ffmpeg.FFMPEG_PATH = ffmpeg.getPyFFmpegPath()  # Force ffmpeg from pyffmpeg
     tmpdir = pathlib.Path(tmpdir)
@@ -61,18 +71,6 @@ def test_saveImage_mp4(tmpdir):
     expected_filenames = ['test.mp4', 'test2.mp4']
     paths = sorted(tmpdir.glob("*.mp4"))
     assert paths[0].stat().st_size < paths[1].stat().st_size
-    assert expected_filenames == [p.name for p in paths]
-
-
-def test_saveImage_pdf(tmpdir):
-    tmpdir = pathlib.Path(tmpdir)
-    db = Drawing()
-    namespace = makeDrawbotNamespace(db)
-    runScriptSource(multipageSource, "<string>", namespace)
-    assert [] == sorted(tmpdir.glob("*.pdf"))
-    db.saveImage(tmpdir / "test.pdf")
-    expected_filenames = ['test.pdf']
-    paths = sorted(tmpdir.glob("*.pdf"))
     assert expected_filenames == [p.name for p in paths]
 
 
