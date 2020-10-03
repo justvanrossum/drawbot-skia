@@ -16,14 +16,16 @@ apiScripts = apiTestsDir.glob("*.py")
 
 
 @pytest.mark.parametrize("apiTestPath", apiScripts)
-def test_apitest(apiTestPath):
+@pytest.mark.parametrize("imageType", ["png", "jpg"])
+def test_apitest(apiTestPath, imageType):
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
     runScript(apiTestPath, namespace)
     if not apiTestsOutputDir.exists():
         apiTestsOutputDir.mkdir()
-    outputPath = apiTestsOutputDir / (apiTestPath.stem + ".png")
-    expectedOutputPath = apiTestsExpectedOutputDir / (apiTestPath.stem + ".png")
+    fileName = (apiTestPath.stem + f".{imageType}")
+    outputPath = apiTestsOutputDir / fileName
+    expectedOutputPath = apiTestsExpectedOutputDir / fileName
     db.saveImage(outputPath)
     same, reason = compareImages(outputPath, expectedOutputPath)
     assert same, reason
