@@ -64,6 +64,18 @@ def test_saveImage_mp4(tmpdir):
     assert expected_filenames == [p.name for p in paths]
 
 
+def test_saveImage_pdf(tmpdir):
+    tmpdir = pathlib.Path(tmpdir)
+    db = Drawing()
+    namespace = makeDrawbotNamespace(db)
+    runScriptSource(multipageSource, "<string>", namespace)
+    assert [] == sorted(tmpdir.glob("*.pdf"))
+    db.saveImage(tmpdir / "test.pdf")
+    expected_filenames = ['test.pdf']
+    paths = sorted(tmpdir.glob("*.pdf"))
+    assert expected_filenames == [p.name for p in paths]
+
+
 def test_noFont(tmpdir):
     db = Drawing()
     # Ensure we don't get an error when font is not set
