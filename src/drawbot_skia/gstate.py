@@ -196,7 +196,7 @@ class _ImmutableContainer:
         return all(getattr(self, n) == getattr(other, n) for n in self._names)
 
     def __repr__(self):
-        args = ", ".join(f"{n}={self.__dict__[n]!r}" for n in self._names)
+        args = ", ".join(f"{n}={self.__dict__[n]!r}" for n in sorted(self._names))
         return f"{self.__class__.__name__}({args})"
 
 
