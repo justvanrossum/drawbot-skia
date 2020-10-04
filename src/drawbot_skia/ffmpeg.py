@@ -18,6 +18,8 @@ def generateMP4(
         ffmpegPath = findExecutable("ffmpeg")
     if ffmpegPath is None:
         ffmpegPath = getPyFFmpegPath()
+    imageTemplate = os.fspath(imageTemplate)
+    mp4path = os.fspath(mp4path)
     cmds = [
         ffmpegPath,             # path to the ffmpeg executable
         "-y",                   # overwrite existing files

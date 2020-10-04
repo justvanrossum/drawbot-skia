@@ -121,8 +121,8 @@ class RecordingDocument(Document):
                 whiteBackground=True,
                 singlePage=False,
             )
-            imagesTemplate = os.fspath(tempDir / "frame_%d.png")
-            generateMP4(imagesTemplate, os.fspath(path), frameRate, codec=codec)
+            imagesTemplate = tempDir / "frame_%d.png"
+            generateMP4(imagesTemplate, path, frameRate, codec=codec)
 
 
 def _savePixelImages(pictures, path, format, whiteBackground=False, singlePage=None):
