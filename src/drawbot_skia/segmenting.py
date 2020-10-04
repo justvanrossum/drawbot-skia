@@ -53,16 +53,15 @@ def textSegments(txt):
     return segments, storage['base_level']
 
 
-def reorderedSegments(segments, baseLevel):
+def reorderedSegments(segments, isRTL, isSegmentRTLFunc):
     reorderedSegments = []
-    isRTL = baseLevel % 2
-    for value, sub in itertools.groupby(segments, key=lambda item: item[2] % 2):
+    for value, sub in itertools.groupby(segments, key=isSegmentRTLFunc):
         if isRTL == value:
             reorderedSegments.extend(sub)
         else:
             reorderedSegments.extend(reversed(list(sub)))
     if isRTL:
-        reorderedSegments = list(reversed(reorderedSegments))
+        reorderedSegments.reverse()
     assert len(reorderedSegments) == len(segments)
     return reorderedSegments
 

@@ -394,7 +394,7 @@ class TextStyle(_ImmutableContainer):
 
     def shape(self, txt):
         segments, baseLevel = textSegments(txt)
-        segments = reorderedSegments(segments, baseLevel)
+        segments = reorderedSegments(segments, baseLevel % 2, lambda item: item[2] % 2)
         startPos = (0, 0)
         glyphsInfo = None
         for runChars, script, bidiLevel, index in segments:
