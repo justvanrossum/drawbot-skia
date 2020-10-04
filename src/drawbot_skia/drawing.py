@@ -4,23 +4,7 @@ import math
 import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
-from .gstate import GraphicsState
-
-
-class gstateDelegateMethod:
-
-    def __set_name__(self, owner, name):
-        self.name = name
-
-    def __get__(self, obj, cls):
-        if obj is None:
-            return self
-
-        @functools.wraps(getattr(GraphicsState, self.name))
-        def wrappedMethod(*args, **kwargs):
-            method = getattr(obj._gstate, self.name)
-            return method(*args, **kwargs)
-        return wrappedMethod
+from .gstate import GraphicsState, GraphicsStateMixin
 
 
 class Drawing:
@@ -95,24 +79,6 @@ class Drawing:
 
     def clipPath(self, path):
         self._canvas.clipPath(path.path, doAntiAlias=True)
-
-    # The following methods will be directly delegated to self._gstate
-    fill = gstateDelegateMethod()
-    stroke = gstateDelegateMethod()
-    blendMode = gstateDelegateMethod()
-    strokeWidth = gstateDelegateMethod()
-    lineCap = gstateDelegateMethod()
-    lineJoin = gstateDelegateMethod()
-    lineDash = gstateDelegateMethod()
-    miterLimit = gstateDelegateMethod()
-    linearGradient = gstateDelegateMethod()
-    radialGradient = gstateDelegateMethod()
-    shadow = gstateDelegateMethod()
-    font = gstateDelegateMethod()
-    fontSize = gstateDelegateMethod()
-    openTypeFeatures = gstateDelegateMethod()
-    fontVariations = gstateDelegateMethod()
-    language = gstateDelegateMethod()
 
     def textSize(self, txt):
         # TODO: with some smartness we can shape only once, for a
@@ -232,3 +198,17 @@ class Drawing:
             canvasMethod(*items, self._gstate.fillPaint.skPaint)
         if self._gstate.strokePaint.somethingToDraw:
             canvasMethod(*items, self._gstate.strokePaint.skPaint)
+
+
+def _makeWrapper(name):
+    @functools.wraps(getattr(GraphicsState, name))
+    def wrapper(self, *args, **kwargs):
+        method = getattr(self._gstate, name)
+        return method(*args, **kwargs)
+    return wrapper
+
+
+# Inject GraphicsStateMixin method wrappers into Drawing
+for name in dir(GraphicsStateMixin):
+    if name[0] != "_":
+        setattr(Drawing, name, _makeWrapper(name))
