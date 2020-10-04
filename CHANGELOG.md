@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.4.4] - 2020-10-04
+
+- Fixed `mp4` export with Python 3.6 on Windows
+
 ## [0.4.3] - 2020-10-03
 
 - Added `svg` export support for `saveImage()`
