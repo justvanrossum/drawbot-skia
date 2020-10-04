@@ -201,7 +201,7 @@ class Drawing:
 
 
 def _makeWrapper(name):
-    @functools.wraps(getattr(GraphicsState, name))
+    @functools.wraps(getattr(GraphicsStateMixin, name))
     def wrapper(self, *args, **kwargs):
         method = getattr(self._gstate, name)
         return method(*args, **kwargs)
