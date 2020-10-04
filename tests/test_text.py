@@ -2,7 +2,7 @@ import os
 import pathlib
 import pytest
 import skia
-from drawbot_skia.text import getShapeFuncForSkiaTypeface
+from drawbot_skia.shaping import getShapeFuncForSkiaTypeface
 
 
 testDir = pathlib.Path(__file__).resolve().parent

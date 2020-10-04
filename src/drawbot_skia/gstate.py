@@ -3,8 +3,8 @@ import os
 import skia
 from .errors import DrawbotError
 from .font import makeTTFontFromSkiaTypeface, tagToInt
-from .text import getShapeFuncForSkiaTypeface
 from .segmenting import textSegments, reorderedSegments
+from .shaping import getShapeFuncForSkiaTypeface
 
 
 class cached_property(object):
