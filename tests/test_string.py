@@ -236,3 +236,6 @@ def test_isRTL(inputString, isRTL, doFormat):
     else:
         fs.append(inputString)
     assert isRTL == fs.isRTL
+    # Test setter
+    fs.isRTL = not fs.isRTL
+    assert not isRTL == fs.isRTL
