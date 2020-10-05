@@ -239,3 +239,25 @@ def test_isRTL(inputString, isRTL, doFormat):
     # Test setter
     fs.isRTL = not fs.isRTL
     assert not isRTL == fs.isRTL
+
+
+def test_calcFeatureSegments():
+    fs = FormattedString()
+    fs.openTypeFeatures(liga=False, tnum=True)
+    fs.append("abc")
+    fs.openTypeFeatures(smcp=True)
+    fs.append("def")
+    fs.openTypeFeatures(liga=True)
+    fs.append("ghi")
+    fs.openTypeFeatures(aalt=2)
+    fs.append("0")
+    fs.openTypeFeatures(aalt=False, smcp=False)
+    fs.append("jkl")
+    features = fs.buildFeaturesDict()
+    expectedFeatures = {
+        'aalt': [(9, 10, 2), (10, 13, False)],
+        'liga': [(0, 6, False), (6, 13, True)],
+        'smcp': [(3, 10, True), (10, 13, False)],
+        'tnum': True,
+    }
+    assert expectedFeatures == features

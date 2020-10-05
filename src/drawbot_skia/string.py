@@ -1,4 +1,5 @@
 from bisect import bisect
+from collections import defaultdict
 from typing import NamedTuple
 from unicodedata2 import bidirectional
 from .gstate import FillPaint, StrokePaint, TextStyle, GraphicsStateMixin
@@ -250,6 +251,33 @@ class FormattedString(GraphicsStateMixin):
             prevRun = run
         if currentRuns:
             yield FormattedString(runs=currentRuns)
+
+    def iterSplitByScriptAndBidi(self):
+        ...
+
+    def buildFeaturesDict(self, firstCharIndex=0):
+        features = defaultdict(list)
+        charIndex = firstCharIndex
+        for run in self.runs:
+            nextCharIndex = charIndex + len(run.text)
+            for tag, value in run.textStyle.features.items():
+                features[tag].append((charIndex, nextCharIndex, value))
+            charIndex = nextCharIndex
+        features = dict(features)
+        numChars = len(self)
+        # Merge ranges
+        for tag, values in features.items():
+            newValues = [values[0]]
+            for charIndex, nextCharIndex, value in values[1:]:
+                if charIndex == newValues[-1][1] and value == newValues[-1][2]:
+                    newValues[-1] = (newValues[-1][0], nextCharIndex, value)
+                else:
+                    newValues.append((charIndex, nextCharIndex, value))
+            if len(newValues) == 1 and newValues[0][0] == 0 and newValues[0][1] == numChars:
+                # Feature covers the full range, no need for segments, just the value
+                newValues = newValues[0][2]
+            features[tag] = newValues
+        return features
 
     @property
     def isRTL(self):
