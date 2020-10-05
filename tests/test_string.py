@@ -189,6 +189,9 @@ def test_slice():
     expected = FormattedString("jk", fontSize=15)
     assert expected == testString[-2:]
 
+    with pytest.raises(TypeError):
+        testString[::-1]
+
 
 def test_textRun_len_slice():
     testString = FormattedString("abcdefg")
