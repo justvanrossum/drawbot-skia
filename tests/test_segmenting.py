@@ -8,21 +8,23 @@ latinText = " hello "
 
 
 testTexts = [
-    (arabicText, 1, [(0, 6, "Arab", 1)]),
-    (hebrewText, 1, [(0, 8, "Hebr", 1)]),
-    (latinText, 0, [(0, 7, "Latn", 0)]),
-    (latinText + arabicText + latinText, 0,
+    (arabicText, None, 1, [(0, 6, "Arab", 1)]),
+    (arabicText, 0, 0, [(0, 1, 'Arab', 0), (1, 5, 'Arab', 1), (5, 6, 'Arab', 0)]),
+    (hebrewText, None, 1, [(0, 8, "Hebr", 1)]),
+    (latinText, None, 0, [(0, 7, "Latn", 0)]),
+    (latinText, 1, 1, [(0, 1, 'Latn', 1), (1, 6, 'Latn', 2), (6, 7, 'Latn', 1)]),
+    (latinText + arabicText + latinText, None, 0,
         [(0, 8, "Latn", 0), (8, 12, "Arab", 1), (12, 14, "Arab", 0), (14, 20, "Latn", 0)]),
-    (arabicText + latinText + arabicText, 1,
+    (arabicText + latinText + arabicText, None, 1,
         [(0, 7, 'Arab', 1), (7, 12, 'Latn', 2), (12, 14, 'Latn', 1), (14, 19, 'Arab', 1)]),
-    (latinText + arabicText + hebrewText + latinText, 0,
+    (latinText + arabicText + hebrewText + latinText, None, 0,
         [(0, 8, 'Latn', 0), (8, 14, 'Arab', 1), (14, 20, 'Hebr', 1, ), (20, 22, 'Hebr', 0), (22, 28, 'Latn', 0)]),
 ]
 
 
-@pytest.mark.parametrize("text, expectedBaseLevel, expectedSegments", testTexts)
-def test_textSegments(text, expectedBaseLevel, expectedSegments):
-    segments, baseLevel = textSegments(text)
+@pytest.mark.parametrize("text, baseLevelOverride, expectedBaseLevel, expectedSegments", testTexts)
+def test_textSegments(text, baseLevelOverride, expectedBaseLevel, expectedSegments):
+    segments, baseLevel = textSegments(text, baseLevelOverride)
     assert expectedBaseLevel == baseLevel
     newSegments = []
     for seg, script, bidiLevel, index in segments:
@@ -30,9 +32,9 @@ def test_textSegments(text, expectedBaseLevel, expectedSegments):
     assert expectedSegments == newSegments
 
 
-@pytest.mark.parametrize("text, expectedBaseLevel, expectedSegments", testTexts)
-def test_textSegmentIndices(text, expectedBaseLevel, expectedSegments):
-    segments, baseLevel = textSegmentIndices(text)
+@pytest.mark.parametrize("text, baseLevelOverride, expectedBaseLevel, expectedSegments", testTexts)
+def test_textSegmentIndices(text, baseLevelOverride, expectedBaseLevel, expectedSegments):
+    segments, baseLevel = textSegmentIndices(text, baseLevelOverride)
     assert expectedBaseLevel == baseLevel
     assert expectedSegments == segments
 

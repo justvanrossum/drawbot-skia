@@ -20,17 +20,21 @@ from bidi.mirror import MIRRORED  # noqa: ignore E402
 UNKNOWN_SCRIPT = {"Zinh", "Zyyy", "Zxxx"}
 
 
-def textSegments(txt):
-    indexedSegments, baseLevel = textSegmentIndices(txt)
+def textSegments(txt, baseLevel=None):
+    indexedSegments, baseLevel = textSegmentIndices(txt, baseLevel=baseLevel)
     segments = []
     for index, nextIndex, scriptCode, bidiLevel in indexedSegments:
         segments.append((txt[index:nextIndex], scriptCode, bidiLevel, index))
     return segments, baseLevel
 
 
-def textSegmentIndices(txt):
+def textSegmentIndices(txt, baseLevel=None):
     scripts = detectScript(txt)
-    storage = getBiDiInfo(txt)
+    if baseLevel is None:
+        base_dir = None
+    else:
+        base_dir = ('L' 'R')[baseLevel]
+    storage = getBiDiInfo(txt, base_dir=base_dir)
     baseLevel = storage['base_level']
 
     levels = [None] * len(txt)
