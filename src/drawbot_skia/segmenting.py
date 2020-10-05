@@ -51,8 +51,8 @@ def textSegmentIndices(txt):
 
     segments = []
     index = 0
-    for rl, scriptCode, bidiLevel in runLengthInfo:
-        nextIndex = index + rl
+    for runLength, scriptCode, bidiLevel in runLengthInfo:
+        nextIndex = index + runLength
         segments.append((index, nextIndex, scriptCode, bidiLevel))
         index = nextIndex
     return segments, baseLevel
