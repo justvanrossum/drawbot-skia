@@ -166,8 +166,12 @@ def test_slice():
     testString.append("def", fontSize=13)
     testString.append("h", fontSize=14)
     testString.append("ijk", fontSize=15)
+
     expected = FormattedString("b", fontSize=12)
     assert expected == testString[1]
+
+    expected = FormattedString("k", fontSize=15)
+    assert expected == testString[-1]
 
     expected = FormattedString("b", fontSize=12)
     assert expected == testString[1:2]
