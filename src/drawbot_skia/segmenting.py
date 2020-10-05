@@ -43,9 +43,10 @@ def textSegmentIndices(txt):
         else:
             prevLevel = level
 
-    runLengthInfo = []
-    for (scriptCode, bidiLevel), sub in itertools.groupby(zip(scripts, levels)):
-        runLengthInfo.append((len(tuple(sub)), scriptCode, bidiLevel))
+    runLengthInfo = [
+        (len(tuple(sub)), scriptCode, bidiLevel)
+        for (scriptCode, bidiLevel), sub in itertools.groupby(zip(scripts, levels))
+    ]
 
     segments = []
     index = 0
