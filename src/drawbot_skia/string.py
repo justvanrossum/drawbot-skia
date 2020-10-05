@@ -90,6 +90,39 @@ class FormattedString(GraphicsStateMixin):
     def __len__(self):
         return self.runCharIndices[-1]
 
+    def __getitem__(self, indexOrSlice):
+        if isinstance(indexOrSlice, int):
+            index = indexOrSlice
+            if index < 0:
+                index += len(self)
+            if not (0 <= index < len(self)):
+                raise IndexError(f"index {indexOrSlice} out of range")
+            startRunIndex = self.findRunIndex(index)
+            runStart = self.runCharIndices[startRunIndex]
+            runs = [self.runs[startRunIndex][index - runStart]]
+        else:
+            slc = indexOrSlice
+            start, stop, step = slc.indices(len(self))
+            if step != 1:
+                raise TypeError(f"FormattedString slicing does not support step != 1 ({step})")
+            startRunIndex = self.findRunIndex(start)
+            if stop == len(self):
+                stopRunIndex = len(self.runs) - 1
+            else:
+                stopRunIndex = self.findRunIndex(stop)
+            runStart = self.runCharIndices[startRunIndex]
+            runStop = self.runCharIndices[stopRunIndex]
+            if startRunIndex == stopRunIndex:
+                runs = [self.runs[startRunIndex][start - runStart:stop - runStop]]
+            else:
+                runs = []
+                runs.append(self.runs[startRunIndex][start - runStart:])
+                runs.extend(self.runs[startRunIndex + 1: stopRunIndex])
+                stopSlice = self.runs[stopRunIndex][:stop - runStop]
+                if stopSlice:
+                    runs.append(stopSlice)
+        return FormattedString(runs=runs)
+
     def splitlines(self, keepends=False):
         currentLine = []
         lines = []

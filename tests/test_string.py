@@ -161,6 +161,28 @@ def test_len(testString):
     assert 0 == len(FormattedString())
 
 
+def test_slice():
+    testString = FormattedString("abc", fontSize=12)
+    testString.append("def", fontSize=13)
+    testString.append("h", fontSize=14)
+    testString.append("ijk", fontSize=15)
+    expected = FormattedString("b", fontSize=12)
+    assert expected == testString[1]
+
+    expected = FormattedString("b", fontSize=12)
+    assert expected == testString[1:2]
+
+    expected = FormattedString("bc", fontSize=12)
+    assert expected == testString[1:3]
+
+    expected = FormattedString("bc", fontSize=12)
+    expected.append("d", fontSize=13)
+    assert expected == testString[1:4]
+
+    expected = FormattedString("jk", fontSize=15)
+    assert expected == testString[-2:]
+
+
 def test_textRun_len_slice():
     testString = FormattedString("abcdefg")
     run = testString.runs[0]
