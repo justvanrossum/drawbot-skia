@@ -34,9 +34,6 @@ def test_textSegments(text, expectedBaseLevel, expectedSegments):
 def test_textSegmentIndices(text, expectedBaseLevel, expectedSegments):
     segments, baseLevel = textSegmentIndices(text)
     assert expectedBaseLevel == baseLevel
-    # expectedSegments2 = []
-    # for length, script, bidiLevel, index in expectedSegments:
-    #     expectedSegments2.append((index, index + length, script, bidiLevel))
     assert expectedSegments == segments
 
 
