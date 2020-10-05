@@ -21,14 +21,10 @@ UNKNOWN_SCRIPT = {"Zinh", "Zyyy", "Zxxx"}
 
 
 def textSegments(txt):
-    runLengthInfo, base_level = textSegmentsRaw(txt)
+    indexedSegments, base_level = textSegmentIndices(txt)
     segments = []
-    index = 0
-    for rl, scriptCode, bidiLevel in runLengthInfo:
-        nextIndex = index + rl
-        runChars = txt[index:nextIndex]
-        segments.append((runChars, scriptCode, bidiLevel, index))
-        index = nextIndex
+    for index, nextIndex, scriptCode, bidiLevel in indexedSegments:
+        segments.append((txt[index:nextIndex], scriptCode, bidiLevel, index))
     return segments, base_level
 
 
