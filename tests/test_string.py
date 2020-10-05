@@ -271,3 +271,5 @@ def test_iterSplitByScriptAndBidi():
     parts = fs.iterSplitByScriptAndBidi()
     assert len(parts) == 4
     assert [p.isRTL for p in parts] == [0, 1, 1, 0]
+    joined = FormattedString().join(parts)
+    assert joined == fs
