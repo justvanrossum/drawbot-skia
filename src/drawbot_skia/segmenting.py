@@ -29,17 +29,6 @@ def textSegments(txt):
 
 
 def textSegmentIndices(txt):
-    runLengthInfo, base_level = textSegmentsRaw(txt)
-    segments = []
-    index = 0
-    for rl, scriptCode, bidiLevel in runLengthInfo:
-        nextIndex = index + rl
-        segments.append((index, nextIndex, scriptCode, bidiLevel))
-        index = nextIndex
-    return segments, base_level
-
-
-def textSegmentsRaw(txt):
     scripts = detectScript(txt)
     storage = getBiDiInfo(txt)
 
@@ -60,7 +49,13 @@ def textSegmentsRaw(txt):
     for (scriptCode, bidiLevel), sub in itertools.groupby(charInfo):
         runLengthInfo.append((len(tuple(sub)), scriptCode, bidiLevel))
 
-    return runLengthInfo, storage['base_level']
+    segments = []
+    index = 0
+    for rl, scriptCode, bidiLevel in runLengthInfo:
+        nextIndex = index + rl
+        segments.append((index, nextIndex, scriptCode, bidiLevel))
+        index = nextIndex
+    return segments, storage['base_level']
 
 
 def reorderedSegments(segments, isRTL, isSegmentRTLFunc):
