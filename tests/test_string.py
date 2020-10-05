@@ -211,3 +211,28 @@ def test_textRun_len_slice():
     assert "fg" == c.text
     c = run[2:5]
     assert "cde" == c.text
+
+
+arabicText = "  أحدث "
+hebrewText = "  מוסיקה "
+latinText = "  hello "
+
+isRTLTestData = [
+    (latinText, False),
+    (arabicText, True),
+    (hebrewText, True),
+    (hebrewText + latinText, True),
+    (latinText + hebrewText, False),
+]
+
+
+@pytest.mark.parametrize("inputString, isRTL", isRTLTestData)
+@pytest.mark.parametrize("doFormat", [False, True])
+def test_isRTL(inputString, isRTL, doFormat):
+    fs = FormattedString()
+    if doFormat:
+        for i, c in enumerate(inputString):
+            fs.append(c, fontSize=10 + i)
+    else:
+        fs.append(inputString)
+    assert isRTL == fs.isRTL

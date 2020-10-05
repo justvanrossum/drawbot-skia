@@ -1,9 +1,12 @@
 from bisect import bisect
 from typing import NamedTuple
+from unicodedata2 import bidirectional
 from .gstate import FillPaint, StrokePaint, TextStyle, GraphicsStateMixin
 
 
 class FormattedString(GraphicsStateMixin):
+
+    _isRTL = None
 
     def __init__(self, text=None, runs=None, **properties):
         self.runs = []
@@ -247,6 +250,31 @@ class FormattedString(GraphicsStateMixin):
             prevRun = run
         if currentRuns:
             yield FormattedString(runs=currentRuns)
+
+    @property
+    def isRTL(self):
+        if self._isRTL is None:
+            isRTL = None
+            for run in self.runs:
+                for char in run.text:
+                    bidiType = bidirectional(char)
+                    if bidiType in ('AL', 'R'):
+                        isRTL = True
+                        break
+                    elif bidiType == 'L':
+                        isRTL = False
+                        break
+                if isRTL is not None:
+                    break
+            else:
+                # P3, last resort
+                isRTL = False
+            self._isRTL = isRTL
+        return self._isRTL
+
+    @isRTL.setter
+    def isRTL(self, value):
+        self._isRTL = value
 
 
 class TextRun(NamedTuple):
