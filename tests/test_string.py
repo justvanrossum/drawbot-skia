@@ -73,10 +73,13 @@ def test_iterSplit():
 
 @pytest.fixture
 def testString():
+    char = ord("a")
     fs = FormattedString()
     for i in range(1, 5):
         fs.fontSize(i + 10)
-        fs.append("a" * i)
+        for j in range(i):
+            fs.append(chr(char))
+            char += 1
     return fs
 
 
@@ -107,6 +110,7 @@ def test_appendFormattedString(testString):
     assert len(testString.runs) == numRuns * 2
     testString.append(FormattedString())
     assert len(testString.runs) == numRuns * 2
+    assert "abcdefghijabcdefghij" == testString.text
 
 
 def test_add(testString):
@@ -120,7 +124,7 @@ def test_iadd(testString):
     testString += "XYZ"
     assert before is testString
     assert len(testString.runs) == 4
-    assert "aaaaaaaaaaXYZ" == testString.text
+    assert "abcdefghijXYZ" == testString.text
 
 
 def test_copy(testString):
