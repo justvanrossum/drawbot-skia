@@ -35,19 +35,19 @@ def textSegments(txt):
         else:
             prevLevel = level
 
-    chars = list(zip(txt, scripts, levels))
+    charInfo = list(zip(scripts, levels))
 
     runLenghts = []
-    for value, sub in itertools.groupby(chars, key=lambda item: item[1:]):
+    for value, sub in itertools.groupby(charInfo):
         runLenghts.append(len(list(sub)))
 
     segments = []
     index = 0
     for rl in runLenghts:
         nextIndex = index + rl
-        segment = chars[index:nextIndex]
-        runChars = "".join(ch for ch, script, bidiLevel in segment)
-        _, script, bidiLevel = segment[0]
+        segment = charInfo[index:nextIndex]
+        runChars = txt[index:nextIndex]
+        script, bidiLevel = segment[0]
         segments.append((runChars, script, bidiLevel, index))
         index = nextIndex
     return segments, storage['base_level']
