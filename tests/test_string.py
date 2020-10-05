@@ -176,6 +176,9 @@ def test_slice():
     expected = FormattedString("b", fontSize=12)
     assert expected == testString[1:2]
 
+    expected = FormattedString("ab", fontSize=12)
+    assert expected == testString[:2]
+
     expected = FormattedString("bc", fontSize=12)
     assert expected == testString[1:3]
 
