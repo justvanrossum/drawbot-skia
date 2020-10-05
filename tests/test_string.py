@@ -165,36 +165,36 @@ def test_len(testString):
     assert 0 == len(FormattedString())
 
 
-def test_slice():
-    testString = FormattedString("abc", fontSize=12)
-    testString.append("def", fontSize=13)
-    testString.append("h", fontSize=14)
-    testString.append("ijk", fontSize=15)
+sliceTestData = [
+    (1, [("b", 12)]),
+    ((1, 2), [("b", 12)]),
+    ((None, 2), [("a", 11), ("b", 12)]),
+    ((1, 4), [("bc", 12), ("d", 13)]),
+    ((-2, None), [("ij", 14)]),
+    ((None, None, -1), TypeError),
+]
 
-    expected = FormattedString("b", fontSize=12)
-    assert expected == testString[1]
 
-    expected = FormattedString("k", fontSize=15)
-    assert expected == testString[-1]
-
-    expected = FormattedString("b", fontSize=12)
-    assert expected == testString[1:2]
-
-    expected = FormattedString("ab", fontSize=12)
-    assert expected == testString[:2]
-
-    expected = FormattedString("bc", fontSize=12)
-    assert expected == testString[1:3]
-
-    expected = FormattedString("bc", fontSize=12)
-    expected.append("d", fontSize=13)
-    assert expected == testString[1:4]
-
-    expected = FormattedString("jk", fontSize=15)
-    assert expected == testString[-2:]
-
-    with pytest.raises(TypeError):
-        testString[::-1]
+@pytest.mark.parametrize("index, expectedInput", sliceTestData)
+def test_slice(testString, index, expectedInput):
+    if not isinstance(expectedInput, list):
+        expectedException = expectedInput
+        expected = None
+    else:
+        expectedException = None
+        expected = FormattedString()
+        for txt, fontSize in expectedInput:
+            expected.append(txt, fontSize=fontSize)
+    if isinstance(index, tuple):
+        slc = slice(*index)
+    else:
+        slc = index
+    if expectedException is not None:
+        with pytest.raises(expectedException):
+            fs = testString[slc]
+    else:
+        fs = testString[slc]
+        assert expected == fs
 
 
 def test_textRun_len_slice():
