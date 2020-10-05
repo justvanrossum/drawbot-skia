@@ -3,6 +3,7 @@ from collections import defaultdict
 from typing import NamedTuple
 from unicodedata2 import bidirectional
 from .gstate import FillPaint, StrokePaint, TextStyle, GraphicsStateMixin
+from .segmenting import textSegmentIndices
 
 
 class FormattedString(GraphicsStateMixin):
@@ -252,8 +253,14 @@ class FormattedString(GraphicsStateMixin):
         if currentRuns:
             yield FormattedString(runs=currentRuns)
 
-    def iterSplitByScriptAndBidi(self):
-        ...
+    def iterSplitByScriptAndBidi(self, baseLevel=None):
+        indexedSegments, baseLevel = textSegmentIndices(self.text, baseLevel)
+        result = []
+        for startIndex, stopIndex, scriptCode, bidiLevel in indexedSegments:
+            part = self[startIndex:stopIndex]
+            part.isRTL = bidiLevel % 2
+            result.append(part)
+        return result
 
     def buildFeaturesDict(self, firstCharIndex=0):
         features = defaultdict(list)

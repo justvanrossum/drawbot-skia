@@ -261,3 +261,13 @@ def test_calcFeatureSegments():
         'tnum': True,
     }
     assert expectedFeatures == features
+
+
+def test_iterSplitByScriptAndBidi():
+    fs = FormattedString()
+    fs.append(latinText)
+    fs.append(arabicText)
+    fs.append(hebrewText)
+    parts = fs.iterSplitByScriptAndBidi()
+    assert len(parts) == 4
+    assert [p.isRTL for p in parts] == [0, 1, 1, 0]
