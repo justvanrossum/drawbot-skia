@@ -21,22 +21,23 @@ UNKNOWN_SCRIPT = {"Zinh", "Zyyy", "Zxxx"}
 
 
 def textSegments(txt):
-    indexedSegments, base_level = textSegmentIndices(txt)
+    indexedSegments, baseLevel = textSegmentIndices(txt)
     segments = []
     for index, nextIndex, scriptCode, bidiLevel in indexedSegments:
         segments.append((txt[index:nextIndex], scriptCode, bidiLevel, index))
-    return segments, base_level
+    return segments, baseLevel
 
 
 def textSegmentIndices(txt):
     scripts = detectScript(txt)
     storage = getBiDiInfo(txt)
+    baseLevel = storage['base_level']
 
     levels = [None] * len(txt)
     for ch in storage['chars']:
         levels[ch['index']] = ch['level']
 
-    prevLevel = storage['base_level']
+    prevLevel = baseLevel
     for i, level in enumerate(levels):
         if level is None:
             levels[i] = prevLevel
@@ -54,7 +55,7 @@ def textSegmentIndices(txt):
         nextIndex = index + rl
         segments.append((index, nextIndex, scriptCode, bidiLevel))
         index = nextIndex
-    return segments, storage['base_level']
+    return segments, baseLevel
 
 
 def reorderedSegments(segments, isRTL, isSegmentRTLFunc):
