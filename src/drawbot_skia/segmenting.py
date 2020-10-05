@@ -21,6 +21,20 @@ UNKNOWN_SCRIPT = {"Zinh", "Zyyy", "Zxxx"}
 
 
 def textSegments(txt):
+    runLengths, charInfo, base_level = textSegmentsRaw(txt)
+    segments = []
+    index = 0
+    for rl in runLengths:
+        nextIndex = index + rl
+        segment = charInfo[index:nextIndex]
+        runChars = txt[index:nextIndex]
+        script, bidiLevel = segment[0]
+        segments.append((runChars, script, bidiLevel, index))
+        index = nextIndex
+    return segments, base_level
+
+
+def textSegmentsRaw(txt):
     scripts = detectScript(txt)
     storage = getBiDiInfo(txt)
 
@@ -37,20 +51,11 @@ def textSegments(txt):
 
     charInfo = list(zip(scripts, levels))
 
-    runLenghts = []
+    runLengths = []
     for value, sub in itertools.groupby(charInfo):
-        runLenghts.append(len(list(sub)))
+        runLengths.append(len(list(sub)))
 
-    segments = []
-    index = 0
-    for rl in runLenghts:
-        nextIndex = index + rl
-        segment = charInfo[index:nextIndex]
-        runChars = txt[index:nextIndex]
-        script, bidiLevel = segment[0]
-        segments.append((runChars, script, bidiLevel, index))
-        index = nextIndex
-    return segments, storage['base_level']
+    return runLengths, charInfo, storage['base_level']
 
 
 def reorderedSegments(segments, isRTL, isSegmentRTLFunc):
