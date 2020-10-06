@@ -268,7 +268,7 @@ def test_iterSplitByScriptAndBidi():
     fs.append(latinText)
     fs.append(arabicText)
     fs.append(hebrewText)
-    parts = fs.iterSplitByScriptAndBidi()
+    parts = list(fs.iterSplitByScriptAndBidi())
     assert len(parts) == 4
     assert [p.isRTL for p in parts] == [0, 1, 1, 0]
     joined = FormattedString().join(parts)

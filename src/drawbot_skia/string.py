@@ -255,12 +255,10 @@ class FormattedString(GraphicsStateMixin):
 
     def iterSplitByScriptAndBidi(self, baseLevel=None):
         indexedSegments, baseLevel = textSegmentIndices(self.text, baseLevel)
-        result = []
         for startIndex, stopIndex, scriptCode, bidiLevel in indexedSegments:
             part = self[startIndex:stopIndex]
             part.isRTL = bidiLevel % 2
-            result.append(part)
-        return result
+            yield part
 
     def buildFeaturesDict(self, firstCharIndex=0):
         features = defaultdict(list)
