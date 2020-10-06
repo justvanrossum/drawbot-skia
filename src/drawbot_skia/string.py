@@ -314,6 +314,12 @@ class FormattedString(GraphicsStateMixin):
     def isRTL(self, value):
         self._isRTL = value
 
+    def getLineHeight(self):
+        lineHeight = self.textStyle.getLineHeight()
+        for run in self.runs:
+            lineHeight = max(lineHeight, run.textStyle.getLineHeight())
+        return lineHeight
+
 
 class TextRun(NamedTuple):
 
