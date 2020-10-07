@@ -10,7 +10,7 @@ class FormattedString(GraphicsStateMixin):
 
     _isRTL = None
 
-    def __init__(self, text=None, runs=None, **properties):
+    def __init__(self, text=None, *, runs=None, **properties):
         self.runs = []
         self._runCharIndices = None
         if runs:
