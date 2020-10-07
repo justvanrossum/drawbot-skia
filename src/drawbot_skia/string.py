@@ -23,6 +23,11 @@ class FormattedString(GraphicsStateMixin):
             self.strokePaint = StrokePaint(somethingToDraw=False)
             self.append(text, **properties)
 
+    @classmethod
+    def fromStyleObjects(cls, text, textStyle, fillPaint, strokePaint):
+        run = TextRun(text, textStyle, fillPaint, strokePaint)
+        return cls(runs=[run])
+
     def copy(self):
         copy = FormattedString(runs=self.runs)
         # Ok to share these, they are copy-on-write, see GraphicsStateMixin

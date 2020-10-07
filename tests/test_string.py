@@ -273,3 +273,10 @@ def test_iterSplitByScriptAndBidi():
     assert [p.isRTL for p in parts] == [0, 1, 1, 0]
     joined = FormattedString().join(parts)
     assert joined == fs
+
+
+def test_fromStyleObjects():
+    txt = "abc"
+    fs1 = FormattedString(txt, fontSize=13, fill=(1, 0, 0), stroke=0, strokeWidth=4)
+    fs2 = FormattedString.fromStyleObjects(txt, fs1.textStyle, fs1.fillPaint, fs1.strokePaint)
+    assert fs1 == fs2
