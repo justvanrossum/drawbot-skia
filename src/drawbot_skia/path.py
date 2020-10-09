@@ -3,7 +3,7 @@ import math
 import skia
 from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
-from fontTools.pens.pointPen import SegmentToPointPen
+from fontTools.pens.pointPen import PointToSegmentPen, SegmentToPointPen
 from .gstate import TextStyle
 
 
@@ -23,13 +23,16 @@ from .gstate import TextStyle
 # - traceImage
 
 
-class BezierPath(BasePen):
+class BezierPath(PointToSegmentPen, BasePen):
 
     def __init__(self, path=None, glyphSet=None):
-        super().__init__(glyphSet)
+        super(BasePen, self).__init__(glyphSet)
         if path is None:
             path = skia.Path()
         self.path = path
+        self.pen = self
+        self.currentPath = None
+        self.outputImpliedClosingLine = True
 
     def _moveTo(self, pt):
         self.path.moveTo(*pt)
@@ -51,8 +54,10 @@ class BezierPath(BasePen):
     def _closePath(self):
         self.path.close()
 
-    def _endPath(self):
-        pass
+    def endPath(self):
+        if self.currentPath is not None:
+            # We are drawing as a point pen
+            super(PointToSegmentPen, self).endPath()
 
     def arc(self, center, radius, startAngle, endAngle, clockwise):
         cx, cy = center
