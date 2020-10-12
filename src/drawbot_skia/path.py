@@ -67,7 +67,7 @@ class BezierPath(BasePen):
             **kwargs
         )
 
-    def endPath(self):
+    def _endPath(self):
         if hasattr(self, "_pointToSegmentPen"):
             # We are drawing as a point pen
             pointToSegmentPen = self._pointToSegmentPen
