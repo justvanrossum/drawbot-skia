@@ -23,16 +23,13 @@ from .gstate import TextStyle
 # - traceImage
 
 
-class BezierPath(PointToSegmentPen, BasePen):
+class BezierPath(BasePen):
 
     def __init__(self, path=None, glyphSet=None):
-        super(BasePen, self).__init__(glyphSet)
+        super().__init__(glyphSet)
         if path is None:
             path = skia.Path()
         self.path = path
-        self.pen = self
-        self.currentPath = None
-        self.outputImpliedClosingLine = True
 
     def _moveTo(self, pt):
         self.path.moveTo(*pt)
@@ -54,10 +51,28 @@ class BezierPath(PointToSegmentPen, BasePen):
     def _closePath(self):
         self.path.close()
 
+    def beginPath(self, identifier=None):
+        self._pointToSegmentPen = PointToSegmentPen(self)
+        self._pointToSegmentPen.beginPath()
+
+    def addPoint(self, point, segmentType=None, smooth=False, name=None, identifier=None, **kwargs):
+        if not hasattr(self, "_pointToSegmentPen"):
+            raise AttributeError("path.beginPath() must be called before the path can be used as a point pen")
+        self._pointToSegmentPen.addPoint(
+            point,
+            segmentType=segmentType,
+            smooth=smooth,
+            name=name,
+            identifier=identifier,
+            **kwargs
+        )
+
     def endPath(self):
-        if self.currentPath is not None:
+        if hasattr(self, "_pointToSegmentPen"):
             # We are drawing as a point pen
-            super(PointToSegmentPen, self).endPath()
+            pointToSegmentPen = self._pointToSegmentPen
+            del self._pointToSegmentPen
+            pointToSegmentPen.endPath()
 
     def arc(self, center, radius, startAngle, endAngle, clockwise):
         cx, cy = center
