@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.?.?] - 2020-10-??
+
+- Added PointPen behavior to BezierPath ([#9](https://github.com/justvanrossum/drawbot-skia/pull/9))
+
 ## [0.4.4] - 2020-10-04
 
 - Fixed `mp4` export with Python 3.6 on Windows
