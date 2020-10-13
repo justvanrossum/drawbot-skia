@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+	<path fill="red" transform="matrix(1 0 -0 -1 0 200)" d="M20 20L20 100L100 100L100 180C150 180 180 150 180 100L180 50Q180 20 150 20"/>
+	<path fill="none" stroke="black" stroke-width="10" stroke-miterlimit="5" transform="matrix(1 0 -0 -1 0 200)" d="M20 20L20 100L100 100L100 180C150 180 180 150 180 100L180 50Q180 20 150 20"/>
+	<path fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" transform="matrix(0.7 0 -0 -0.7 40 185)" d="M20 20L20 100L100 100L100 180C150 180 180 150 180 100L180 50Q180 20 150 20"/>
+</svg>

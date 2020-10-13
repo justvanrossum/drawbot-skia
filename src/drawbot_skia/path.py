@@ -3,7 +3,7 @@ import math
 import skia
 from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
-from fontTools.pens.pointPen import SegmentToPointPen
+from fontTools.pens.pointPen import PointToSegmentPen, SegmentToPointPen
 from .gstate import TextStyle
 
 
@@ -51,8 +51,28 @@ class BezierPath(BasePen):
     def _closePath(self):
         self.path.close()
 
-    def _endPath(self):
-        pass
+    def beginPath(self, identifier=None):
+        self._pointToSegmentPen = PointToSegmentPen(self)
+        self._pointToSegmentPen.beginPath()
+
+    def addPoint(self, point, segmentType=None, smooth=False, name=None, identifier=None, **kwargs):
+        if not hasattr(self, "_pointToSegmentPen"):
+            raise AttributeError("path.beginPath() must be called before the path can be used as a point pen")
+        self._pointToSegmentPen.addPoint(
+            point,
+            segmentType=segmentType,
+            smooth=smooth,
+            name=name,
+            identifier=identifier,
+            **kwargs
+        )
+
+    def endPath(self):
+        if hasattr(self, "_pointToSegmentPen"):
+            # We are drawing as a point pen
+            pointToSegmentPen = self._pointToSegmentPen
+            del self._pointToSegmentPen
+            pointToSegmentPen.endPath()
 
     def arc(self, center, radius, startAngle, endAngle, clockwise):
         cx, cy = center
