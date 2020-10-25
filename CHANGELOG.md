@@ -1,5 +1,10 @@
 # Changelog for drawbot-skia
 
+## [0.?.?] - 2020-10-??
+
+- Added `listFontVariations()`
+- Added `listNamedInstances()`
+
 ## [0.4.5] - 2020-10-17
 
 - Added PointPen behavior to BezierPath ([#9](https://github.com/justvanrossum/drawbot-skia/pull/9), thanks Jens Kutilek!)
