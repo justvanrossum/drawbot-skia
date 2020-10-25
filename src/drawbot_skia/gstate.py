@@ -153,6 +153,44 @@ class GraphicsStateMixin:
     def language(self, language):
         self.textStyle = self.textStyle.copy(language=language)
 
+    def listFontVariations(self):
+        ttFont = self.textStyle.ttFont
+        variations = {}
+        if "fvar" in ttFont:
+            nameTable = ttFont["name"]
+            for axis in ttFont["fvar"].axes:
+                axisName = _getName(nameTable, axis.axisNameID)
+                variations[axis.axisTag] = dict(
+                    name=axisName,
+                    minValue=axis.minValue,
+                    defaultValue=axis.defaultValue,
+                    maxValue=axis.maxValue,
+                )
+        return variations
+
+    def listNamedInstances(self):
+        ttFont = self.textStyle.ttFont
+        instances = {}
+        if "fvar" in ttFont:
+            nameTable = ttFont["name"]
+            psName = _getName(nameTable, 6)
+            for instance in ttFont["fvar"].instances:
+                if instance.postscriptNameID != 0xFFFF:
+                    name = _getName(nameTable, instance.postscriptNameID)
+                else:
+                    name = psName + "_" + _getName(nameTable, instance.subfamilyNameID)
+                instances[name] = instance.coordinates
+        return instances
+
+
+def _getName(nameTable, nameID):
+    nameRecord = nameTable.getName(nameID, 3, 1, 0x0409)
+    if nameRecord is None:
+        nameRecord = nameTable.getName(nameID, 1, 0, 0)
+    if nameRecord is not None:
+        return nameRecord.toUnicode()
+    return None
+
 
 class GraphicsState(GraphicsStateMixin):
 
