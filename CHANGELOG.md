@@ -2,7 +2,7 @@
 
 ## [0.?.?] - 2020-10-??
 
-- Added `listFontVariations()` ([#10](https://github.com/justvanrossum/drawbot-skia/issues/10)
+- Added `listFontVariations()` ([#10](https://github.com/justvanrossum/drawbot-skia/issues/10))
 - Added `listNamedInstances()`
 
 ## [0.4.5] - 2020-10-17
