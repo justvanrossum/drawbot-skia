@@ -178,7 +178,13 @@ class GraphicsStateMixin:
                 if instance.postscriptNameID != 0xFFFF:
                     name = _getName(nameTable, instance.postscriptNameID)
                 else:
-                    name = psName + "_" + _getName(nameTable, instance.subfamilyNameID)
+                    instanceStyleName = _getName(nameTable, instance.subfamilyNameID)
+                    styleName = _getName(nameTable, 2)
+                    # A dodgy heuristic here:
+                    if instanceStyleName == styleName:
+                        name = psName
+                    else:
+                        name = psName + "_" + instanceStyleName
                 instances[name] = instance.coordinates
         return instances
 
