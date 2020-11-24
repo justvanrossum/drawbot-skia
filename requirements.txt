@@ -1,4 +1,4 @@
-skia-python==86.0
+skia-python==87.0
 fonttools[unicode]==4.14.0
 uharfbuzz==0.13.2
 python-bidi==0.4.2
