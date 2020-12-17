@@ -149,6 +149,23 @@ def test_newPage_newGState():
     assert (255, 255, 255, 255) == db._gstate.fillPaint.color
 
 
+def test_multipleDocuments(tmpdir):
+    tmpdir = pathlib.Path(tmpdir)
+    db = Drawing()
+    db.newPage(100, 100)
+    db.newPage(100, 100)
+    db.saveImage(tmpdir / "test1.png")
+
+    db.newDrawing()
+    db.newPage(100, 100)
+    db.newPage(100, 100)
+    db.saveImage(tmpdir / "test2.png")
+
+    fileNames = sorted(p.name for p in tmpdir.glob("*.png"))
+    expectedFileNames = ["test1_0.png", "test1_1.png", "test2_0.png", "test2_1.png"]
+    assert expectedFileNames == fileNames
+
+
 def test_polygon_args():
     db = Drawing()
     db.polygon([0, 0], [0, 100], [100, 0])

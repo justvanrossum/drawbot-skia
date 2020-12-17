@@ -4,6 +4,7 @@
 
 - Added `listFontVariations()` ([#10](https://github.com/justvanrossum/drawbot-skia/issues/10))
 - Added `listNamedInstances()`
+- Implemented `newDrawing()`, so multiple documents can be created in one run.
 
 ## [0.4.5] - 2020-10-17
 

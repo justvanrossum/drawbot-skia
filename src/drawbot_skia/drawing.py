@@ -10,13 +10,16 @@ from .gstate import GraphicsState, GraphicsStateMixin
 class Drawing:
 
     def __init__(self, document=None, flipCanvas=True):
+        self._flipCanvas = flipCanvas
+        self._reset(document)
+
+    def _reset(self, document=None):
         self._stack = []
         self._gstate = GraphicsState()
         if document is None:
             document = RecordingDocument()
         self._document = document
         self._skia_canvas = None
-        self._flipCanvas = flipCanvas
 
     @property
     def _canvas(self):
@@ -29,7 +32,7 @@ class Drawing:
         self._skia_canvas = canvas
 
     def newDrawing(self):
-        ...
+        self._reset()
 
     def endDrawing(self):
         ...
