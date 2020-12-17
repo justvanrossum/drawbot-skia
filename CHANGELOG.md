@@ -1,6 +1,6 @@
 # Changelog for drawbot-skia
 
-## [0.?.?] - 2020-10-??
+## [0.4.6] - 2020-12-17
 
 - Added `listFontVariations()` ([#10](https://github.com/justvanrossum/drawbot-skia/issues/10))
 - Added `listNamedInstances()`
