@@ -5,6 +5,7 @@ import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
 from .gstate import GraphicsState, GraphicsStateMixin
+from .font import getUPM, getAdvanceWidth
 
 
 class Drawing:
@@ -106,6 +107,44 @@ class Drawing:
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
             self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
+
+    def textBox(self, txt, box, fontPath, align=None, boxFill=None):
+        # TODO: better/dedicated lineHeight, alignment, word breaks, 
+        # hyphenation, boxColor, 
+        #
+        # solve fontPath argument
+        #
+        # better lineWidth calcualtion : the last char on the line
+        # should be calculated by boundingBox, not advance width
+        #
+        # textCircle? textSkew? textTriangle? >> textPath..
+        
+        
+        currentFontSize = self.textSize("x")[1]
+        
+        # if boxFill:
+        #     with self.savedState():
+        #         GraphicsStateMixin.fill(*boxFill)
+        #         GraphicsStateMixin.rect(*box)
+        
+        x,y,w,h = box
+
+        while txt:
+            lineWidth = 0
+            lineText = ""
+            while lineWidth < w:
+                if txt:
+                    char = txt[0]
+                    lineWidth += getAdvanceWidth(char,fontPath, currentFontSize)
+                    if lineWidth < w:
+                        txt = txt[1:]  
+                        lineText+=char
+                else:
+                    # we're done.
+                    lineWidth=w
+                    txt=None
+            self.text(lineText,(x,h+y-currentFontSize))
+            self.translate(0,-currentFontSize)
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)

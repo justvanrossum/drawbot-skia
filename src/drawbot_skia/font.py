@@ -1,5 +1,6 @@
 import struct
 from fontTools.ttLib import TTFont
+from defconAppKit.tools.textSplitter import splitText
 
 
 def makeTTFontFromSkiaTypeface(skTypeface):
@@ -38,3 +39,16 @@ def tagToInt(tag):
     if isinstance(tag, str):
         tag = bytes(tag, "ascii")
     return struct.unpack(">i", tag)[0]
+
+def getUPM(fontPath):
+    ftf = TTFont(fontPath)
+    if 'head' in ftf.keys():
+        return ftf['head'].unitsPerEm
+    # assume the common
+    return 1000
+
+def getAdvanceWidth(character, fontPath, fontSize=None):
+    ftf = TTFont(fontPath)
+    if not fontSize: fontSize=getUPM(fontPath)
+    gn = splitText(character,ftf['cmap'].getBestCmap())[0]
+    return ftf['hmtx'][gn][0]/getUPM(fontPath) * fontSize
