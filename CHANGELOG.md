@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.4.7] - 2021-03-19
+
+- Made `newPage()` more compatible with Mac app: its arguments are now optional. ([#14](https://github.com/justvanrossum/drawbot-skia/pull/14), thanks Jan Šindler!)
+
 ## [0.4.6] - 2020-12-17
 
 - Added `listFontVariations()` ([#10](https://github.com/justvanrossum/drawbot-skia/issues/10))
