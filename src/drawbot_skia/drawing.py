@@ -46,12 +46,12 @@ class Drawing:
         self.newPage(width,  height)
 
     def newPage(self, width=None, height=None):
-        if width and not height or height and not width:
+        if (width is not None and height is None) or (height is not None and width is None):
             raise TypeError("newPage() takes either no argument or two - width and height")
-        if not width and not height:
+        if width is None and height is None:
             width = getattr(self._document, 'pageWidth', None)
             height = getattr(self._document, 'pageHeight', None)
-            if not width or not height:
+            if width is None or height is None:
                 # this is because dimensions are set only after drawing starts,
                 # if you use this function before, it breaks
                 width, height = DEFAULT_CANVAS_DIMENSIONS
