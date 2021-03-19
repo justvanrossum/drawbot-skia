@@ -148,23 +148,24 @@ def test_newPage_newGState():
     fill(1)
     assert (255, 255, 255, 255) == db._gstate.fillPaint.color
 
+
 def test_newPage_dimensions_arguments():
-    from drawbot_skia.drawing import default_canvas_dimensions
+    from drawbot_skia.drawing import DEFAULT_CANVAS_DIMENSIONS
     db = Drawing()
-    db.rect(0, 0, 300, 300) # the dimensions are set only after drawing starts
-    assert (db.width(), db.height()) == default_canvas_dimensions, (
-        "No args and first page - dimensions differ"
-        )
+    db.rect(0, 0, 300, 300)  # the dimensions are set only after drawing starts
+    assert (db.width(), db.height()) == DEFAULT_CANVAS_DIMENSIONS
     db.newPage(600, 450)
     db.rect(0, 0, 300, 300)
-    assert (db.width(), db.height()) == (600, 450), (
-        "Args setting dimensions - dimensions differ"
-        )
+    assert (db.width(), db.height()) == (600, 450)
     db.newPage()
     db.rect(0, 0, 300, 300)
-    assert (db.width(), db.height()) == (600, 450), (
-        "No args but not first page - dimensions differ" 
-        )
+    assert (db.width(), db.height()) == (600, 450)
+    with pytest.raises(TypeError):
+        db.newPage(10)
+    with pytest.raises(TypeError):
+        db.newPage(width=10)
+    with pytest.raises(TypeError):
+        db.newPage(height=10)
 
 
 def test_multipleDocuments(tmpdir):

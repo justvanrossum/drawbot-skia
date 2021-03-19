@@ -6,7 +6,9 @@ from .document import RecordingDocument
 from .errors import DrawbotError
 from .gstate import GraphicsState, GraphicsStateMixin
 
-default_canvas_dimensions = (1000, 1000)
+
+DEFAULT_CANVAS_DIMENSIONS = (1000, 1000)
+
 
 class Drawing:
 
@@ -25,7 +27,7 @@ class Drawing:
     @property
     def _canvas(self):
         if self._skia_canvas is None:
-            self.size(*default_canvas_dimensions)  # This will create the canvas
+            self.size(*DEFAULT_CANVAS_DIMENSIONS)  # This will create the canvas
         return self._skia_canvas
 
     @_canvas.setter
@@ -43,21 +45,16 @@ class Drawing:
             raise DrawbotError("size() can't be called if there's already a canvas active")
         self.newPage(width,  height)
 
-    def newPage(self, *dimensions):
-        assert len(dimensions) in (0, 2), (
-            "newPage() takes either no argument or two - width and height"
-            )
-        if dimensions:
-            width, height = dimensions
-        else:
+    def newPage(self, width=None, height=None):
+        if width and not height or height and not width:
+            raise TypeError("newPage() takes either no argument or two - width and height")
+        if not width and not height:
             width = getattr(self._document, 'pageWidth', None)
             height = getattr(self._document, 'pageHeight', None)
             if not width or not height:
-                # this is because dimensions are set only after drawing starts, 
+                # this is because dimensions are set only after drawing starts,
                 # if you use this function before, it breaks
-                width = default_canvas_dimensions[0]
-                height = default_canvas_dimensions[1]
-
+                width, height = DEFAULT_CANVAS_DIMENSIONS
         if self._document.isDrawing:
             self._document.endPage()
             self._gstate = GraphicsState()
