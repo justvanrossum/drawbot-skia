@@ -132,9 +132,6 @@ class GraphicsStateMixin:
     def fontSize(self, size):
         self.textStyle = self.textStyle.copy(fontSize=size)
 
-    def lineHeight(self, value):
-        self.textStyle = self.textStyle.copy(lineHeight=value)
-
     def openTypeFeatures(self, *, resetFeatures=False, **features):
         if resetFeatures:
             currentFeatures = {}
@@ -377,7 +374,6 @@ class TextStyle(_ImmutableContainer):
     variations = {}  # won't get mutated
     language = None
     font = None
-    lineHeight = None
 
     def __init__(self, **properties):
         super().__init__(**properties)
@@ -483,12 +479,6 @@ class TextStyle(_ImmutableContainer):
         builder = skia.TextBlobBuilder()
         builder.allocRunPos(self.skFont, glyphsInfo.gids, glyphsInfo.positions)
         return builder.make()
-
-    def getLineHeight(self):
-        if self.lineHeight is not None:
-            return self.lineHeight
-        else:
-            return self.fontSize * 1.2
 
 
 # Font cache dict
