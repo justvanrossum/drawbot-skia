@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from contextlib import contextmanager
 import logging
 import os
 import pathlib
@@ -174,6 +175,14 @@ class PDFDocument(Document):
         self._document = skia.PDF.MakeDocument(self._stream)
         self.pageWidth = self.pageHeight = None
         self._isDrawing = False
+
+    @contextmanager
+    def drawing(self):
+        from .drawing import Drawing
+
+        drawing = Drawing(self)
+        yield drawing
+        drawing.endDrawing()
 
     @property
     def isDrawing(self):
