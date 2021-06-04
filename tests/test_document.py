@@ -1,6 +1,5 @@
 import pathlib
 from drawbot_skia.document import PDFDocument
-from drawbot_skia.drawing import Drawing
 
 
 def test_pdf_document(tmpdir):
