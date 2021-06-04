@@ -181,8 +181,10 @@ class PDFDocument(Document):
         from .drawing import Drawing
 
         drawing = Drawing(self)
-        yield drawing
-        drawing.endDrawing()
+        try:
+            yield drawing
+        finally:
+            drawing.endDrawing()
 
     @property
     def isDrawing(self):
