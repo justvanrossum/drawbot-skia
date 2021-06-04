@@ -38,7 +38,8 @@ class Drawing:
         self._reset()
 
     def endDrawing(self):
-        ...
+        self._canvas = None
+        self._document.endDrawing()
 
     def size(self, width, height):
         if self._document.isDrawing:

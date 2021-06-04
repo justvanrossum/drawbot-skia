@@ -25,6 +25,10 @@ class Document(ABC):
         ...
 
     @abstractmethod
+    def endDrawing(self):
+        ...
+
+    @abstractmethod
     def setFrameDuration(self, duration):
         ...
 
@@ -62,6 +66,9 @@ class RecordingDocument(Document):
         self._currentRecorder = None
         self._currentFrameDuration = DEFAULT_FRAMEDURATION
         self.pageWidth = self.pageHeight = None
+
+    def endDrawing(self):
+        ...
 
     def setFrameDuration(self, duration):
         self._currentFrameDuration = duration
@@ -162,7 +169,37 @@ class MP4Document(PixelDocument):
 
 
 class PDFDocument(Document):
-    ...
+    def __init__(self, path):
+        self._stream = skia.FILEWStream(os.fspath(path))
+        self._document = skia.PDF.MakeDocument(self._stream)
+        self.pageWidth = self.pageHeight = None
+        self._isDrawing = False
+
+    @property
+    def isDrawing(self):
+        return self._isDrawing
+
+    def beginPage(self, width, height):
+        self.pageWidth = width
+        self.pageHeight = height
+        self._isDrawing = True
+        return self._document.beginPage(width, height)
+
+    def endPage(self):
+        self._isDrawing = False
+        self._document.endPage()
+
+    def endDrawing(self):
+        if self.isDrawing:
+            self.endPage()
+        self._stream.flush()
+        del self._document
+
+    def setFrameDuration(self, duration):
+        ...
+
+    def saveImage(self, path, **kwargs):
+        raise NotImplementedError()
 
 
 class SVGDocument(Document):
