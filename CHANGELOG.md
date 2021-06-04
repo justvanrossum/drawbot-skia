@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.4.8] - 2021-06-04
+
+- Added exerimental PDFDocument class that allows to draw directly to PDF, instead of having to go via a skia.PictureRecorder
+
 ## [0.4.7] - 2021-03-19
 
 - Made `newPage()` more compatible with Mac app: its arguments are now optional. ([#14](https://github.com/justvanrossum/drawbot-skia/pull/14), thanks Jan Šindler!)
