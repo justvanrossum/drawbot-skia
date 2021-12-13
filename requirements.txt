@@ -1,6 +1,6 @@
 skia-python==87.3
-fonttools[unicode]==4.28.2
-uharfbuzz==0.18.0
+fonttools[unicode]==4.28.3
+uharfbuzz==0.19.0
 python-bidi==0.4.2
 unicodedata2==13.0.0.post2
-skia-pathops==0.7.1
+skia-pathops==0.7.2
