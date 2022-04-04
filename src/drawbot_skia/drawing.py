@@ -181,15 +181,19 @@ class Drawing:
     def savedState(self):
         self._stack.append(self._gstate.copy())
         self._canvas.save()
-        yield
-        self._canvas.restore()
-        self._gstate = self._stack.pop()
+        try:
+            yield
+        finally:
+            self._canvas.restore()
+            self._gstate = self._stack.pop()
 
     @contextlib.contextmanager
     def _savedCanvasState(self):
         self._canvas.save()
-        yield
-        self._canvas.restore()
+        try:
+            yield
+        finally:
+            self._canvas.restore()
 
     def saveImage(self, fileName, **kwargs):
         if self._document.isDrawing:
