@@ -401,8 +401,11 @@ class TextStyle(_ImmutableContainer):
         return hb.Font(makeHBFaceFromSkiaTypeface(self.skFont.getTypeface()))
 
     @cached_property
-    def isColrFont(self):
-        return "COLR" in self.ttFont
+    def colrFont(self):
+        if "COLR" not in self.ttFont:
+            return None
+        from blackrenderer.font import BlackRendererFont
+        return BlackRendererFont(ttFont=self.ttFont, hbFont=self.hbFont)
 
     @staticmethod
     def _getTypefaceAndTTFont(fontNameOrPath):

@@ -120,13 +120,26 @@ class Drawing:
             self._canvas.translate(x, y)
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
-            if not textStyle.isColrFont:
+            if textStyle.colrFont is None:
                 builder = skia.TextBlobBuilder()
                 builder.allocRunPos(textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions)
                 blob = builder.make()
                 self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
             else:
-                raise NotImplementedError("COLR support is WIP")
+                from blackrenderer.backends.skia import SkiaCanvas
+
+                ttFont = textStyle.ttFont
+                colrFont = textStyle.colrFont
+                canvas = SkiaCanvas(self._canvas)
+                scaleFactor = textStyle.fontSize / colrFont.unitsPerEm
+                a, r, g, b = (ch / 255 for ch in self._gstate.fillPaint.color)
+                textColor = (r, g, b, a)
+                for gid, (x, y) in zip(glyphsInfo.gids, glyphsInfo.positions):
+                    glyphName = ttFont.getGlyphName(gid)
+                    with self._savedCanvasState():
+                        self._canvas.translate(x, y)
+                        self._canvas.scale(scaleFactor, -scaleFactor)
+                        colrFont.drawGlyph(glyphName, canvas, palette=None, textColor=textColor)
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)
