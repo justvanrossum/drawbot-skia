@@ -1,5 +1,8 @@
 size(250, 680)
 
+fill(1)
+rect(0, 0, width(), height())
+
 font("../fonts/Nabla.subset.ttf")
 
 fs = 120
