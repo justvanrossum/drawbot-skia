@@ -1,10 +1,11 @@
 import logging
 import os
 import skia
+import uharfbuzz as hb
 from .errors import DrawbotError
-from .font import makeTTFontFromSkiaTypeface, tagToInt
+from .font import intToTag, makeTTFontFromSkiaTypeface, tagToInt
 from .segmenting import textSegments, reorderedSegments
-from .shaping import getShapeFuncForSkiaTypeface
+from .shaping import shape
 
 
 class cached_property(object):
@@ -395,6 +396,14 @@ class TextStyle(_ImmutableContainer):
         _, ttFont = self._getTypefaceAndTTFont(self.font)
         return ttFont
 
+    @cached_property
+    def hbFont(self):
+        return hb.Font(makeHBFaceFromSkiaTypeface(self.skFont.getTypeface()))
+
+    @cached_property
+    def isColrFont(self):
+        return "COLR" in self.ttFont
+
     @staticmethod
     def _getTypefaceAndTTFont(fontNameOrPath):
         cacheKey = fontNameOrPath
@@ -436,17 +445,14 @@ class TextStyle(_ImmutableContainer):
         fontArgs.setVariationDesignPosition(pos)
         return typeface.makeClone(fontArgs)
 
-    @cached_property
-    def _shapeFunc(self):
-        return getShapeFuncForSkiaTypeface(self.skFont.getTypeface())
-
     def shape(self, txt):
         segments, baseLevel = textSegments(txt)
         segments = reorderedSegments(segments, baseLevel % 2, lambda item: item[2] % 2)
         startPos = (0, 0)
         glyphsInfo = None
         for runChars, script, bidiLevel, index in segments:
-            runInfo = self._shapeFunc(
+            runInfo = shape(
+                self.hbFont,
                 runChars,
                 fontSize=self.skFont.getSize(),
                 startPos=startPos,
@@ -562,3 +568,21 @@ _blendModesList = [
 ]
 
 _blendModes = set(_blendModesList)
+
+
+def makeHBFaceFromSkiaTypeface(skTypeface):
+    tableData = {}
+    tableTags = {intToTag(tag) for tag in skTypeface.getTableTags()}
+
+    def getTable(face, tag, userData):
+        if tag in tableData:
+            return tableData[tag]
+        if tag not in tableTags:
+            return None
+        data = skTypeface.getTableData(tagToInt(tag))
+        # HB doesn't hold on the data, and neither does Skia, so we
+        # need to do that ourselves.
+        tableData[tag] = data
+        return data
+
+    return hb.Face.create_for_tables(getTable, None)

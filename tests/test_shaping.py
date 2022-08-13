@@ -2,7 +2,9 @@ import os
 import pathlib
 import pytest
 import skia
-from drawbot_skia.shaping import getShapeFuncForSkiaTypeface
+import uharfbuzz as hb
+from drawbot_skia.gstate import makeHBFaceFromSkiaTypeface
+from drawbot_skia.shaping import shape
 
 
 testDir = pathlib.Path(__file__).resolve().parent
@@ -32,8 +34,9 @@ shapeTestCases = [
 )
 def test_shape(fontPath, text, features, variations, direction, language, script, expected):
     tf = skia.Typeface.MakeFromFile(os.fspath(fontPath))
-    shapeFunc = getShapeFuncForSkiaTypeface(tf)
-    glyphInfo = shapeFunc(
+    hbFont = hb.Font(makeHBFaceFromSkiaTypeface(tf))
+    glyphInfo = shape(
+        hbFont,
         text,
         features=features,
         variations=variations,
