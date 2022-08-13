@@ -405,7 +405,10 @@ class TextStyle(_ImmutableContainer):
         if "COLR" not in self.ttFont:
             return None
         from blackrenderer.font import BlackRendererFont
-        return BlackRendererFont(ttFont=self.ttFont, hbFont=self.hbFont)
+        colrFont = BlackRendererFont(ttFont=self.ttFont, hbFont=self.hbFont)
+        if self.variations:
+            colrFont.setLocation(self.variations)
+        return colrFont
 
     @staticmethod
     def _getTypefaceAndTTFont(fontNameOrPath):
