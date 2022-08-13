@@ -70,6 +70,18 @@ def shape(
     )
 
 
+def alignGlyphPositions(glyphsInfo, align):
+    textWidth = glyphsInfo.endPos[0]
+    if align is None:
+        align = "left" if not glyphsInfo.baseLevel else "right"
+    xOffset = 0
+    if align == "right":
+        xOffset = -textWidth
+    elif align == "center":
+        xOffset = -textWidth / 2
+    glyphsInfo.positions = [(x + xOffset, y) for x, y in glyphsInfo.positions]
+
+
 def scalePositions(positions, sx, sy=None):
     if sy is None:
         sy = sx

@@ -473,23 +473,6 @@ class TextStyle(_ImmutableContainer):
         glyphsInfo.baseLevel = baseLevel
         return glyphsInfo
 
-    def alignGlyphPositions(self, glyphsInfo, align):
-        textWidth = glyphsInfo.endPos[0]
-        if align is None:
-            align = "left" if not glyphsInfo.baseLevel else "right"
-        xOffset = 0
-        if align == "right":
-            xOffset = -textWidth
-        elif align == "center":
-            xOffset = -textWidth / 2
-        glyphsInfo.positions = [(x + xOffset, y) for x, y in glyphsInfo.positions]
-
-    def makeTextBlob(self, glyphsInfo, align):
-        self.alignGlyphPositions(glyphsInfo, align)
-        builder = skia.TextBlobBuilder()
-        builder.allocRunPos(self.skFont, glyphsInfo.gids, glyphsInfo.positions)
-        return builder.make()
-
     def getLineHeight(self):
         if self.lineHeight is not None:
             return self.lineHeight

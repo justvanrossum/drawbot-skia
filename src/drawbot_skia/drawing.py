@@ -5,6 +5,7 @@ import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
 from .gstate import GraphicsState, GraphicsStateMixin
+from .shaping import alignGlyphPositions
 
 
 DEFAULT_CANVAS_DIMENSIONS = (1000, 1000)
@@ -109,8 +110,9 @@ class Drawing:
             # Hard Skia crash otherwise
             return
 
-        glyphsInfo = self._gstate.textStyle.shape(txt)
-        blob = self._gstate.textStyle.makeTextBlob(glyphsInfo, align)
+        textStyle = self._gstate.textStyle
+        glyphsInfo = textStyle.shape(txt)
+        alignGlyphPositions(glyphsInfo, align)
 
         x, y = position
 
@@ -118,7 +120,13 @@ class Drawing:
             self._canvas.translate(x, y)
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
-            self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
+            if not textStyle.isColrFont:
+                builder = skia.TextBlobBuilder()
+                builder.allocRunPos(textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions)
+                blob = builder.make()
+                self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
+            else:
+                raise NotImplementedError("COLR support is WIP")
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)
