@@ -25,28 +25,28 @@ def test_font_gs():
 
 
 mutatorsans_variations = {
-    'wdth': {
-        'defaultValue': 0.0,
-        'maxValue': 1000.0,
-        'minValue': 0.0,
-        'name': 'Width',
+    "wdth": {
+        "defaultValue": 0.0,
+        "maxValue": 1000.0,
+        "minValue": 0.0,
+        "name": "Width",
     },
-    'wght': {
-        'defaultValue': 0.0,
-        'maxValue': 1000.0,
-        'minValue': 0.0,
-        'name': 'Weight',
+    "wght": {
+        "defaultValue": 0.0,
+        "maxValue": 1000.0,
+        "minValue": 0.0,
+        "name": "Weight",
     },
 }
 
 
 mutatorsans_instances = {
-    'MutatorMathTest-LightCondensed': {'wdth': 0.0, 'wght': 0.0},
-    'MutatorMathTest-BoldCondensed': {'wdth': 0.0, 'wght': 1000.0},
-    'MutatorMathTest-LightWide': {'wdth': 1000.0, 'wght': 0.0},
-    'MutatorMathTest-BoldWide': {'wdth': 1000.0, 'wght': 1000.0},
-    'MutatorMathTest-LightCondensed_Medium_Narrow_I': {'wdth': 327.0, 'wght': 500.0},
-    'MutatorMathTest-LightCondensed_Medium_Wide_I': {'wdth': 327.0, 'wght': 500.0},
+    "MutatorMathTest-LightCondensed": {"wdth": 0.0, "wght": 0.0},
+    "MutatorMathTest-BoldCondensed": {"wdth": 0.0, "wght": 1000.0},
+    "MutatorMathTest-LightWide": {"wdth": 1000.0, "wght": 0.0},
+    "MutatorMathTest-BoldWide": {"wdth": 1000.0, "wght": 1000.0},
+    "MutatorMathTest-LightCondensed_Medium_Narrow_I": {"wdth": 327.0, "wght": 500.0},
+    "MutatorMathTest-LightCondensed_Medium_Wide_I": {"wdth": 327.0, "wght": 500.0},
 }
 
 

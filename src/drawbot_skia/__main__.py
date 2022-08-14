@@ -27,7 +27,9 @@ def main(args=None):
     arguments = parser.parse_args(args)
     db = Drawing()
     namespace = makeDrawbotNamespace(db)
-    runScriptSource(arguments.drawbot_script.read(), arguments.drawbot_script.name, namespace)
+    runScriptSource(
+        arguments.drawbot_script.read(), arguments.drawbot_script.name, namespace
+    )
     for path in arguments.output_file:
         db.saveImage(path)
 

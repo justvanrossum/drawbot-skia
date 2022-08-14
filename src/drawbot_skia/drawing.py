@@ -12,7 +12,6 @@ DEFAULT_CANVAS_DIMENSIONS = (1000, 1000)
 
 
 class Drawing:
-
     def __init__(self, document=None, flipCanvas=True):
         self._flipCanvas = flipCanvas
         self._reset(document)
@@ -44,15 +43,21 @@ class Drawing:
 
     def size(self, width, height):
         if self._document.isDrawing:
-            raise DrawbotError("size() can't be called if there's already a canvas active")
-        self.newPage(width,  height)
+            raise DrawbotError(
+                "size() can't be called if there's already a canvas active"
+            )
+        self.newPage(width, height)
 
     def newPage(self, width=None, height=None):
-        if (width is not None and height is None) or (height is not None and width is None):
-            raise TypeError("newPage() takes either no argument or two - width and height")
+        if (width is not None and height is None) or (
+            height is not None and width is None
+        ):
+            raise TypeError(
+                "newPage() takes either no argument or two - width and height"
+            )
         if width is None and height is None:
-            width = getattr(self._document, 'pageWidth', None)
-            height = getattr(self._document, 'pageHeight', None)
+            width = getattr(self._document, "pageWidth", None)
+            height = getattr(self._document, "pageHeight", None)
             if width is None or height is None:
                 # this is because dimensions are set only after drawing starts,
                 # if you use this function before, it breaks
@@ -87,6 +92,7 @@ class Drawing:
 
     def polygon(self, firstPoint, *points, close=True):
         from .path import BezierPath
+
         bez = BezierPath()
         bez.polygon(firstPoint, *points, close=close)
         self.drawPath(bez)
@@ -122,7 +128,9 @@ class Drawing:
                 self._canvas.scale(1, -1)
             if "COLR" not in textStyle.ttFont:
                 builder = skia.TextBlobBuilder()
-                builder.allocRunPos(textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions)
+                builder.allocRunPos(
+                    textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions
+                )
                 blob = builder.make()
                 self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
             else:
@@ -142,7 +150,9 @@ class Drawing:
                     with self._savedCanvasState():
                         self._canvas.translate(x, y)
                         self._canvas.scale(scaleFactor, -scaleFactor)
-                        brFont.drawGlyph(glyphName, canvas, palette=None, textColor=textColor)
+                        brFont.drawGlyph(
+                            glyphName, canvas, palette=None, textColor=textColor
+                        )
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)
@@ -249,6 +259,7 @@ def _makeWrapper(name):
     def wrapper(self, *args, **kwargs):
         method = getattr(self._gstate, name)
         return method(*args, **kwargs)
+
     wrapper.__qualname__ = f"Drawing.{name}"
     return wrapper
 

@@ -14,6 +14,7 @@ def makeDrawbotNamespace(drawbot):
     from .path import BezierPath
     import math
     import random
+
     additionalNames = dict(BezierPath=BezierPath)
     for name in ["random", "randint", "choice", "shuffle"]:
         additionalNames[name] = getattr(random, name)

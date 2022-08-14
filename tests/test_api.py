@@ -60,7 +60,7 @@ def test_apitest(apiTestPath, imageType):
     runScript(apiTestPath, namespace)
     if not apiTestsOutputDir.exists():
         apiTestsOutputDir.mkdir()
-    fileName = (apiTestPath.stem + f".{imageType}")
+    fileName = apiTestPath.stem + f".{imageType}"
     outputPath = apiTestsOutputDir / fileName
     expectedOutputPath = apiTestsExpectedOutputDir / fileName
     db.saveImage(outputPath)
@@ -85,16 +85,16 @@ rect(50, 50, 100, 100)
 
 
 test_data_saveImage = [
-    (singlepageSource, "png", ['test.png']),
-    (singlepageSource, "jpg", ['test.jpg']),
-    (singlepageSource, "svg", ['test.svg']),
-    (singlepageSource, "pdf", ['test.pdf']),
-    (singlepageSource, "mp4", ['test.mp4']),
-    (multipageSource, "png", ['test_0.png', 'test_1.png', 'test_2.png']),
-    (multipageSource, "jpg", ['test_0.jpg', 'test_1.jpg', 'test_2.jpg']),
-    (multipageSource, "svg", ['test_0.svg', 'test_1.svg', 'test_2.svg']),
-    (multipageSource, "pdf", ['test.pdf']),
-    (multipageSource, "mp4", ['test.mp4']),
+    (singlepageSource, "png", ["test.png"]),
+    (singlepageSource, "jpg", ["test.jpg"]),
+    (singlepageSource, "svg", ["test.svg"]),
+    (singlepageSource, "pdf", ["test.pdf"]),
+    (singlepageSource, "mp4", ["test.mp4"]),
+    (multipageSource, "png", ["test_0.png", "test_1.png", "test_2.png"]),
+    (multipageSource, "jpg", ["test_0.jpg", "test_1.jpg", "test_2.jpg"]),
+    (multipageSource, "svg", ["test_0.svg", "test_1.svg", "test_2.svg"]),
+    (multipageSource, "pdf", ["test.pdf"]),
+    (multipageSource, "mp4", ["test.mp4"]),
 ]
 
 
@@ -113,6 +113,7 @@ def test_saveImage_multipage(tmpdir, script, imageType, expectedFilenames):
 
 def test_saveImage_mp4_codec(tmpdir):
     from drawbot_skia import ffmpeg
+
     ffmpeg.FFMPEG_PATH = ffmpeg.getPyFFmpegPath()  # Force ffmpeg from pyffmpeg
     tmpdir = pathlib.Path(tmpdir)
     db = Drawing()
@@ -121,7 +122,7 @@ def test_saveImage_mp4_codec(tmpdir):
     assert [] == sorted(tmpdir.glob("*.png"))
     db.saveImage(tmpdir / "test.mp4")
     db.saveImage(tmpdir / "test2.mp4", codec="mpeg4")
-    expectedFilenames = ['test.mp4', 'test2.mp4']
+    expectedFilenames = ["test.mp4", "test2.mp4"]
     paths = sorted(tmpdir.glob("*.mp4"))
     assert paths[0].stat().st_size < paths[1].stat().st_size
     assert expectedFilenames == [p.name for p in paths]
@@ -151,6 +152,7 @@ def test_newPage_newGState():
 
 def test_newPage_dimensions_arguments():
     from drawbot_skia.drawing import DEFAULT_CANVAS_DIMENSIONS
+
     db = Drawing()
     db.rect(0, 0, 300, 300)  # the dimensions are set only after drawing starts
     assert (db.width(), db.height()) == DEFAULT_CANVAS_DIMENSIONS

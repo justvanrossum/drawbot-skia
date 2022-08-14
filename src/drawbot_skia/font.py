@@ -24,12 +24,13 @@ def makeHBFaceFromSkiaTypeface(skTypeface):
 def makeTTFontFromSkiaTypeface(skTypeface):
     ttf = TTFont(lazy=True)
     ttf.reader = SkiaSFNTReader(skTypeface)
-    ttf._tableCache = None  # fonttools fix: doesn't get set when not reading from a file
+    ttf._tableCache = (
+        None  # fonttools fix: doesn't get set when not reading from a file
+    )
     return ttf
 
 
 class SkiaSFNTReader:
-
     def __init__(self, skTypeface):
         self.skTypeface = skTypeface
         self.tags = {intToTag(tagInt): tagInt for tagInt in skTypeface.getTableTags()}

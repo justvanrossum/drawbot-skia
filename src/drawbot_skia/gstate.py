@@ -16,7 +16,7 @@ class cached_property(object):
     with an ordinary attribute. Deleting the attribute resets the property."""
 
     def __init__(self, func):
-        self.__doc__ = getattr(func, '__doc__')
+        self.__doc__ = getattr(func, "__doc__")
         self.func = func
 
     def __get__(self, obj, cls):
@@ -35,14 +35,18 @@ class GraphicsStateMixin:
         if color is None:
             self.fillPaint = self.fillPaint.copy(somethingToDraw=False, shader=None)
         else:
-            self.fillPaint = self.fillPaint.copy(color=color, somethingToDraw=True, shader=None)
+            self.fillPaint = self.fillPaint.copy(
+                color=color, somethingToDraw=True, shader=None
+            )
 
     def stroke(self, *args):
         color = _colorArgs(args)
         if color is None:
             self.strokePaint = self.strokePaint.copy(somethingToDraw=False, shader=None)
         else:
-            self.strokePaint = self.strokePaint.copy(color=color, somethingToDraw=True, shader=None)
+            self.strokePaint = self.strokePaint.copy(
+                color=color, somethingToDraw=True, shader=None
+            )
 
     def blendMode(self, blendMode):
         if blendMode not in _blendModes:
@@ -66,7 +70,9 @@ class GraphicsStateMixin:
     def lineDash(self, firstValue=None, *values):
         if firstValue is None:
             if values:
-                raise TypeError("lineDash() argument(s) should be None, or one or more numbers")
+                raise TypeError(
+                    "lineDash() argument(s) should be None, or one or more numbers"
+                )
         if firstValue is None:
             assert not values
             self.strokePaint = self.strokePaint.copy(lineDash=None)
@@ -90,9 +96,19 @@ class GraphicsStateMixin:
             colors=colors,
             positions=locations,
         )
-        self.fillPaint = self.fillPaint.copy(shader=shader, fill=None, somethingToDraw=True)
+        self.fillPaint = self.fillPaint.copy(
+            shader=shader, fill=None, somethingToDraw=True
+        )
 
-    def radialGradient(self, startPoint, endPoint=None, colors=None, locations=None, startRadius=0, endRadius=100):
+    def radialGradient(
+        self,
+        startPoint,
+        endPoint=None,
+        colors=None,
+        locations=None,
+        startRadius=0,
+        endRadius=100,
+    ):
         # MakeRadial(
         #   center: skia.Point,
         #   radius: float,
@@ -102,9 +118,13 @@ class GraphicsStateMixin:
         #   flags: int = 0,
         #   localMatrix: skia.Matrix = None) → skia.Shader
         if startRadius != 0:
-            logging.warning("radialGradient: startRadius != 0 ignored (it's not supported in drawbot-skia)")
+            logging.warning(
+                "radialGradient: startRadius != 0 ignored (it's not supported in drawbot-skia)"
+            )
         if endPoint is not None and endPoint != startPoint:
-            logging.warning("radialGradient: endPoint argument ignored (it's not supported in drawbot-skia)")
+            logging.warning(
+                "radialGradient: endPoint argument ignored (it's not supported in drawbot-skia)"
+            )
         colors = [_colorTupleToInt(_colorArgs(c)) for c in colors]
         shader = skia.GradientShader.MakeRadial(
             center=startPoint,
@@ -112,7 +132,9 @@ class GraphicsStateMixin:
             colors=colors,
             positions=locations,
         )
-        self.fillPaint = self.fillPaint.copy(shader=shader, fill=None, somethingToDraw=True)
+        self.fillPaint = self.fillPaint.copy(
+            shader=shader, fill=None, somethingToDraw=True
+        )
 
     def shadow(self, offset, blur=None, color=None):
         if offset is None:
@@ -226,7 +248,6 @@ class GraphicsState(GraphicsStateMixin):
 
 
 class _ImmutableContainer:
-
     def __init__(self, **properties):
         self.__dict__.update(properties)
         self._names = set(properties)
@@ -493,7 +514,9 @@ class FontObjects:
 
 def _cloneTypeface(typeface, ttFont, variations):
     fvar = ttFont.get("fvar")
-    defaultLocation = {a.axisTag: variations.get(a.axisTag, a.defaultValue) for a in fvar.axes}
+    defaultLocation = {
+        a.axisTag: variations.get(a.axisTag, a.defaultValue) for a in fvar.axes
+    }
     tags = [a.axisTag for a in fvar.axes]
     location = [(tag, variations.get(tag, defaultLocation[tag])) for tag in tags]
     makeCoord = skia.FontArguments.VariationPosition.Coordinate
@@ -544,34 +567,34 @@ def _colorArgs(args):
 
 
 _blendModesList = [
-    'normal',
-    'multiply',
-    'screen',
-    'overlay',
-    'darken',
-    'lighten',
-    'colorDodge',
-    'colorBurn',
-    'softLight',
-    'hardLight',
-    'difference',
-    'exclusion',
-    'hue',
-    'saturation',
-    'color',
-    'luminosity',
-    'clear',
-    'copy',
-    'sourceIn',
-    'sourceOut',
-    'sourceAtop',
-    'destinationOver',
-    'destinationIn',
-    'destinationOut',
-    'destinationAtop',
-    'xOR',
-    'plusDarker',
-    'plusLighter',
+    "normal",
+    "multiply",
+    "screen",
+    "overlay",
+    "darken",
+    "lighten",
+    "colorDodge",
+    "colorBurn",
+    "softLight",
+    "hardLight",
+    "difference",
+    "exclusion",
+    "hue",
+    "saturation",
+    "color",
+    "luminosity",
+    "clear",
+    "copy",
+    "sourceIn",
+    "sourceOut",
+    "sourceAtop",
+    "destinationOver",
+    "destinationIn",
+    "destinationOut",
+    "destinationAtop",
+    "xOR",
+    "plusDarker",
+    "plusLighter",
 ]
 
 _blendModes = set(_blendModesList)
