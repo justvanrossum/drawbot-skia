@@ -1,48 +1,27 @@
 from types import SimpleNamespace
-import functools
 import uharfbuzz as hb
-from .font import intToTag, tagToInt
 
 
-def getShapeFuncForSkiaTypeface(skTypeface):
-    face = makeHBFaceFromSkiaTypeface(skTypeface)
-    font = hb.Font(face)
-    return functools.partial(_shape, face, font)
-
-
-def makeHBFaceFromSkiaTypeface(skTypeface):
-    tableData = {}
-    tableTags = {intToTag(tag) for tag in skTypeface.getTableTags()}
-
-    def getTable(face, tag, userData):
-        if tag in tableData:
-            return tableData[tag]
-        if tag not in tableTags:
-            return None
-        data = skTypeface.getTableData(tagToInt(tag))
-        # HB doesn't hold on the data, and neither does Skia, so we
-        # need to do that ourselves.
-        tableData[tag] = data
-        return data
-
-    return hb.Face.create_for_tables(getTable, None)
-
-
-def _shape(face, font,
-           text, fontSize=None,
-           startPos=(0, 0), startCluster=0,
-           flippedCanvas=False,
-           *,
-           features=None,
-           variations=None,
-           direction=None,
-           language=None,
-           script=None):
+def shape(
+    font,
+    text,
+    fontSize=None,
+    startPos=(0, 0),
+    startCluster=0,
+    flippedCanvas=False,
+    *,
+    features=None,
+    variations=None,
+    direction=None,
+    language=None,
+    script=None
+):
     if features is None:
         features = {}
     if variations is None:
         variations = {}
 
+    face = font.face
     if fontSize is None:
         fontScaleX = fontScaleY = 1
     else:
@@ -89,6 +68,18 @@ def _shape(face, font,
         positions=positions,
         endPos=endPos,
     )
+
+
+def alignGlyphPositions(glyphsInfo, align):
+    textWidth = glyphsInfo.endPos[0]
+    if align is None:
+        align = "left" if not glyphsInfo.baseLevel else "right"
+    xOffset = 0
+    if align == "right":
+        xOffset = -textWidth
+    elif align == "center":
+        xOffset = -textWidth / 2
+    glyphsInfo.positions = [(x + xOffset, y) for x, y in glyphsInfo.positions]
 
 
 def scalePositions(positions, sx, sy=None):

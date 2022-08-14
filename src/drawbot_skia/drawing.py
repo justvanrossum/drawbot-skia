@@ -5,6 +5,7 @@ import skia
 from .document import RecordingDocument
 from .errors import DrawbotError
 from .gstate import GraphicsState, GraphicsStateMixin
+from .shaping import alignGlyphPositions
 
 
 DEFAULT_CANVAS_DIMENSIONS = (1000, 1000)
@@ -109,8 +110,9 @@ class Drawing:
             # Hard Skia crash otherwise
             return
 
-        glyphsInfo = self._gstate.textStyle.shape(txt)
-        blob = self._gstate.textStyle.makeTextBlob(glyphsInfo, align)
+        textStyle = self._gstate.textStyle
+        glyphsInfo = textStyle.shape(txt)
+        alignGlyphPositions(glyphsInfo, align)
 
         x, y = position
 
@@ -118,7 +120,29 @@ class Drawing:
             self._canvas.translate(x, y)
             if self._flipCanvas:
                 self._canvas.scale(1, -1)
-            self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
+            if "COLR" not in textStyle.ttFont:
+                builder = skia.TextBlobBuilder()
+                builder.allocRunPos(textStyle.skFont, glyphsInfo.gids, glyphsInfo.positions)
+                blob = builder.make()
+                self._drawItem(self._canvas.drawTextBlob, blob, 0, 0)
+            else:
+                from blackrenderer.backends.skia import SkiaCanvas
+
+                ttFont = textStyle.ttFont
+                brFont = textStyle.brFont
+                if textStyle.variations:
+                    brFont.setLocation(textStyle.variations)
+
+                canvas = SkiaCanvas(self._canvas)
+                scaleFactor = textStyle.fontSize / brFont.unitsPerEm
+                a, r, g, b = (ch / 255 for ch in self._gstate.fillPaint.color)
+                textColor = (r, g, b, a)
+                for gid, (x, y) in zip(glyphsInfo.gids, glyphsInfo.positions):
+                    glyphName = ttFont.getGlyphName(gid)
+                    with self._savedCanvasState():
+                        self._canvas.translate(x, y)
+                        self._canvas.scale(scaleFactor, -scaleFactor)
+                        brFont.drawGlyph(glyphName, canvas, palette=None, textColor=textColor)
 
     def image(self, imagePath, position, alpha=1.0):
         im = self._getImage(imagePath)

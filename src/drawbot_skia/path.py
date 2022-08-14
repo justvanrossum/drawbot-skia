@@ -5,6 +5,7 @@ from fontTools.misc.transform import Transform
 from fontTools.pens.basePen import BasePen
 from fontTools.pens.pointPen import PointToSegmentPen, SegmentToPointPen
 from .gstate import TextStyle
+from .shaping import alignGlyphPositions
 
 
 # TODO:
@@ -193,7 +194,7 @@ class BezierPath(BasePen):
             return
         textStyle = TextStyle(font=font, fontSize=fontSize)
         glyphsInfo = textStyle.shape(txt)
-        textStyle.alignGlyphPositions(glyphsInfo, align)
+        alignGlyphPositions(glyphsInfo, align)
         gids = sorted(set(glyphsInfo.gids))
         paths = [textStyle.skFont.getPath(gid) for gid in gids]
         for path in paths:

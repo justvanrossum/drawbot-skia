@@ -1,5 +1,24 @@
 import struct
+import uharfbuzz as hb
 from fontTools.ttLib import TTFont
+
+
+def makeHBFaceFromSkiaTypeface(skTypeface):
+    tableData = {}
+    tableTags = {intToTag(tag) for tag in skTypeface.getTableTags()}
+
+    def getTable(face, tag, userData):
+        if tag in tableData:
+            return tableData[tag]
+        if tag not in tableTags:
+            return None
+        data = skTypeface.getTableData(tagToInt(tag))
+        # HB doesn't hold on the data, and neither does Skia, so we
+        # need to do that ourselves.
+        tableData[tag] = data
+        return data
+
+    return hb.Face.create_for_tables(getTable, None)
 
 
 def makeTTFontFromSkiaTypeface(skTypeface):

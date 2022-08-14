@@ -27,6 +27,7 @@ setup(
         "uharfbuzz",
         "python-bidi",
         "unicodedata2",
+        "blackrenderer",
     ],
     setup_requires=["setuptools_scm"],
     extras_require={
