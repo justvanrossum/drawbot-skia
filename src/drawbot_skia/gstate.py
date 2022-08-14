@@ -384,72 +384,28 @@ class TextStyle(_ImmutableContainer):
         super().__init__(**properties)
 
     @cached_property
+    def fontObjects(self):
+        return _getFontObjects(self.font)
+
+    @cached_property
     def skFont(self):
-        typeface, ttFont = self._getTypefaceAndTTFont(self.font)
+        typeface = self.fontObjects.skTypeface
+        ttFont = self.fontObjects.ttFont
         if self.variations and "fvar" in ttFont:
-            typeface = self._cloneTypeface(typeface, ttFont, self.variations)
-        font = self._makeFontFromTypeface(typeface, self.fontSize)
-        return font
+            typeface = _cloneTypeface(typeface, ttFont, self.variations)
+        return _makeFontFromTypeface(typeface, self.fontSize)
 
     @property
     def ttFont(self):
-        _, ttFont = self._getTypefaceAndTTFont(self.font)
-        return ttFont
+        return self.fontObjects.ttFont
 
-    @cached_property
+    @property
     def hbFont(self):
-        return hb.Font(makeHBFaceFromSkiaTypeface(self.skFont.getTypeface()))
+        return self.fontObjects.hbFont
 
-    @cached_property
-    def colrFont(self):
-        if "COLR" not in self.ttFont:
-            return None
-        from blackrenderer.font import BlackRendererFont
-        colrFont = BlackRendererFont(ttFont=self.ttFont, hbFont=self.hbFont)
-        if self.variations:
-            colrFont.setLocation(self.variations)
-        return colrFont
-
-    @staticmethod
-    def _getTypefaceAndTTFont(fontNameOrPath):
-        cacheKey = fontNameOrPath
-        if cacheKey not in _fontCache:
-            if fontNameOrPath is None:
-                typeface = skia.Typeface(None)
-            else:
-                fontNameOrPath = os.fspath(fontNameOrPath)
-                if not os.path.exists(fontNameOrPath):
-                    typeface = skia.Typeface(fontNameOrPath)
-                else:
-                    typeface = skia.Typeface.MakeFromFile(fontNameOrPath)
-                    if typeface is None:
-                        raise DrawbotError(f"can't load font: {fontNameOrPath}")
-            ttFont = makeTTFontFromSkiaTypeface(typeface)
-            _fontCache[cacheKey] = typeface, ttFont
-        return _fontCache[cacheKey]
-
-    @staticmethod
-    def _makeFontFromTypeface(typeface, size):
-        font = skia.Font(typeface, size)
-        font.setForceAutoHinting(False)
-        font.setHinting(skia.FontHinting.kNone)
-        font.setSubpixel(True)
-        font.setEdging(skia.Font.Edging.kAntiAlias)
-        return font
-
-    @staticmethod
-    def _cloneTypeface(typeface, ttFont, variations):
-        fvar = ttFont.get("fvar")
-        defaultLocation = {a.axisTag: variations.get(a.axisTag, a.defaultValue) for a in fvar.axes}
-        tags = [a.axisTag for a in fvar.axes]
-        location = [(tag, variations.get(tag, defaultLocation[tag])) for tag in tags]
-        makeCoord = skia.FontArguments.VariationPosition.Coordinate
-        rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location]
-        coords = skia.FontArguments.VariationPosition.Coordinates(rawCoords)
-        pos = skia.FontArguments.VariationPosition(coords)
-        fontArgs = skia.FontArguments()
-        fontArgs.setVariationDesignPosition(pos)
-        return typeface.makeClone(fontArgs)
+    @property
+    def brFont(self):
+        return self.fontObjects.brFont
 
     def shape(self, txt):
         segments, baseLevel = textSegments(txt)
@@ -486,14 +442,76 @@ class TextStyle(_ImmutableContainer):
             return self.fontSize * 1.2
 
 
-# Font cache dict
-# - keys: font name or path string
-# - values: (skTypeface, ttFont) tuples
-_fontCache = {}
+_fontObjectsCache = {}
 
 
 def clearFontCache():
-    _fontCache.clear()
+    _fontObjectsCache.clear()
+
+
+def _getFontObjects(fontNameOrPath):
+    fontObjects = _fontObjectsCache.get(fontNameOrPath)
+    if fontObjects is None:
+        fontObjects = FontObjects(fontNameOrPath)
+        _fontObjectsCache[fontNameOrPath] = fontObjects
+    return fontObjects
+
+
+class FontObjects:
+    def __init__(self, fontNameOrPath):
+        self.fontNameOrPath = fontNameOrPath
+
+    @cached_property
+    def skTypeface(self):
+        fontNameOrPath = self.fontNameOrPath
+        if fontNameOrPath is None:
+            typeface = skia.Typeface(None)
+        else:
+            fontNameOrPath = os.fspath(fontNameOrPath)
+            if not os.path.exists(fontNameOrPath):
+                typeface = skia.Typeface(fontNameOrPath)
+            else:
+                typeface = skia.Typeface.MakeFromFile(fontNameOrPath)
+                if typeface is None:
+                    raise DrawbotError(f"can't load font: {fontNameOrPath}")
+        return typeface
+
+    @cached_property
+    def ttFont(self):
+        return makeTTFontFromSkiaTypeface(self.skTypeface)
+
+    @cached_property
+    def hbFont(self):
+        return hb.Font(makeHBFaceFromSkiaTypeface(self.skTypeface))
+
+    @cached_property
+    def brFont(self):
+        from blackrenderer.font import BlackRendererFont
+
+        return BlackRendererFont(ttFont=self.ttFont, hbFont=self.hbFont)
+
+
+def _cloneTypeface(typeface, ttFont, variations):
+    fvar = ttFont.get("fvar")
+    defaultLocation = {a.axisTag: variations.get(a.axisTag, a.defaultValue) for a in fvar.axes}
+    tags = [a.axisTag for a in fvar.axes]
+    location = [(tag, variations.get(tag, defaultLocation[tag])) for tag in tags]
+    makeCoord = skia.FontArguments.VariationPosition.Coordinate
+    rawCoords = [makeCoord(tagToInt(tag), value) for tag, value in location]
+    coords = skia.FontArguments.VariationPosition.Coordinates(rawCoords)
+    pos = skia.FontArguments.VariationPosition(coords)
+    fontArgs = skia.FontArguments()
+    fontArgs.setVariationDesignPosition(pos)
+    return typeface.makeClone(fontArgs)
+
+
+def _makeFontFromTypeface(typeface, size):
+    font = skia.Font(typeface, size)
+    font.setForceAutoHinting(False)
+    font.setHinting(skia.FontHinting.kNone)
+    font.setSubpixel(True)
+    font.setEdging(skia.Font.Edging.kAntiAlias)
+    return font
 
 
 def _colorTupleToInt(color):
