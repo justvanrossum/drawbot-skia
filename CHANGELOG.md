@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.5.0] - 2022-08-14
+
+- Support COLR/COLRv1 fonts via blackrenderer ([#85](https://github.com/justvanrossum/drawbot-skia/pull/85))
+
 ## [0.4.8] - 2021-06-04
 
 - Added exerimental PDFDocument class that allows to draw directly to PDF, instead of having to go via a skia.PictureRecorder
