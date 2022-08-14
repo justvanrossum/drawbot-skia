@@ -3,7 +3,7 @@ import os
 import skia
 import uharfbuzz as hb
 from .errors import DrawbotError
-from .font import intToTag, makeTTFontFromSkiaTypeface, tagToInt
+from .font import makeHBFaceFromSkiaTypeface, makeTTFontFromSkiaTypeface, tagToInt
 from .segmenting import textSegments, reorderedSegments
 from .shaping import shape
 
@@ -575,21 +575,3 @@ _blendModesList = [
 ]
 
 _blendModes = set(_blendModesList)
-
-
-def makeHBFaceFromSkiaTypeface(skTypeface):
-    tableData = {}
-    tableTags = {intToTag(tag) for tag in skTypeface.getTableTags()}
-
-    def getTable(face, tag, userData):
-        if tag in tableData:
-            return tableData[tag]
-        if tag not in tableTags:
-            return None
-        data = skTypeface.getTableData(tagToInt(tag))
-        # HB doesn't hold on the data, and neither does Skia, so we
-        # need to do that ourselves.
-        tableData[tag] = data
-        return data
-
-    return hb.Face.create_for_tables(getTable, None)
