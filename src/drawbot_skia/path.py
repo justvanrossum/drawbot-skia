@@ -25,7 +25,6 @@ from .shaping import alignGlyphPositions
 
 
 class BezierPath(BasePen):
-
     def __init__(self, path=None, glyphSet=None):
         super().__init__(glyphSet)
         if path is None:
@@ -56,9 +55,19 @@ class BezierPath(BasePen):
         self._pointToSegmentPen = PointToSegmentPen(self)
         self._pointToSegmentPen.beginPath()
 
-    def addPoint(self, point, segmentType=None, smooth=False, name=None, identifier=None, **kwargs):
+    def addPoint(
+        self,
+        point,
+        segmentType=None,
+        smooth=False,
+        name=None,
+        identifier=None,
+        **kwargs
+    ):
         if not hasattr(self, "_pointToSegmentPen"):
-            raise AttributeError("path.beginPath() must be called before the path can be used as a point pen")
+            raise AttributeError(
+                "path.beginPath() must be called before the path can be used as a point pen"
+            )
         self._pointToSegmentPen.addPoint(
             point,
             segmentType=segmentType,
@@ -159,7 +168,9 @@ class BezierPath(BasePen):
         it = skia.Path.Iter(self.path, False)
         needEndPath = False
         for verb, points in it:
-            penVerb, startIndex, numPoints = _pathVerbsToPenMethod.get(verb, (None, None, None))
+            penVerb, startIndex, numPoints = _pathVerbsToPenMethod.get(
+                verb, (None, None, None)
+            )
             if penVerb is None:
                 continue
             assert len(points) == numPoints, (verb, numPoints, len(points))
@@ -207,6 +218,7 @@ class BezierPath(BasePen):
 
     def _doPathOp(self, other, operator):
         from pathops import Path, op
+
         path1 = Path()
         path2 = Path()
         self.drawToPen(path1.getPen())
@@ -224,22 +236,27 @@ class BezierPath(BasePen):
 
     def union(self, other):
         from pathops import PathOp
+
         return self._doPathOp(other, PathOp.UNION)
 
     def intersection(self, other):
         from pathops import PathOp
+
         return self._doPathOp(other, PathOp.INTERSECTION)
 
     def difference(self, other):
         from pathops import PathOp
+
         return self._doPathOp(other, PathOp.DIFFERENCE)
 
     def xor(self, other):
         from pathops import PathOp
+
         return self._doPathOp(other, PathOp.XOR)
 
     def removeOverlap(self):
         from pathops import Path
+
         path = Path()
         self.drawToPen(path.getPen())
         path.simplify(
@@ -318,7 +335,9 @@ def _convertConicToCubicDirty(pt1, pt2, pt3):
         d1 = math.hypot(dx1, dy1)
         d2 = math.hypot(dx2, dy2)
         if abs(d1 - d2) > 0.00001:
-            logging.warning("unsupported conic form (non-circular, non-90-degrees): conic to cubic conversion will be bad")
+            logging.warning(
+                "unsupported conic form (non-circular, non-90-degrees): conic to cubic conversion will be bad"
+            )
             # TODO: we should fall back to skia.Path.ConvertConicToQuads(),
             # but that call is currently not working.
         angleHalf = angleDiff / 2

@@ -38,11 +38,10 @@ class Document(ABC):
         ...
 
 
-DEFAULT_FRAMEDURATION = 1/10
+DEFAULT_FRAMEDURATION = 1 / 10
 
 
 class RecordingDocument(Document):
-
     def __init__(self):
         self._pictures = []
         self._frameDurations = []
@@ -113,6 +112,7 @@ class RecordingDocument(Document):
 
     def _saveImage_mp4(self, path, codec="libx264", **kwargs):
         from .ffmpeg import generateMP4
+
         if not self._pictures:
             # Empty mp4?
             return

@@ -55,10 +55,12 @@ def shape(
     x = y = 0
     for pos in buf.glyph_positions:
         dx, dy, ax, ay = pos.position
-        positions.append((
-            startPosX + (x + dx) * fontScaleX,
-            startPosY + (y + dy) * fontScaleY,
-        ))
+        positions.append(
+            (
+                startPosX + (x + dx) * fontScaleX,
+                startPosY + (y + dy) * fontScaleY,
+            )
+        )
         x += ax
         y += ay
     endPos = startPosX + x * fontScaleX, startPosY + y * fontScaleY
@@ -90,9 +92,21 @@ def scalePositions(positions, sx, sy=None):
 
 def getFeatures(face, otTableTag):
     features = set()
-    for scriptIndex, script in enumerate(hb.ot_layout_table_get_script_tags(face, otTableTag)):
-        langIdices = list(range(len(hb.ot_layout_script_get_language_tags(face, otTableTag, scriptIndex))))
+    for scriptIndex, script in enumerate(
+        hb.ot_layout_table_get_script_tags(face, otTableTag)
+    ):
+        langIdices = list(
+            range(
+                len(
+                    hb.ot_layout_script_get_language_tags(face, otTableTag, scriptIndex)
+                )
+            )
+        )
         langIdices.append(0xFFFF)
         for langIndex in langIdices:
-            features.update(hb.ot_layout_language_get_feature_tags(face, otTableTag, scriptIndex, langIndex))
+            features.update(
+                hb.ot_layout_language_get_feature_tags(
+                    face, otTableTag, scriptIndex, langIndex
+                )
+            )
     return sorted(features)

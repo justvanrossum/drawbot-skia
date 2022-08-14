@@ -7,7 +7,9 @@ rect(0, 0, 200, 100)
 
 fill(0)
 path = BezierPath()
-path.text("fiets", offset=(9, 18), font="../fonts/SourceSerifPro-Regular.otf", fontSize=95)
+path.text(
+    "fiets", offset=(9, 18), font="../fonts/SourceSerifPro-Regular.otf", fontSize=95
+)
 
 clipPath(path)
 

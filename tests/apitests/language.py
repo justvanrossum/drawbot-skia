@@ -1,7 +1,7 @@
 size(600, 120)
 
-proofText = 'вгджзийклнпттттфцчшщъьюѝ'
-font('../fonts/SourceSerifPro-Regular.otf')
+proofText = "вгджзийклнпттттфцчшщъьюѝ"
+font("../fonts/SourceSerifPro-Regular.otf")
 fontSize(34)
 
 w, _ = textSize(proofText)

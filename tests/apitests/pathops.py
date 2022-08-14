@@ -1,4 +1,3 @@
-
 path1 = BezierPath()
 path1.rect(25, 25, 100, 100)
 path2 = BezierPath()

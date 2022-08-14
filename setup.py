@@ -16,7 +16,7 @@ setup(
     url="http://github.com/justvanrossum/drawbot-skia",
     license="Apache License 2.0",
     entry_points={
-        'console_scripts': ['drawbot=drawbot_skia.__main__:main'],
+        "console_scripts": ["drawbot=drawbot_skia.__main__:main"],
     },
     package_dir={"": "src"},
     packages=find_packages("src"),
