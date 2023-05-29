@@ -3,5 +3,5 @@ fonttools[unicode]==4.39.4
 uharfbuzz==0.37.0
 python-bidi==0.4.2
 unicodedata2==15.0.0
-skia-pathops==0.7.2
+skia-pathops==0.7.4
 blackrenderer==0.5.3
