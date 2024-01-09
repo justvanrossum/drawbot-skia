@@ -14,14 +14,10 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-10.15, ubuntu-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, "3.10"]
         exclude:
           - os: macOS-10.15
-            python-version: 3.7
-          - os: macOS-10.15
             python-version: 3.8
-          - os: windows-latest
-            python-version: 3.7
           - os: windows-latest
             python-version: 3.8
 
