@@ -17,9 +17,9 @@ jobs:
         python-version: [3.8, "3.10"]
         exclude:
           - os: macOS-10.15
-            python-version: 3.8
+            python-version: "3.10"
           - os: windows-latest
-            python-version: 3.8
+            python-version: "3.10"
 
     steps:
     - uses: actions/checkout@v3
