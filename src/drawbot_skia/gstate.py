@@ -258,7 +258,7 @@ class _ImmutableContainer:
         return self.__class__(**dct)
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if type(self) is not type(other):
             return False
         if self._names != other._names:
             return False
