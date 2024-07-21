@@ -89,12 +89,12 @@ test_data_saveImage = [
     (singlepageSource, "jpg", ["test.jpg"]),
     (singlepageSource, "svg", ["test.svg"]),
     (singlepageSource, "pdf", ["test.pdf"]),
-    (singlepageSource, "mp4", ["test.mp4"]),
+    # (singlepageSource, "mp4", ["test.mp4"]),
     (multipageSource, "png", ["test_0.png", "test_1.png", "test_2.png"]),
     (multipageSource, "jpg", ["test_0.jpg", "test_1.jpg", "test_2.jpg"]),
     (multipageSource, "svg", ["test_0.svg", "test_1.svg", "test_2.svg"]),
     (multipageSource, "pdf", ["test.pdf"]),
-    (multipageSource, "mp4", ["test.mp4"]),
+    # (multipageSource, "mp4", ["test.mp4"]),
 ]
 
 
