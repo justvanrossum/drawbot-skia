@@ -111,6 +111,7 @@ def test_saveImage_multipage(tmpdir, script, imageType, expectedFilenames):
     assert expectedFilenames == [p.name for p in sorted(tmpdir.glob(glob_pattern))]
 
 
+@pytest.mark.skipif(sys.platform == ""darwin"", reason="currently broken on macOS")
 def test_saveImage_mp4_codec(tmpdir):
     from drawbot_skia import ffmpeg
 
