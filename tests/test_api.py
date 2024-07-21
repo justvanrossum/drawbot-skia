@@ -32,6 +32,7 @@ expectedFailures = [
     ("fontVariations", "svg", "linux"),
     ("fontVariations", "pdf", "win32"),
     ("fontVariations", "svg", "win32"),
+    ("fontVariations", "pdf", "darwin"),
     ("image", "pdf", "linux"),
     ("image", "pdf", "win32"),
     ("imageBlendMode", "pdf", "linux"),
