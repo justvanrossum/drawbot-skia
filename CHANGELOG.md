@@ -1,5 +1,9 @@
 # Changelog for drawbot-skia
 
+## [0.5.1] - 2024-07-21
+
+- Pin python-bidi to 0.4.2 in setup.py, as 0.5 breaks things
+
 ## [0.5.0] - 2022-08-14
 
 - Support COLR/COLRv1 fonts via blackrenderer ([#85](https://github.com/justvanrossum/drawbot-skia/pull/85))
