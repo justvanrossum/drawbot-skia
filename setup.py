@@ -25,7 +25,7 @@ setup(
         "fonttools[unicode]",
         "numpy",  # unlisted skia-python dependency, TODO: is this true?
         "uharfbuzz",
-        "python-bidi",
+        "python-bidi==0.4.2",  # pin for now, 0.5 breaks things
         "unicodedata2",
         "blackrenderer",
     ],
