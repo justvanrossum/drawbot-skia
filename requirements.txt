@@ -1,7 +1,7 @@
-skia-python==87.4
-fonttools[unicode]==4.47.0
-uharfbuzz==0.30.0
-python-bidi==0.4.2
+skia-python==87.6
+fonttools[unicode]==4.54.1
+uharfbuzz==0.41.0
+python-bidi==0.6.3
 unicodedata2==15.1.0
-skia-pathops==0.7.2
-blackrenderer==0.5.3
+skia-pathops==0.8.0.post2
+blackrenderer==0.6.0
