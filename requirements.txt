@@ -4,4 +4,4 @@ uharfbuzz==0.41.0
 python-bidi==0.6.3
 unicodedata2==15.1.0
 skia-pathops==0.8.0.post2
-blackrenderer==0.5.3
+blackrenderer==0.6.0
